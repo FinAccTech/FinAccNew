@@ -1,0 +1,111 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Group Summary </p>        
+        </div>
+
+        <div class="headerRight">                 
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" (click)="exportexcel()" >                        
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>                
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="filterHeader">
+            <div class="filterLeft">
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                        
+                    <label for="" class="formLabel date"> From Date </label>            
+                </div>
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> To Date </label>            
+                </div>
+    
+                <button class="btn" (click)="FilterGroupSummary()" >Load Details</button>
+            </div>
+
+            <div class="filterMiddle">
+                <div class="formGroup">
+                    <app-selectionlist [Caption]="'Group'" [DataSource]="GrpList" [SelectedItem]="SelectedGroup"  (newItemEvent)="getGroup($event)"></app-selectionlist>                                    
+                </div>    
+            </div>
+
+            <div class="filterRight">
+                <div class="matGroup" style="width: 90%;" >
+                    <div class="matSelect">
+                        <mat-select style="text-align: center;" [value]="GrpType" [(ngModel)] ="GrpType" (selectionChange)="FilterGroupSummary()" >
+                            <mat-option [value]="0">Grouped</mat-option>
+                            <mat-option [value]="1">Ledger Wise</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Grouped
+                    </div>
+                </div>  
+
+                <div class="matGroup" style="width: 90%;" >
+                    <div class="matSelect">
+                        <mat-select style="text-align: center;" [value]="GrpType" [(ngModel)] ="DetType" (selectionChange)="FilterGroupSummary()" >
+                            <mat-option [value]="0">Normal</mat-option>
+                            <mat-option [value]="1">Detailed</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Detailed
+                    </div>
+                </div>  
+
+                <div class="matGroup" style="width: 90%;" >
+                    <div class="matSelect">
+                        <mat-select style="text-align: center;" [value]="ShowTransactions" [(ngModel)] ="ShowTransactions">
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Show Transactions
+                    </div>
+                </div>  
+
+
+            </div>
+        </div>
+
+        
+        <div class="tableBody">
+            <table id="groupsummary" >
+                <thead> <tr>
+                            <th>Particulars</th>
+                            <th *ngIf="ShowTransactions" >Transaction Debit</th>
+                            <th *ngIf="ShowTransactions">Transaction Credit</th>
+                            <th>Closing Debit</th>
+                            <th>Closing Credit</th>
+                        </tr>
+                </thead>
+
+                <tbody>                    
+                    <tr *ngFor="let vou of GroupSummarylist; let i = index">                        
+                        <td *ngIf="vou.ClsDr > 0 || vou.ClsCr >0" > {{vou.Name}} </td>
+                        
+                        <td *ngIf="(vou.ClsDr > 0 || vou.ClsCr >0) && ShowTransactions"> {{vou.TrnDr | number}} </td>
+                        <td *ngIf="(vou.ClsDr > 0 || vou.ClsCr >0) && ShowTransactions"> {{vou.TrnCr | number}} </td>
+
+                        <td *ngIf="vou.ClsDr > 0 || vou.ClsCr >0"> {{vou.ClsDr | number}} </td>
+                        <td *ngIf="vou.ClsDr > 0 || vou.ClsCr >0"> {{vou.ClsCr | number}} </td>
+                    </tr>                    
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+ 
+</div>

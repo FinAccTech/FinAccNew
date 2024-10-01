@@ -1,0 +1,78 @@
+.dashboardContainer{
+    width: 100%;
+    display: flex;
+    position: relative;
+    background-color: #F0F0F9;    
+    //background-color:#F7F8F9;
+    
+    
+    .sidenavContainer
+    {
+        position: fixed;        
+        width: 15.5rem;                
+        height: 100%;                
+    }
+    
+    .headerContainer{                         
+        position: fixed;
+        height: 4.70rem;
+        width: calc(100% - 15.9rem);
+        margin-left: 15.6rem;        
+        background-color: #fff;     
+        z-index: 100;           
+    }
+
+    .bodyContainer{
+        width:100%;
+        margin-top: 5.3rem;  
+        margin-left: 16.1rem;  
+        z-index: 99;
+    }
+}
+
+.dashboardCompact{
+    width: 100%;
+    display: flex;
+    position: relative;
+    background-color: #F0F0F9;    
+    height: 100%;
+    
+    .sidenavContainer
+    {
+        z-index: 1000;
+        // width is fixed in typescript as per mode and screen size
+        position: fixed;                
+        height: 100%;        
+        background-color: #fff;
+    }
+    
+    .headerContainer{                         
+        position: fixed;
+        height: 4.70rem;
+        width: calc(100% - 4.75rem);
+        margin-left: 5rem;        
+        background-color: #fff;        
+    }
+
+    // .headerCompact{                         
+    //     position: fixed;
+    //     height: 4.70rem;
+    //     width: calc(100% - 3rem);
+    //     margin-left: 2.5rem;       
+    //     z-index: 100;           
+    // }
+
+    .bodyContainer{
+        position: fixed;
+        width: calc(100% - 5.2rem);
+        margin-top: 5.3rem;  
+        margin-left: 5.3rem;                        
+        z-index: 99;
+        
+    }
+    
+}
+
+.noMargin{
+    margin-left: 0;
+}

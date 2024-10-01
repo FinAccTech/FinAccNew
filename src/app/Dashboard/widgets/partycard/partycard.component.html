@@ -1,0 +1,41 @@
+<div class="cardContainer">
+  
+
+    <div class="details">
+
+        <div class="imgContainer"  >                        
+            <ng-container *ngIf="!Party || !Party.ProfileImage">
+                <img src="assets/images/partyimagepreview.png" alt="Customer Image" />
+            </ng-container>
+
+            <ng-container *ngIf="Party && Party.ProfileImage">
+                <img [src]="Party.ProfileImage" alt="Customer Image" />
+            </ng-container>
+            
+        </div>
+
+        <div class="personalInfo" *ngIf="Party">
+            <p class="code">Code: <strong> {{Party.Party_Code}} </strong>  </p>
+            <p class="name"> {{Party.Party_Name}} </p>
+            <p class="relName"> {{Party.Rel == 0 ? 'S/o. ' : Party.Rel == 1 ? 'D/o. ' : Party.Rel == 2 ? 'W/o. ' :'C/o. ' }}  {{Party.RelName}} </p>
+            <p class="relName"> {{Party.Address1}} </p>
+            <p class="relName"> {{Party.Address2}} </p>
+            <p class="relName"> {{Party.Address3}} </p>
+            <p class="area">{{Party.Area?.Area_Name}}</p>
+            <div class="mobileArea">
+                <div> <p><i class="fa-solid fa-mobile-screen-button"></i> <strong> {{Party.Mobile}} </strong> </p> </div>
+                <div> <p>Nominee:  {{Party.Nominee}} </p> </div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <div class="loanDetails" *ngIf="Party" >
+        <p>Live <br> {{ Party.OpenLoans }} </p>
+        <p>Closed <br> {{Party.ClosedLoans }}</p>
+        <p>Matured <br> {{Party.MaturedLoans }}</p>
+        <p>Auctioned <br> {{Party.AuctionedLoans }}</p>
+    </div>
+
+</div>

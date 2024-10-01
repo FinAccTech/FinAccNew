@@ -1,0 +1,79 @@
+<div class="listContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            <span class="bar"></span>
+            <p class="heading"> &nbsp; Users</p>        
+        </div>
+
+        <div class="headerRight">
+            <div class="searchBox">
+                <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />
+                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+    
+            
+            <button class="newBtn" (click)="AddNewUser()">
+                <i class='bx bx-plus bx-tada' ></i>Create New
+            </button>
+            <i class='bx bxs-download'></i>
+        </div>
+    </div> 
+
+    <div class="tableBody">
+
+        <div class="tableContainer" #TABLE>
+            <table class="table" mat-table [dataSource]="dataSource" matSort   >
+
+              <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
+                    <th style="" mat-header-cell *matHeaderCellDef mat-sort-header>  {{ column=="crud"? '': column.replace("_"," ")}} </th>
+                    
+                  <td mat-cell *matCellDef="let element; let i = index;"
+                  [style.color]=" column == 'Active_Status' ? element['Active_Status'] == 1 ? 'green' : 'red' : '#6a7a8c'" 
+                  > 
+                    {{  
+                      column == "Active_Status"  
+                        ? element[column] == 1 
+                          ? "Active"
+                          : "InActive"                        
+
+                        : column == "#"
+                            ? i+1
+
+                        : column == "User_Type" 
+                            ? element[column]  == 0
+                            ? "User"
+                            : "Admin"
+
+                      : element[column]      
+                   
+                    }}                     
+                    <ng-container *ngIf="column=='crud'" >
+                        <div class="crudIcons">
+                            <i class="fa-solid fa-pen-to-square" style="color: green;" (click)="OpenUser(element)" ></i>
+                            &nbsp;
+                            <i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="DeleteUser(element)"  ></i>
+                        </div>
+                        
+                      </ng-container>
+                  </td>            
+                  
+              </ng-container>
+             
+                   
+              <tr mat-header-row *matHeaderRowDef ="columnsToDisplay; sticky: true;"></tr>
+              <tr mat-row *matRowDef="let element; columns: columnsToDisplay;">
+              </tr>
+              
+              
+              
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 5 aria-label="Select page of users"></mat-paginator> 
+          </div>
+    </div>
+
+</div>
+
+

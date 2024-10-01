@@ -1,0 +1,56 @@
+<div class="loginContainer">
+    <div class="content">
+        <div class="contentLeft">
+             <p>Try it for FREE today </p>
+             <button class="btn">CREATE ACCOUNT</button>
+        </div>
+
+        <div class="contentRight">
+            <div class="header">
+                <img src="assets/images/finacclogo.png" height="60" width="60" />
+                <p>FinAcc</p>
+            </div>      
+            
+            
+             <div class="body">
+                <p class="title">Welcome Back !</p>
+                <div class="newTextField">
+                    <label><input type="text" style="font-weight: bold;"  class="textfield" (keydown.enter)="CheckLogin()"  [(ngModel)]="ClientCode" required><span class="placeholder">Client Code</span></label>
+                </div>
+
+                <span *ngIf="ClientCode == ''" style="color: red;"> *** Enter Client Code</span>
+                <hr style="margin: 1rem; border: 1px solid #ddd;">
+
+                <div class="newTextField">
+                    <label><input type="text" class="textfield" (keydown.enter)="CheckLogin()"  [(ngModel)]="UserName" required><span class="placeholder">Enter Email Id / Username</span></label>
+                </div>
+                <div class="newTextField">
+                    <label><input type="password" class="textfield"  (keydown.enter)="CheckLogin()" [(ngModel)]="Password" required><span class="placeholder">Enter Password</span></label>
+                </div>
+                <div class="btnSection">
+                    <button class="btn"(click)="CheckLogin()"  >SIGN IN</button>
+                    <ng-container  *ngIf="InvalidUser">
+                        <p class="errArea">
+                           {{errText}}
+                        </p>
+                    </ng-container>
+                </div>                
+            </div> 
+
+            <div class="footer">
+                <div class="footerLeft">
+                    <p>Available on</p>
+                    <i class="fa fa-android" aria-hidden="true"></i>
+                    <i class="fa fa-windows" aria-hidden="true"></i>
+                    <i class="fa fa-apple" aria-hidden="true"></i>
+                </div>
+
+                <div class="footerRight">
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                    <p>+91 98658 80356</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

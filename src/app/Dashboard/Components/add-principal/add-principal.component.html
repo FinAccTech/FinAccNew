@@ -1,0 +1,67 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Additional Principal </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col60">
+                <table>
+                    <thead><th></th><th>Date</th><th>Amount</th><th>Remarks</th></thead>
+                    <tr *ngFor="let pmt of PaymentsList; let i = index" (click)="SelectCurrentPayment(pmt)"  >
+                        <td  (click)="DeletePayment(i)" ><i class='bx bx-trash' style="color: red;"></i></td>
+                        <td class=""> {{pmt.Pmt_Date | intToDate | date:"dd/MM/yyyy" }} </td>
+                        <td class=""> {{pmt.Amount}} </td>
+                        <td class=""> {{pmt.Remarks}} </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col40">
+                <div class="row">
+                    <div class="col100">
+                        <div class="formGroup">                            
+                            <!-- <input type="date" class="formControl" required [(ngModel)]="PaymentDate" /> -->
+                            <input type="date" class="formControl" required [ngModel]="PaymentDate! | intToDate | date:'yyyy-MM-dd'" (blur)="PaymentDate= DateToInt($event)" />                                                               
+                            <label for="" class="formLabel" >Payment Date </label>                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">
+                    <div class="col100">
+                        <div class="formGroup">                            
+                            <input type="number" NumberInput class="formControl" required [(ngModel)]="Amount"/>
+                            <label for="" class="formLabel" >Amount</label>                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">
+                    <div class="col100">
+                        <div class="formGroup">                            
+                            <input type="text" class="formControl" required [(ngModel)]="Remarks"/>
+                            <label for="" class="formLabel" >Remarks </label>                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="row" style="margin-top: 1rem; display: flex;justify-content: space-between; align-items: center;">
+                    <div class="col50">
+                        <button class="btn" (click)="AddPayment()"> <i class='bx bx-plus' ></i> &nbsp; {{CurrentPayment ? 'Update' : 'Add Principal' }}  </button>
+                    </div>
+
+                    <div class="col50">
+                        <button class="btn" (click)="SaveandClose()" > <i class='bx bx-save' ></i> &nbsp; Save and Close </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

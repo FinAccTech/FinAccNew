@@ -1,0 +1,1304 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', sans-serif;        
+  font-size: 14px;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+@media only screen and (max-width: 1600px) {
+  /* For mobile phones: */
+  *{
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  /* For mobile phones: */
+  *{
+    font-size: 10px;
+  }
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+  :root{    
+    --ColorPrimary:#EAA63E;
+  }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.disabledDiv{
+  pointer-events: none;
+}
+
+.mat-mdc-table tbody, .mat-mdc-cell {
+  color: red;
+}
+
+.cardDefault{
+  width: 100%;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.btnDefault{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: .6rem;
+  border: none;
+  background-color: #fff;
+  color:var(--ColorPrimary);
+  max-width: 10rem;
+  border: 1px solid var(--ColorPrimary);
+  flex-wrap: nowrap;
+
+  i{
+    font-size: 1.5rem;
+  }
+}
+
+.btnDefault:hover{
+  background-color: var(--ColorPrimary);
+  color: #fff;
+  cursor: pointer;
+  
+  
+}
+
+.noContent{
+  width: 100%;
+  margin-top: 8rem;
+  text-align: center;
+  background-color: #fff;
+  padding: 5rem;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  
+  i{
+    font-size: 6rem;
+  }
+  .heading{
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .desc{
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+.statusLabelOpen{  
+  display: flex;                    
+  border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  .caption{    
+      color: green;            
+      padding: .5rem;
+      background-color: #fff;        
+      text-wrap: nowrap;
+  }
+  .value{
+      border-radius: 20%;
+      color: #fff;
+      background-color: green;
+      padding: .5rem;
+      text-align: center;
+      font-weight: 500;
+  }
+}
+.statusLabelClosed{
+  border: 2px solid darkgray;    
+  display: flex;                    
+  border-radius: 5px;
+  .caption{    
+      color: darkgray;            
+      padding: .7rem;
+      background-color: #fff;        
+      text-wrap: nowrap;
+  }
+  .value{
+      width: 100%;
+      color: #fff;
+      background-color: darkgray;
+      padding: .7rem;
+      text-align: center;
+      font-weight: 500;
+  }
+}
+.statusLabelMatured{
+  border: 2px solid red;    
+  display: flex;                    
+  border-radius: 5px;
+  .caption{    
+      color: red;            
+      padding: .7rem;
+      background-color: #fff;        
+      text-wrap: nowrap;
+  }
+  .value{
+      width: 100%;
+      color: #fff;
+      background-color: red;
+      padding: .7rem;
+      text-align: center;
+      font-weight: 500;
+  }
+}
+.statusLabelAuctioned{
+  border: 2px solid black;    
+  display: flex;                    
+  border-radius: 5px;
+  .caption{    
+      color: black;            
+      padding: .7rem;
+      background-color: #fff;        
+      text-wrap: nowrap;
+  }
+  .value{
+      width: 100%;
+      color: #fff;
+      background-color: black;
+      padding: .7rem;
+      text-align: center;
+      font-weight: 500;
+  }
+}
+
+.smallLabel{
+  .caption{
+    padding: .1rem;    
+    font-size: 12px;
+  }
+  .value{
+    padding: .1rem;
+    font-size: 12px;
+  }
+  
+}
+  .form-control {
+    position: relative;
+    width: 100%;
+    height: 39px;
+  }
+
+  .form-control input {
+    width: 100%;
+    border: 0;
+    outline: none;
+    height: 100%;
+    padding: 0 15px;
+    transition: 0.4s;
+  }
+
+  .form-control label {
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    width: 100%;
+    height: 100%;
+    transition: 0.2s;
+    font-size: 14px;
+    color: gray;
+    pointer-events: none;
+  }
+
+  .form-control div.border-around {
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    height: 100%;
+    width: 100%;
+    padding-right: 25px;
+    top: 0;
+    pointer-events: none;
+    border-radius: 3px;
+    transition: 0.2s;
+  }
+
+  .form-control input:valid + label {
+    top: -0.45rem;
+    left: 10px;
+    font-size: 13px;
+    background-color: #fff;
+    width: auto;
+    height: 0.9rem;
+    padding: 0 10px;
+    color: gray;
+    z-index: 100;
+  }
+  
+  input:not(:focus) {
+    color: gray;
+    background-color: #fff;
+  }
+  
+  .form-control input:focus + label {
+    top: -0.45rem;
+    left: 10px;
+    font-size: 13px;
+    z-index: 100;
+    width: auto;
+    height: 0.9rem;
+    padding: 0 10px;
+    color: black;
+    background-color: #fff;
+  }
+  
+  .form-control input:focus ~ div.border-around {
+    border: 1px solid var(--ColorPrimary);
+  }
+  
+ 
+  .matGroup{
+    position: relative;
+    .matSelect{
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 5px;
+      position: relative;
+    }
+  
+    .matLabel {
+      top: -8px;
+      left: 10px;    
+      font-size: 12px;
+      background-color: #fff;
+      position: absolute;    
+    }
+  }
+  
+
+  .newTextField {
+    position: relative;
+    height: 40px;  
+    width: 100%;
+  }
+  
+  .textfield {
+  //    position: relative;
+  //     padding: 10px 15px;
+  //     border:1px solid #e3f2fd;
+  //     border-radius:5px;
+  //     box-shadow: none;
+  
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #d8d2d2;
+    outline: none;
+    padding: 16px;
+    border-radius: 6px;
+    z-index: 1;
+    overflow: hidden;
+    font-size: 14px;
+  
+  }
+  .newTextField span {
+    position: absolute;
+    z-index: 1;
+    background-color:#fff;
+    top: 13px;
+    font-size: 14px;
+    color:#A9A9A9;
+    padding:0 5px;
+  }
+
+  .textfield:focus {
+    
+    
+  }
+  input:focus ~ span,
+  input:not(:focus)  ~ span {
+    top:-12px;
+    color: black;        
+  }
+
+
+  .textfield, span {
+  transition: ease-in-out 0.2s all;
+  -webkit-transition: ease-in-out 0.2s all;
+  -moz-transition: ease-in-out 0.2s all;
+  -o-transition: ease-in-out 0.2s all;
+  }
+  
+
+.formGroup{
+  position: relative;
+  height: 40px;  
+  width: 100%;
+  
+  .rightIcon{
+    right: .7rem;
+    top: 12px;
+    position: absolute;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ColorPrimary);
+    z-index: 12;
+  }
+
+  .rightTopCornerIcon{
+    right: 0;
+    top: 0;
+    position: absolute;
+    font-size: 14px;
+    cursor: pointer;
+    color: green;
+    z-index: 12;
+  }
+  
+
+  .formControl{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;    
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    color: black;
+  }
+
+  .formControlreadonly{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;  
+  }
+
+
+  .formLabel{  
+    position: absolute;
+    left: 10px;
+    top: 13px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+  }
+
+  .formLabelreadonly{
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+    z-index: 10;
+    font-weight: 500;
+    
+  }
+
+  .formLabel.date{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;    
+    font-weight: 500;
+  }
+
+  .formControl:focus + .formLabel{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus{
+    border: 1.5px solid var(--ColorPrimary);
+  }
+
+  .formControl:not(:focus) + label {  
+    top: -10px !important ;
+    z-index: 10;
+  }
+
+
+  .formControlType2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #f1eaea;
+    outline: none;
+    padding: 15px 0 0 10%;    
+    z-index: 1;
+    overflow: hidden;
+    
+  }
+
+  .formLabelType2{
+    position: absolute;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;    
+    left: 0;
+    top: 6%;
+    color: #a1a1a1;
+    background-color: #fff;
+    
+    font-size: 13px;  
+    white-space: nowrap;
+    
+  }
+
+  .errorHint{
+    position: absolute;
+    display: none;
+    font-size: 10px;
+    color: red;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+
+.formGroup.invalid{  
+  .formControl{
+    border: 1px solid red;
+  }  
+  
+  .errorHint{
+    display: block;
+  }
+}
+
+.formGroupsansBorder{
+  position: relative;
+  height: 48px;  
+  width: 100%;
+  
+  .rightIcon{
+    right: .7rem;
+    top: 12px;
+    position: absolute;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ColorPrimary);
+    z-index: 12;
+  }
+
+  .rightTopCornerIcon{
+    right: 0;
+    top: 0;
+    position: absolute;
+    font-size: 14px;
+    cursor: pointer;
+    color: green;
+    z-index: 12;
+  }
+  
+
+  .formControl{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #d8d2d2;    
+    
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .formControlreadonly{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #d8d2d2;
+    outline: none;
+    padding: 16px;
+    border-radius: 3px;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;  
+  }
+
+
+  .formLabel{  
+    position: absolute;
+    left: 0;
+    top: 13px;
+    color: #a1a1a1;
+    background-color: #fff;
+    
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+  }
+
+  .formLabelreadonly{
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 1rem;
+    transition: .3s;    
+    white-space: nowrap;
+    z-index: 10;
+    font-weight: 500;
+    
+  }
+
+  .formLabel.date{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus + .formLabel{
+    top: -8px;    
+    z-index: 10;
+    font-size: 12px;
+    color: var(--ColorPrimary);
+    font-weight: 500;
+  }
+
+  .formControl:focus{
+    border-bottom: 1.5px solid var(--ColorPrimary);
+  }
+
+  .formControl:not(:focus):valid + label {  
+
+    top: -10px;
+    z-index: 10;
+  }
+
+
+  .formControlType2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: 1px solid #f1eaea;
+    outline: none;
+    padding: 15px 0 0 5px;
+    z-index: 1;
+    overflow: hidden;
+    
+  }
+
+  .formLabelType2{
+    position: absolute;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    left: 1px;
+    top: 6%;
+    color: #a1a1a1;
+    background-color: #fff;
+    padding: 0 6px;
+    font-size: 13px;  
+    white-space: nowrap;
+    
+  }
+
+  .errorHint{
+    position: absolute;
+    display: none;
+    font-size: 10px;
+    color: red;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+
+.formGroupsansBorder.invalid{  
+  .formControl{
+    border-bottom: 1px solid red;
+  }  
+  
+  .errorHint{
+    display: block;
+  }
+}
+
+.invalidSel{
+  border: 1px solid red;
+}
+.middleItems{
+  display: flex;
+  align-items: center;
+}
+
+.zoomOnFocus:hover{
+    cursor: pointer;
+    transition: transform 0.25s 0s; 
+    transform: scale(1.5); 
+}
+
+.generalSearchBox{
+  position: relative;
+  width: 100%;
+
+  input{    
+    padding: .6rem;
+    padding-left: 2.5rem;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+
+  }
+  .iconRight{
+    position: absolute;
+    left: .5rem;
+    top: 25%;
+    padding-right: 1rem;
+    
+    i{
+      font-size: 16px;
+      color: gray;
+    }
+  }
+  
+}
+
+//For All Masters List with Mat Table 
+.listContainer{    
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: .5rem;
+
+  .headerCard{      
+      padding: 1rem;
+      width: 100%;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+      background-color: #fff;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      
+      border-left: 6px solid var(--ColorPrimary);
+      
+      .headerLeft{
+          display: flex;
+          align-items: center;
+          // .bar{
+          //     border-left: 4px solid var(--ColorPrimary);        
+          //     padding-top: 1rem;     
+          //     padding-bottom: 1rem;     
+          // }
+
+          .heading{
+              font-size: 1.3rem;
+              user-select: none;                
+          }
+      }
+
+      .headerRight{
+          display: flex;
+          column-gap: 1rem;
+          align-items: center;
+          justify-content: space-between;
+          
+          .searchBox{
+            position: relative;
+          
+            input{
+              border: 1px solid lightgray;
+              padding: .5rem;
+              padding-left: 2rem;
+              outline: none;
+
+            }
+            .iconRight{
+              position: absolute;
+              left: .5rem;
+              top: 25%;
+              padding-right: 1rem;
+              
+              i{
+                font-size: 16px;
+                color: gray;
+              }
+            }
+            
+          }
+      
+          .newBtn{
+              border: none;
+              text-wrap: nowrap;
+              cursor: pointer;
+              padding: .4rem;
+              background-color: var(--ColorPrimary);
+              color: #fff;
+              
+              display: flex;
+              flex-direction: row;
+              align-items: center;                
+
+              i{
+                  color: #fff;
+                  font-size: 2rem;
+              }
+          }
+
+          .newBtn:hover{
+              font-weight: 500;
+          }
+
+          i{
+              font-size: 2rem;
+              color: green;
+          }
+          i:hover{
+              cursor: pointer;
+              transition: transform 0.25s 0s; 
+              transform: scale(1.5); 
+          }
+      }
+
+
+  }
+
+  .filterHeader{
+    display: flex;  
+    margin-top: .7rem;        
+    align-items: center;
+    //background-color: #fff;
+    //box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: .6rem;
+    column-gap: 1rem;
+
+    .filterLeft{
+      width: 60%;
+
+      .searchBox{
+        position: relative;
+        width: 100%;
+
+        input{
+          border: 1px solid lightgray;
+          padding: .5rem;
+          padding-left: 2rem;
+          outline: none;
+          width: 100%;
+          padding: 1rem;
+          border: none;
+          border-bottom: 1px solid darkgray;
+        }
+        .iconRight{
+          position: absolute;
+          right: .5rem;
+          top: 25%;
+          padding-right: 1rem;
+          
+          i{
+            font-size: 16px;
+            color: gray;
+          }
+        }
+        
+      }
+  
+    }
+
+    .filterRight{
+      display: flex;  
+      align-items: center;
+      width: 40%;
+      column-gap: 1rem;
+      input{
+        background-color: #fff;
+      }
+      .btn{
+        border: 1px solid var(--ColorPrimary);
+        padding: .7rem;
+        background-color: #fff;
+        color: var(--ColorPrimary);
+        text-wrap: nowrap;
+
+        i{
+          font-size: 1.2rem;
+        }
+        
+      }
+
+      .btn:hover{
+        background-color: var(--ColorPrimary);
+        color: #fff;
+        cursor: pointer;
+        font-weight: 500;
+        i{
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .tableBody{             
+      //box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+      width: 100%;
+      
+  }
+  }
+
+.crudIcons i:hover{
+  cursor: pointer;
+  transition: transform 0.25s 0s; 
+  transform: scale(2); 
+}
+
+// For all Modal Dioalog Forms
+.modalForm{
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  padding: 1rem;
+  resize: both;
+
+  .header{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid lightgray;
+      padding: 0.75rem 1rem .5rem 1rem;
+
+      .headerLeft{
+          display: flex;
+          i{
+              font-size: 24px;
+              color: var(--Color4);
+          }
+
+          .bar{
+            border-left: 4px solid var(--ColorPrimary);        
+            padding-top: 1rem;     
+            padding-bottom: 1rem;     
+          }
+          p{
+              font-size: 18px;                            
+          }
+      }
+
+      .headerRight{
+          p{
+              font-size: 30px;
+              cursor: pointer;
+          }
+          p:hover{
+              transition: transform 0.25s 0s; 
+              transform: scale(1.5); 
+          }
+      }
+  }
+
+  .body{
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0 0 0 .5rem;
+  }
+
+  .footer{        
+      align-self: flex-end;
+      padding: 1rem 0 0 0;
+      display: flex;
+      flex-direction: row;
+      column-gap: 1rem;
+      
+      button{
+          padding: .6rem;
+          background-color: #fff;
+          border: 1px solid var(--ColorPrimary);                      
+          border-radius: 6px;
+          cursor: pointer;
+          i{
+            color: green;
+          }
+      }
+
+      button:hover{            
+          //box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+          color: green;
+      }
+
+      button.red{
+          padding: .6rem;
+          background-color: #fff;
+          border: 1px solid var(--ColorPrimary);                               
+          border-radius: 6px;
+          cursor: pointer;          
+          i{
+            color: red;
+          }
+      }
+
+      button.red:hover{        
+        color: red;
+      }
+  }
+}
+
+.row{    
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;    
+  .col10 {
+    width: 10%;
+  }
+  .col20 {
+    width: 20%;
+  }
+  .col30 {
+    width: 30%;
+    padding-right: 1rem;
+  }
+  .col40 {
+    width: 40%;
+  }
+  .col50 {
+    width: 50%;
+    padding-right: .5rem;
+  }
+  .col60 {
+    padding-right: 1rem;
+    width: 60%;
+  }
+  .col70 {
+    padding-right: 1rem;
+    width: 70%;
+  }
+  .col80 {
+    width: 80%;
+  }
+  .col90 {
+    width: 90%;
+  }
+  .col100 {
+    width: 100%;
+    padding-right: .5rem;
+  }
+  
+} 
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+
+    .toggle-switch {
+      display: inline-block;
+      background: #ccc;
+      border-radius: 16px;
+      width: 45px;
+      height: 22px;
+      position: relative;
+      vertical-align: middle;
+      transition: background 0.25s;
+    }
+    .toggle-switch:before, .toggle-switch:after {
+      content: "";
+    }
+    .toggle-switch:before {
+      display: block;
+      background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 3px;
+      left: 1px;
+      transition: left 0.25s;
+    }
+    .toggle:hover .toggle-switch:before {
+      background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    }
+    .toggle-checkbox:checked + .toggle-switch {
+      background: green;
+    }
+    .toggle-checkbox:checked + .toggle-switch:before {
+      left: 28px;
+    }
+
+    .toggle-checkbox {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .toggle-label {
+      margin-left: 5px;
+      position: relative;
+      top: 1px;
+    }
+}
+
+
+
+// Breakpoints
+$bp-maggie: 15em; 
+$bp-lisa: 30em;
+$bp-bart: 48em;
+$bp-marge: 62em;
+$bp-homer: 75em;
+
+
+.responsiveGrid {
+  
+  width: 100%;
+  height: 100%;
+  
+  @media (min-width: 100%) {
+    margin: 2%; 
+  }
+  
+  @media (min-width: 100%) {
+    margin: 2em auto;
+    max-width: $bp-homer;
+  }
+
+  .responsive-table {
+    width: 100%;
+    margin-bottom: 1.5em;
+    border-spacing: 0;
+    
+    @media (min-width: $bp-bart) {
+      font-size: .9em; 
+    }
+    
+    @media (min-width: $bp-marge) {
+      font-size: 1em; 
+    }
+    
+    thead {
+      // Accessibly hide <thead> on narrow viewports
+      position: absolute;
+      clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+      padding: 0;
+      border: 0;
+      height: 1px; 
+      width: 1px; 
+      overflow: hidden;
+      
+      @media (min-width: $bp-bart) {
+        // Unhide <thead> on wide viewports
+        position: relative;
+        clip: auto;
+        height: auto;
+        width: auto;
+        overflow: auto;
+      }
+      
+      th {
+        background-color: var(--ColorPrimary);
+        border: 1px solid #fff;
+        font-weight: normal;
+        text-align: center;
+        color: white;
+        
+        &:first-of-type {
+          text-align: left; 
+        }
+      }
+    }
+    
+    // Set these items to display: block for narrow viewports
+    tbody,
+    tr,
+    th,
+    td {
+      display: block;
+      padding: 0;
+      text-align: left;
+      white-space: normal;
+    }
+    tr:hover{
+      background-color: #ddd;
+      cursor: pointer;
+    }
+    tr {   
+      @media (min-width: $bp-bart) {
+        // Undo display: block 
+        display: table-row; 
+      }
+    }
+    
+    th,
+    td {
+      padding: .5em;
+      vertical-align: middle;
+      
+      @media (min-width: $bp-lisa) {
+        padding: .75em .5em; 
+      }
+      
+      @media (min-width: $bp-bart) {
+        // Undo display: block 
+        display: table-cell;
+        padding: .5em;
+      }
+      
+      @media (min-width: $bp-marge) {
+        padding: .75em .5em; 
+      }
+      
+      @media (min-width: $bp-homer) {
+        padding: .75em; 
+      }
+    }
+    
+    caption {
+      margin-top: .5em;
+      font-size: .5em;
+      font-weight: bold;
+      text-align: center;
+      
+      @media (min-width: $bp-bart) {
+        font-size: 1.2em;
+      }
+    }
+    
+    tfoot {
+      font-size: .8em;
+      font-style: italic;
+      
+      @media (min-width: $bp-marge) {
+        font-size: .9em;
+      }
+    }
+    
+    tbody {
+      @media (min-width: $bp-bart) {
+        // Undo display: block 
+        display: table-row-group; 
+      }
+      
+      tr {
+        margin-bottom: 1em;
+        
+        @media (min-width: $bp-bart) {
+          // Undo display: block 
+          display: table-row;
+          border-width: 1px;
+        }
+        
+        &:last-of-type {
+          margin-bottom: 0; 
+        }
+        
+        &:nth-of-type(even) {
+          @media (min-width: $bp-bart) {
+            background-color: rgba(0,0,0,.12);
+          }
+        }
+      }
+      
+      th[scope="row"] {
+        background-color: var(--ColorPrimary);
+        color: white;
+        
+        @media (min-width: $bp-lisa) {
+          border-left: 1px solid var(--ColorPrimary);
+          border-bottom: 1px solid var(--ColorPrimary);
+        }
+        
+        @media (min-width: $bp-bart) {
+          background-color: transparent;
+          color: rgba(0,0,0.87);
+          text-align: left;
+        }
+      }
+      
+      td {
+        text-align: right;
+        
+        @media (min-width: $bp-bart) {
+          border-left: 1px solid var(--ColorPrimary);
+          border-bottom: 1px solid var(--ColorPrimary);
+          text-align: center; 
+        }
+        
+        &:last-of-type {
+          @media (min-width: $bp-bart) {
+            border-right: 1px solid var(--ColorPrimary);
+          } 
+        }
+      }
+      
+      td[data-type=currency] {
+        text-align: right; 
+      }
+      
+      td[data-title]:before {
+        content: attr(data-title);
+        float: left;
+        font-size: .8em;
+        color: rgba(0,0,0,.54);
+        
+        @media (min-width: $bp-lisa) {
+          font-size: .9em; 
+        }
+        
+        @media (min-width: $bp-bart) {
+          // Don’t show data-title labels 
+          content: none; 
+        }
+      } 
+    }
+  }
+}
+

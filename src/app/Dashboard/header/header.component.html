@@ -1,0 +1,58 @@
+<ng-container *ngIf="!MinimalHeader" > 
+    <div class="headerContainer">
+        <div class="headerLeft">
+            <i class="fa fa-bars" aria-hidden="true" (click)="ToggleSideNav()" ></i> 
+            <p class="compName" >{{CompName}}</p>
+            <i class='bx bx-buildings compIcon' (click)="LoadCompanies()" ></i>
+        </div>
+        
+        <div class="headerRight">
+            <i class='bx bx-fullscreen' ></i>
+            <i class='bx bx-bell bx-tada' ></i>
+            <p>{{LoggedUser}}</p>
+            <div class="profilePicture" [matMenuTriggerFor]="menu">
+                <ng-container *ngIf="UserProfileImage && UserProfileImage.length > 0" >
+                    <img [src]="UserProfileImage" />
+                </ng-container>
+
+                <ng-container *ngIf="!UserProfileImage || UserProfileImage.length == 0" >
+                    <img src="assets/images/partyimagepreview.png" />
+                </ng-container>
+
+                
+                <mat-menu #menu="matMenu" style="padding: 1rem;">
+                    <button mat-menu-item  (click)="Logout()">
+                        <div class="menuClass">
+                            <i class='bx bx-log-out'></i> &nbsp;
+                            <span>Log Out</span>
+                        </div>                    
+                    </button>                
+                </mat-menu>
+
+            </div>            
+            <!-- <i class='bx bx-cog bx-spin' ></i> -->
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="MinimalHeader" >
+    <div class="heaaderCompact">
+        <div class="headerLeft">
+            <i class="fa fa-bars" aria-hidden="true" (click)="ToggleSideNav()" ></i>                        
+        </div>
+            
+        <div class="headerCenter">
+            <!-- <img src="assets/images/finacclogo.png" height="40" width="40" /> -->
+            <p class="compName" >Vel Finance and Investments</p>
+        </div>
+        
+        
+        <div class="headerRight">
+            <i class='bx bx-buildings compIcon' ></i>
+            <div class="profilePicture">
+                <img src="assets/images/profile.jpg" />
+            </div>
+        </div>
+        
+    </div>
+</ng-container>

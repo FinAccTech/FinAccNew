@@ -1,0 +1,99 @@
+<div class="cardContainer" *ngIf="Loan">
+    <div class="statusCard">
+        <ng-container *ngIf="Loan.Loan_Repledge_Status==1" >
+            <p style="font-weight: bold; color: red;" >Repledged</p>
+        </ng-container>
+        <div [ngClass]="(Loan.Loan_Status == 1) ? 'statusLabelOpen smallLabel' : (Loan.Loan_Status == 2) ? 'statusLabelClosed' : (Loan.Loan_Status == 3)? 'statusLabelMatured' :'statusLabelAuctioned' " >
+            <div class="caption">Loan Staus</div>
+            <div class="value">{{Loan.Loan_Status == 1 ? 'Open' : Loan.Loan_Status == 2 ? 'Closed' : Loan.Loan_Status == 3 ? 'Matured' : 'Auctioned' }}</div>
+        </div>   
+    </div>
+    
+    <div class="loanDetails">
+        <div class="imgArea">
+            <ng-container *ngIf="Loan.fileSource">
+                <img [src]="Loan.fileSource[0].Image_Url" />
+            </ng-container>
+            <ng-container *ngIf="!Loan.fileSource">
+                <img src="assets/images/noimage.jpg" />
+            </ng-container>
+        </div>
+        <div class="detailsArea">
+
+            <div class="loanInfo">
+            
+                <div class="detailsLeft">
+                    <div class="row">
+                        <p class="caption">Loan No </p>
+                        <p class="value" style="font-size: 1.3rem;" > {{Loan.Loan_No}}  </p>
+                    </div>
+
+                    <div class="row">
+                        <p class="caption">Item Group </p>
+                        <p class="value"> {{Loan.IGroup.Grp_Name}}  </p>
+                    </div>
+
+                    <div class="row">
+                        <p class="caption">Principal</p>
+                        <p class="value"> {{Loan.Principal | number}}  </p>
+                    </div>  
+
+                    <div class="row">
+                        <p class="caption">Location</p>
+                        <p class="value"> {{Loan.Location.Loc_Name}}  </p>
+                    </div>  
+
+                    <div class="row">
+                        <p class="caption">Weights</p>
+                        <p class="value" style="font-size: 12px;" > GW: {{Loan.TotGrossWt}} NW: {{Loan.TotNettWt}}  </p>
+                    </div>  
+                </div>
+
+                <div class="detailsRight">
+
+                    <div class="row">
+                        <p class="caption">Date</p>
+                        <p class="value" > {{Loan.Loan_Date | intToDate | date:'dd-MM-yyyy' }}  </p>                                
+                    </div>
+                            
+                    <div class="row">
+                        <p class="caption" > Scheme  </p>
+                        <p class="value" > {{Loan.Scheme.Scheme_Name}}  </p>
+                    </div>
+
+                    <div class="row">
+                        <p class="caption" > Mature Date  </p>
+                        <p class="value" > {{Loan.Mature_Date | intToDate | date:'dd-MM-yyyy' }}  </p>
+                    </div>
+                    
+                    <div class="row">
+                        <p class="caption" > Loan Age  </p>
+                        <p class="value"  *ngIf="InterestDetails" style="color: red;"  > {{ InterestDetails.Ason_Duration_Months }} Months and {{ InterestDetails.Ason_Duration_Days }} days  </p>
+                    </div>
+
+                    <div class="row">
+                        <p class="caption" > Last Receipt  </p>
+                        <ng-container *ngIf="InterestDetails">
+                            <p class="value" *ngIf="InterestDetails" > {{InterestDetails.Last_Receipt_Date !==0 ? (InterestDetails.Last_Receipt_Date | intToDate | date:'dd-MM-yyyy') : ''  }}  </p>
+                        </ng-container>
+                    </div>
+
+                </div>
+
+            </div>
+            
+            <div class="itemInfo">                            
+                Items: {{Loan.Item_Details}}                
+            </div>
+
+            <ng-container *ngIf="ShowBalInfo">
+                <div class="balInfo" *ngIf="InterestDetails">                                            
+                    <p>Interest: <strong> {{InterestDetails.Interest_Balance | number }} </strong> </p>
+                    <p>Principal: <strong> {{InterestDetails.Principal_Balance| number}} </strong></p>
+                    <p>Nettt Payable: <strong> {{(+InterestDetails.Interest_Balance + +InterestDetails.Principal_Balance) | number}} </strong></p>
+                </div>
+            </ng-container>
+
+        </div>
+    </div>
+</div>

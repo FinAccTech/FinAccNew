@@ -1,0 +1,132 @@
+<div class="postingContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> &nbsp; Alerts Sms / WhatsApp / Email</p>        
+        </div>
+
+        <div class="headerRight"> 
+            <button class="newBtn" (click)="SaveSetup()" >
+                <i class='bx bxs-save'></i> &nbsp; Update Settings
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="contentLeft">            
+            <ng-container *ngIf="AlertSetup && AlertSetup.Alerts">
+                <div class="alerts">
+                    <div class="alert" *ngFor="let alert of AlertSetup.Alerts" >
+                        <div class="captionRow">
+                            <p> {{alert.Alert_Caption}} </p>    
+                        </div>
+
+                        <div class="templatesRow">
+                            
+                            <div class="formGroup">
+                                <app-selectionlist [Caption]="'Sms Template'" [DataSource]="AlertSetup.Templates" [SelectedItem]="AlertSetup.Alerts[alert.Alert_Type-1].Sms_Alert_Template"  
+                                                                                                            (newItemEvent)="getSelectedSmsTemplate($event,alert.Alert_Type)">
+                                </app-selectionlist> 
+                            </div> 
+                            <div class="formGroup">
+                                <app-selectionlist [Caption]="'WhatsApp Template'" [DataSource]="AlertSetup.Templates" [SelectedItem]="AlertSetup.Alerts[alert.Alert_Type-1].WhatsApp_Alert_Template"  
+                                                                                                            (newItemEvent)="getSelectedWaTemplate($event,alert.Alert_Type)">
+                                </app-selectionlist> 
+                            </div> 
+                            <div class="formGroup">
+                                <app-selectionlist [Caption]="'Email Template'" [DataSource]="AlertSetup.Templates" [SelectedItem]="AlertSetup.Alerts[alert.Alert_Type-1].Email_Alert_Template"  
+                                                                                                            (newItemEvent)="getSelectedEmailTemplate($event,alert.Alert_Type)">
+                                </app-selectionlist>                         
+                            </div> 
+                            <div class="formGroup">
+                                <app-selectionlist [Caption]="'Voice Template'" [DataSource]="AlertSetup.Templates" [SelectedItem]="AlertSetup.Alerts[alert.Alert_Type-1].Voice_Alert_Template"  
+                                                                                                            (newItemEvent)="getSelectedVoiceTemplate($event,alert.Alert_Type)">
+                                </app-selectionlist>                         
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                
+            </ng-container>
+            
+        </div>
+
+        <div class="contentRight">            
+            <p style="font-weight: 500;">Templates</p>
+
+            <button (click)="AddNewTemplate()" class="btnDefault"><i class='bx bx-message-square-add' ></i> Add Template</button>
+            <ng-container *ngIf="AlertSetup && AlertSetup.Templates">
+                <div class="templates">
+                    <table>
+                        <thead><th>#</th> <th>Template Name</th> <th>Template Id</th><th></th> </thead>                    
+                        <tbody>
+                            <tr *ngFor="let temp of AlertSetup.Templates; let i = index">
+                                <td style="text-align: center;" >{{i+1}}</td>
+                                <td>{{temp.Template_Name}}</td>
+                                <td>{{temp.Template_Id}}</td>              
+                                <td style="text-align: center; display: flex; justify-content: space-around;">
+                                    <i (click)="OpenTemplate(temp)" class='bx bxs-edit' style="color: green;" ></i>
+                                    <i (click)="RemoveTemplate(temp,i)" class='bx bx-trash' style="color: red;" ></i>
+                                </td>          
+                            </tr>
+                        </tbody>                    
+                    </table>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="AlertSetup">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required [(ngModel)] = AlertSetup.WhatsApp_Instance  />
+                    <label for="" class="formLabel"> WhatsApp Instance </label>                    
+                </div> 
+                <p style="font-weight: 500;" >SMS Api Details</p>
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Admin_Mobile  />
+                            <label for="" class="formLabel"> Admin Mobile </label>                    
+                        </div> 
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col100">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_Api  />
+                            <label for="" class="formLabel"> SMS Api </label>                    
+                        </div> 
+                    </div>
+                </div>
+
+                <div class="row" >
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_Sender_Id  />
+                            <label for="" class="formLabel"> SMS Sender Id </label>                    
+                        </div> 
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_Peid  />
+                            <label for="" class="formLabel"> SMS PEID </label>                    
+                        </div> 
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_UserName  />
+                            <label for="" class="formLabel"> SMS Username </label>                    
+                        </div> 
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="password" class="formControl" required [(ngModel)] = AlertSetup.Sms_Password  />
+                            <label for="" class="formLabel"> SMS Password </label>                    
+                        </div> 
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        
+    </div>

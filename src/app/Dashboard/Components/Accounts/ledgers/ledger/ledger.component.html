@@ -1,0 +1,101 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Ledger</p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Ledger.LedSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Ledger.Led_Code   />
+                    <label for="" class="formLabelreadonly"> Led Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!LedgerNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Ledger.Led_Name  />
+                    <label for="" class="formLabel"> Led Name </label>
+                    <div class="errorHint" *ngIf="!LedgerNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            
+
+            <div class="col50" [ngClass]="!LedegerGroupUnderValid ? 'invalidSel' : ''" >
+                <div class="formGroup">
+                    <app-selectionlist [Caption]="'Group Under'" [DataSource]="GrpsList" [SelectedItem]="Ledger.Group"  (newItemEvent)="getGroup($event)"></app-selectionlist>                                    
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="number" class="formControl" [(ngModel)]="Ledger.Opening_Balance" />                    
+                            <label for="" class="formLabel date"> Opening Balance </label>
+                        </div>
+                    </div>
+
+                    <div class="col50">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="Ledger.AcType"  style="padding: -4rem;">
+                                    <mat-option style="padding: -4rem;" [value]=0>Dr</mat-option>
+                                    <mat-option [value]=1>Cr</mat-option>                            
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; A/C Type
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;">
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="date" class="formControl" [ngModel]="Ledger.Created_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Ledger.Created_Date = DateToInt($event) " />                    
+                            <label for="" class="formLabel date"> Create Date </label>
+                        </div>
+                    </div>
+
+                    <div class="col50" style="text-align: center;" >
+                        <label class="toggle">
+                            <input class="toggle-checkbox" type="checkbox" [checked]="Ledger.IsStd" [(ngModel)]="Ledger.IsStd"> <!-- (change)="SetActiveStatus($event)"  -->
+                            <div class="toggle-switch"></div>
+                            <span class="toggle-label"> {{Ledger.IsStd == true? 'Standard' : 'Normal' }}  </span>
+                        </label>              
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="col50">
+                <div class="footer" style="float: right; margin-top: -.5rem;" >
+                    <button (click)="SaveLedger()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+                    <button (click)="DeleteLedger()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+                </div>
+            </div>
+
+            
+        </div>
+
+    </div>
+   
+</div>

@@ -1,0 +1,425 @@
+<div class="customerForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; {{PartyCaption}} </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="basicInfo">
+            <div class="imgArea"> 
+                <input type="file" style="display: none;"  accept="image/*" (change)="selectFile($event)" #fileUpload>            
+                <div (click)="fileUpload.click()">                    
+                    <ng-container *ngIf="TransImages && TransImages.length > 0" >
+                        <img [src]="TransImages[0].SrcType == 0 ? TransImages[0].Image_File :  TransImages[0].Image_Url" />
+                    </ng-container>
+                    <ng-container *ngIf="!TransImages || TransImages.length == 0" >
+                        <img src="assets/images/noimage.jpg" />
+                    </ng-container>
+                    
+                </div>                
+                <!-- <div class="btnImage">
+                    <button (click)="OpenImagesCreation()">
+                        <i class='bx bx-images bx-tada' ></i>
+                        &nbsp;
+                        <span>Images</span>
+                    </button>                    
+                </div> -->
+                
+                <div class="buttonsSection">
+                    <div class="buttons" (click)="OpenWebCam()" >
+                        <i class='bx bxs-webcam bx-tada' style="color: green;" > </i>
+                        <p>WebCam</p>
+                    </div>
+
+                    <div class="buttons" (click)="fileUpload.click()">
+                        <i class='bx bxs-file-find' style="color: royalblue;"> </i>
+                        <p>Browse</p>
+                    </div>                    
+                    
+                    <div class="buttons" (click)="RemoveProfileImage()" >
+                        <i class='bx bxs-trash' style="color: red;"></i>
+                        <p>Remove</p>
+                    </div>  
+
+                    <div class="buttons" (click)="OpenImagesCreation()">
+                        <i class='bx bx-images' ></i>
+                        <p>More Images</p>
+                    </div>
+                </div>
+            </div>
+   
+            <div class="infoArea">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroupsansBorder">
+                            <input type="hidden" [(ngModel)] = Party.PartySno />
+                            <input type="text" class="formControlreadonly" required disabled={{CodeAutoGen}} [(ngModel)] = Party.Party_Code />
+                            <label for="" class="formLabelreadonly"> Customer Code </label>
+                        </div>
+                    </div>
+                    <div class="col50" style="text-align: center;" (click)="SetFavorite()" >                        
+                        <i *ngIf="Party.IsFavorite == true" class='bx bxs-error bx-tada' ></i>
+                        <i *ngIf="Party.IsFavorite == false" class='bx bxs-error ' ></i>
+                        <p *ngIf="Party.IsFavorite == false">BlackList Now</p>
+                        <p *ngIf="Party.IsFavorite == true">BlackListed</p>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px;" > 
+                    <div class="col100">
+                        <div class="formGroupsansBorder" [ngClass]="!PartyNameValid ? 'invalid' : ''" >
+                            <input type="text" class="formControl" required name="partyname"   [(ngModel)] = Party.Party_Name  maxlength="50" />
+                            <label for="" class="formLabel"> Customer Name </label>
+                            <div class="errorHint" *ngIf="!PartyNameValid" > Invalid Name </div>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 15px;" >
+                    <div class="col30">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="Party.Rel"  >
+                                    <mat-option [value]="0">S/o</mat-option>
+                                    <mat-option [value]="1">D/o</mat-option>                            
+                                    <mat-option [value]="2">W/o</mat-option>                            
+                                    <mat-option [value]="3">C/o</mat-option>                            
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; Rel
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col70">
+                        <div class="formGroupsansBorder">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.RelName maxlength="50" />
+                            <label for="" class="formLabel"> Relation Name  </label>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 15px;" >
+                    <div class="col100">
+                        <div class="formGroupsansBorder" [ngClass]="!MobNumberValid ? 'invalid' : ''">
+                            <input type="text" class="formControl" required  [(ngModel)] = Party.Mobile maxlength="10" />
+                            <label for="" class="formLabel"> Mobile </label>
+                            <div class="errorHint" *ngIf="!MobNumberValid" > Invalid Mobile </div>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="verify">
+                    <div class="verifyItem">
+                        <ng-container *ngIf="Party.Verify_Status == 1">
+                            <i class="fa-solid fa-circle-check status" style="color: green;"></i>                        
+                            <div class="desc">                            
+                                <i class="fa-solid fa-mobile-retro"></i>
+                                <p>Verified</p>
+                            </div>
+                        </ng-container>                        
+                        
+                        <ng-container *ngIf="Party.Verify_Status == 0">
+                            <i class="fa-solid fa-circle-xmark status" style="color: red;" ></i>                         
+                            <div class="desc">                            
+                                <i class="fa-solid fa-mobile-retro"></i>
+                                <p>Not Verified</p>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div class="verifyItem">
+                        <ng-container *ngIf="Party.Fp_Status == 1">
+                            <i class="fa-solid fa-circle-check status" style="color: green;"></i>                        
+                            <div class="desc">                             
+                                <i class="fa-solid fa-fingerprint"></i>
+                                <p>Verified</p>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="Party.Fp_Status == 0">
+                            <i class="fa-solid fa-circle-xmark status" style="color: red;" ></i>                        
+                            <div class="desc">                            
+                                <i class="fa-solid fa-fingerprint"></i>
+                                <p>Not Verified</p>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <!-- <div class="verifyItem">
+                        <i class="fa-solid fa-circle-xmark status" style="color: red;" ></i>                        
+                        <div class="desc">
+                            <i class="fa-regular fa-id-card"></i>
+                            <p>Not Verified</p>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="detailedInfo">
+            <mat-tab-group style="height: 100%;">
+                <mat-tab label="Address Information"> 
+                    <ng-template mat-tab-label>                                        
+                        Address Information                  
+                    </ng-template>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Address1 maxlength="50"/>
+                                        <label for="" class="formLabel"> Address </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Address2 maxlength="50"/>
+                                        <label for="" class="formLabel"> Address </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Address3 maxlength="50" />
+                                        <label for="" class="formLabel"> Address </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Address4 maxlength="50" />
+                                        <label for="" class="formLabel"> Address </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100" [ngClass]="!AreaNameValid ? 'invalidSel' : ''" >
+                                    <app-selectionlist [Caption]="'Area'" [DataSource]="AreasList" [MasterComponentId]="7" [SelectedItem]="SelectedArea"  (newItemEvent)="getArea($event)" (newMasterEmit)="getNewArea($event)"></app-selectionlist>                                    
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.State maxlength="20"/>
+                                        <label for="" class="formLabel"> State </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="number" class="formControl" required  [(ngModel)] = Party.Pincode maxlength="0" />
+                                        <label for="" class="formLabel"> Pincode </label>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.City maxlength="50"/>
+                                        <label for="" class="formLabel"> City </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Contact Information"> 
+                    <ng-template mat-tab-label>                                        
+                        Contact Information                  
+                    </ng-template>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Mobile maxlength="10"/>
+                                        <label for="" class="formLabel"> Mobile </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Phone maxlength="20"/>
+                                        <label for="" class="formLabel"> Phone </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Email maxlength="50"/>
+                                        <label for="" class="formLabel"> Email </label>
+                                    </div>
+                                </div>
+                            </div>
+                      
+                        </div>
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Aadhar_No maxlength="20"/>
+                                        <label for="" class="formLabel"> Aadhar No </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Occupation maxlength="20"/>
+                                        <label for="" class="formLabel"> Occupation </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Nominee maxlength="50"/>
+                                        <label for="" class="formLabel"> Nominee </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Other Information"> 
+                    <ng-template mat-tab-label>                                        
+                        Other Information                  
+                    </ng-template>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100" style="text-align: center;margin-top: 15px; text-align: center;" >
+                                    <label class="toggle">
+                                        <input class="toggle-checkbox" type="checkbox" [checked]="Party.Sex" [(ngModel)]="Party.Sex"> 
+                                        <div class="toggle-switch"></div>
+                                        <span class="toggle-label"> {{ Party.Sex == 1 ? 'Male' : 'Female' }}  </span>
+                                    </label>
+                                     
+                                       
+  
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 30px;" >
+                                <div class="col100"> 
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" [ngModel]="Party.Dob! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Party.Dob = DateToInt($event) " />                    
+                                        <label for="" class="formLabel date"> Date of Birth </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Reference maxlength="50"/>
+                                        <label for="" class="formLabel"> Reference </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col100" style="text-align: center;margin-top: 15px;" >
+                                <label class="toggle">
+                                    <input class="toggle-checkbox" type="checkbox" [checked]="Party.Active_Status" [(ngModel)]="Party.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                                    <div class="toggle-switch"></div>
+                                    <span class="toggle-label"> {{Party.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                                </label>
+                            </div>
+                      
+                        </div>
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Monthly_Income />
+                                        <label for="" class="formLabel"> Monthly Income  </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Loan_Value_Limit />
+                                        <label for="" class="formLabel"> Loan Value Limit </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="matGroup">
+                                        <div class="matSelect">
+                                            
+                                            <mat-select [(value)]="Party.Allow_More_Value"  >
+                                                <mat-option [value]=false> No</mat-option>
+                                                <mat-option [value]=true>Yes</mat-option>                            
+                                            </mat-select>
+                                        </div>
+                                        <div class="matLabel">
+                                            &nbsp;&nbsp; Allow More Value
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="date" class="formControl" [ngModel]="Party.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Party.Create_Date = DateToInt($event) " />                    
+                                        <label for="" class="formLabel date"> Create Date </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col100">
+                            <div class="formGroup">
+                                <input type="text" class="formControl" required  [(ngModel)] = Party.Remarks maxlength="100"/>
+                                <label for="" class="formLabel"> Remarks </label>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+        <div class="footer">
+            <button (click)="SaveParty()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+            <button (click)="DeleteParty()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+        </div>
+    </div>
+
+
+</div>
+

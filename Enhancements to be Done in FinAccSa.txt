@@ -1,0 +1,5 @@
+Enhancements to be Done in FinAccSaas
+=====================================
+
+1. Get Masters list in Single Shot in Receipts, Redemptions, Rp paymnets, Rp Redemptions. just like we did in Loan
+2. Udf_getReceipts and Udf_getRedemptions function to be called directly from db instead of query in php. just like we did for udf_getLoans

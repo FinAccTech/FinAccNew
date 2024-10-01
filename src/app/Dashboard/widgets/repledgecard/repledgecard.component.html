@@ -1,0 +1,77 @@
+<div class="rpContainer">    
+    <div class="detRow">
+        <div class="colDet">
+            <p class="caption"> Repledge No </p>
+            <p class="value"> {{Repledge.Repledge_No}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Repledge Date </p>
+            <p class="value"> {{Repledge.Repledge_Date | intToDate | date:'dd/MM/yyyy' }} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Status </p>
+            <p class="value"> {{Repledge.Repledge_Status}} </p>
+        </div>
+    </div>
+
+    <div class="detRow">
+        <div class="colDet">
+            <p class="caption"> Supplier </p>
+            <p class="value"> {{Repledge.Supplier.Party_Name}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Ref No </p>
+            <p class="value"> {{Repledge.Ref_No}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Borrower </p>
+            <p class="value"> {{Repledge.Borrower.Party_Name}} </p>
+        </div>        
+    </div>
+
+    <div class="detRow">
+        <div class="colDet">
+            <p class="caption"> Repledge Amount </p>
+            <p class="value"> {{Repledge.Principal}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Roi </p>
+            <p class="value"> {{Repledge.Roi}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Mature Date </p>
+            <p class="value"> {{Repledge.Mature_Date | intToDate | date:'dd/MM/yyyy'}} </p>
+        </div>        
+    </div>
+
+    <div class="detRow">
+        <div class="colDet">
+            <p class="caption"> Duration </p>
+            <p class="value"  *ngIf="InterestDetails" style="color: red;"  > {{ InterestDetails.Ason_Duration_Months }} Months and {{ InterestDetails.Ason_Duration_Days }} days  </p>
+        </div>        
+    </div>
+
+    <div class="detRow">
+        <div class="singleColDet">
+            <span><strong>Loans</strong></span> {{StrLoansList}}
+        </div>
+        <!-- <div class="singleColDet" *ngFor="let ln of LoansList">
+            <p>{{ln.Loan_No}}</p>            
+        </div>         -->
+    </div>
+
+    <div class="detRow">
+        <div class="colDet">
+            <p class="caption"> Principal Balance </p>
+            <p class="value" *ngIf="InterestDetails">  {{InterestDetails.Principal_Balance}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Interest Balance </p>
+            <p class="value" *ngIf="InterestDetails"> {{InterestDetails.Interest_Balance}} </p>
+        </div>
+        <div class="colDet">
+            <p class="caption"> Nett Payabale </p>
+            <p class="value" *ngIf="InterestDetails"> <strong> {{(+InterestDetails.Interest_Balance + +InterestDetails.Principal_Balance) | number}} </strong> </p>
+        </div>        
+    </div>
+</div>

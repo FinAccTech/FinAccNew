@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="header">
+        <div class="caption">
+            <i class='bx bx-list-check'></i>
+            <p>&nbsp; {{UpdateTypeCaption}} </p>
+        </div>
+        
+        <p class="close" mat-dialog-close="" >&times;</p>
+    </div>
+
+    <div class="content">
+       
+        <div class="row" style="margin-top: 1rem;" >
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="date" class="formControl" required [ngModel]="Approval_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Approval_Date= DateToInt($event);" />                                                               
+                    <label for="" class="formLabel date"> {{Update_Type == 1 ? 'Approval': 'Cancel'}} Date </label>                    
+                </div>
+            </div>
+        </div>
+       
+        <div class="row" style="margin-top: 1rem;">
+            <div class="col100">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)]="Remarks" />                                                               
+                    <label for="" class="formLabel"> {{Update_Type == 1 ? 'Approval': 'Cancel'}} Remarks </label>                    
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">            
+            <ng-container *ngIf="Update_Type == 1" >
+                <button class="submit" (click)="Submit(true)" style=" display: flex; align-items: center; " > <i class='bx bx-printer'></i>&nbsp; <span> Approve and Print </span></button> 
+            </ng-container>            
+            <button class="submit" (click)="Submit(false)" style=" display: flex; align-items: center; " > <i class='bx bx-check'></i> &nbsp; {{Update_Type == 1 ? 'Approve': 'Cancel'}} <span> Loan </span></button> 
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,136 @@
+<div class="auctionContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            <i class="fa fa-arrow-circle-left back" aria-hidden="true" (click)="GoBack()" ></i>
+            <p class="heading"> Auction Entry</p>        
+            <span *ngIf="Auction.AuctionSno==0" style=" font-size: 1.2rem; color: green;" > (Create New) </span>
+            <span *ngIf="Auction.AuctionSno!==0" style="font-size: 1.2rem;color: red;" > (Edit Mode) </span>
+        </div>
+
+        <div class="headerRight">                 
+            <div class="searchBox">
+                <input type="text" required   placeholder="Type here to Search" />
+                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+    
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-save' style='color:green' ></i>
+                        <span>Save Auction</span>
+                    </div>                    
+                </button>
+                <button mat-menu-item class>
+                    <div class="menuClass">
+                        <i class='bx bx-printer' style='color:gray' ></i>
+                        <span>Print Auction</span>
+                    </div>
+                </button>
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-trash' style='color:red' ></i>
+                        <span>Delete Auction</span>
+                    </div>
+                </button>                
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="contentTop">
+            <div class="contentLeft">
+                <!-- <div class="cardDefault"> -->
+                    <div class="row">
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Series'" [DataSource]="VoucherSeriesList" [SelectedItem]="SelectedSeries"  (newItemEvent)="getSeries($event)" ></app-selectionlist>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!AuctionNumberValid ? 'invalid' : ''">
+                                <input type="hidden" required [(ngModel)]= "Auction.AuctionSno"  />        
+                                <input type="text" class="formControl" required [disabled]="AutoSeriesNo" [(ngModel)]= "Auction.Auction_No"  style="text-align: center; font-size: 20px; font-weight: bold;" />
+                                <label for="" class="formLabel" >Auction Number </label>
+                                <div class="errorHint" *ngIf="!AuctionNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!AuctionDateValid ? 'invalid' : ''">                                  
+                                <input type="date" class="formControl" required [ngModel]="Auction.Auction_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Auction.Auction_Date= DateToInt($event)" />                                           
+                                <label for="" class="formLabel date"> Auction Date </label>
+                                <div class="errorHint" *ngIf="!AuctionDateValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                          
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col20">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "Auction.Remarks"/>
+                                <label for="" class="formLabel"> Bar Code </label>                                                      
+                            </div>
+                        </div>
+                        <div class="col30">                            
+                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" required [(ngModel)]= "Auction.Auction_Amount" style="text-align: center; font-size: 20px; font-weight: bold;"/>
+                                <label for="" class="formLabel"> Auction Amount </label>                                
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col100">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "Auction.Remarks"/>
+                                <label for="" class="formLabel"> Remarks </label>                                
+                            </div>
+                        </div>                                 
+                    </div>
+                
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col100">
+                            <div class="footerRight">
+                                <button (click)="SaveAuction()" #btnsave > <i class="fa-regular fa-floppy-disk"></i> &nbsp;&nbsp; Save</button>
+                                <button (click)="DeleteAuction()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp;&nbsp; Delete</button>  
+                            </div>                            
+                        </div>              
+                    </div>
+            </div>
+            <div class="contentRight">                                
+                 <ng-container *ngIf="SelectedLoan && SelectedLoan.Customer && SelectedLoan !== undefined" >
+                    <div class="detailSection">                        
+                        <div class="partyDetails">
+                            <app-customerdetails [Customer]="SelectedLoan.Customer" />
+                        </div>
+
+                        <div class="loanDetails">
+                           <app-loandetails [Loan]="SelectedLoan" [ShowBalInfo]="true" />
+                        </div>
+                    </div>                 
+                 </ng-container>
+            </div>
+        </div>
+
+   </div>
+</div>
+    

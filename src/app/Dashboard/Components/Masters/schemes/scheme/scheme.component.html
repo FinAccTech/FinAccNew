@@ -1,0 +1,289 @@
+<div class="schemeForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Scheme </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body"> 
+        <div class="row" style="margin-top: 20px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Scheme.SchemeSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Scheme.Scheme_Code   />
+                    <label for="" class="formLabelreadonly"> Scheme Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!SchemeNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Scheme.Scheme_Name  />
+                    <label for="" class="formLabel"> Scheme Name </label>
+                    <div class="errorHint" *ngIf="!SchemeNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div> 
+        
+        <div class="row" style="margin-top: 15px;" >
+            <div class="col50">                
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Scheme.IsStdRoi"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true" >Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Is Std Roi 
+                    </div>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Scheme.Calc_Basis"  >
+                            <mat-option [value]="0" >Daily</mat-option>
+                            <mat-option [value]="1">Monthly</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Calculation Based
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; align-items: center; " >
+            <div class="col30">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Scheme.Calc_Method"  >
+                            <mat-option [value]="0">Simple</mat-option>
+                            <mat-option [value]="1">Multiple</mat-option>
+                            <mat-option [value]="2">Compound</mat-option>
+                            <mat-option [value]="3">Emi</mat-option>
+                            <mat-option [value]="4">Customized</mat-option>
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Calculation Method
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col70" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; column-gap: .5rem; ">
+
+                <!-- <ng-container *ngIf="(Scheme.Calc_Method != 1)" > -->
+                    <div class="formGroup" style="width: 50%;">                    
+                        <input type="text" class="formControl"  required [(ngModel)] = Scheme.Roi   />
+                        <label for="" class="formLabel"> Roi </label>
+                    </div>
+                <!-- </ng-container> -->
+
+                
+                <button class="btn" [disabled]="Scheme.Calc_Method !== 1" (click)="OpenSlab(0)" >Open Slab</button>                   
+                
+
+                <ng-container *ngIf="Scheme.Calc_Method == 4" >
+                    <div class="matGroup" style="width: 50%;">
+                        <div class="matSelect">
+                            <mat-select [(value)]="Scheme.Custom_Style"  >
+                                <mat-option [value]="0">None</mat-option>                                
+                                <mat-option [value]="1">VelBankers</mat-option>
+                            </mat-select>
+                        </div>
+                        <div class="matLabel">
+                            &nbsp;&nbsp; Customized Style
+                        </div>
+                    </div>               
+                </ng-container>
+
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;display: flex; align-items: center;" >
+            <div class="col30">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Scheme.Enable_AmtSlab"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Amount Slab
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col20">            
+                <!-- <ng-container *ngIf="Scheme.Enable_AmtSlab == true" > -->
+                    <button [disabled]="!Scheme.Enable_AmtSlab" class="btn" (click)="OpenSlab(1)" >Open Slab</button>                  
+                <!-- </ng-container> -->
+            </div>
+
+            <div class="col30">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Scheme.Enable_FeeSlab"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Processing Fee Slab
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col20">            
+                <!-- <ng-container *ngIf="Scheme.Enable_FeeSlab == 1" > -->
+                    <button [disabled]="!Scheme.Enable_FeeSlab" class="btn" (click)="OpenSlab(2)" >Open Slab</button>                  
+                <!-- </ng-container> -->
+            </div>
+        </div>
+
+        <!-- <div class="row" style="margin-top: 15px;" >
+            <div class="col50">                
+               
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.OrgRoi   />
+                    <label for="" class="formLabel"> Org Roi </label>
+                </div>
+            </div>
+        </div> -->
+
+          <div class="row" style="margin-top: 15px;">            
+            <div class="col100" style="display: flex; flex-direction: row; column-gap: 10px; align-items: center;" >                
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.Preclosure_Days   />
+                    <label for="" class="formLabel"> Preclosure Days </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.Min_CalcDays   />
+                    <label for="" class="formLabel"> Minc Calc Days </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.Grace_Days   />
+                    <label for="" class="formLabel"> Grace Days </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;" [ngClass]="SeriesFixed ? 'disabledDiv' : ''" >
+            <div class="col50" [ngClass]="!SeriesNameValid ? 'invalidSel' : ''" >
+                <app-selectionlist [Caption]="'Series'" [DataSource]="SeriesList" [SelectedItem]="SelectedSeries"  (newItemEvent)="getSeries($event)" ></app-selectionlist>
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <p> <strong> Maturity Period </strong></p>            
+        </div>
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col100" style="display: flex; flex-direction: row; column-gap: 10px; align-items: center;" >                
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpYear   />
+                    <label for="" class="formLabel"> Year </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpMonth   />
+                    <label for="" class="formLabel"> Month </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpDays   />
+                    <label for="" class="formLabel"> Days </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">   
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.AdvanceMonth   />
+                    <label for="" class="formLabel"> Advance Month </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.ProcessingFeePer   />
+                    <label for="" class="formLabel"> Processing Fee % </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px;" >
+            <div class="col50">                
+                <div class="formGroup">                    
+                    <input type="number" NumberInput MaxValue="100"  class="formControl"  required [(ngModel)] = Scheme.Min_MarketValue   />
+                    <label for="" class="formLabel"> Min Market Value </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="number" NumberInput MaxValue="100" class="formControl"  required [(ngModel)] = Scheme.Max_MarketValue   />
+                    <label for="" class="formLabel"> Max Market Value </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px;" >
+            <div class="col50">                
+                <div class="formGroup">                    
+                    <input type="number" NumberInput class="formControl"  required [(ngModel)] = Scheme.Min_LoanValue   />
+                    <label for="" class="formLabel"> Min Loan Value </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="number" NumberInput class="formControl"  required [(ngModel)] = Scheme.Max_LoanValue   />
+                    <label for="" class="formLabel"> Max Loan Value </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Scheme.Active_Status" [(ngModel)]="Scheme.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Scheme.Active_Status == true? 'Active' : 'InActive' }}  </span>
+                </label>
+
+                
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Scheme.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Scheme.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col100">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = Scheme.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveScheme()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteScheme()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

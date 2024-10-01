@@ -1,0 +1,94 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Item Group</p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = ItemGroup.GrpSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = ItemGroup.Grp_Code   />
+                    <label for="" class="formLabelreadonly"> Group Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!GrpNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = ItemGroup.Grp_Name  />
+                    <label for="" class="formLabel"> Group Name </label>
+                    <div class="errorHint" *ngIf="!GrpNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!MarketRateValid ? 'invalid' : ''" >
+                    <input type="number" class="formControl" required [(ngModel)] = ItemGroup.Market_Rate />
+                    <label for="" class="formLabel"> Market Rate </label>
+                    <div class="errorHint" *ngIf="!MarketRateValid" > Market Rate required </div>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!LPGValid ? 'invalid' : ''" >
+                    <input type="number" class="formControl" required [(ngModel)] = ItemGroup.Loan_PerGram />
+                    <label for="" class="formLabel"> Loan per Gram </label>
+                    <div class="errorHint" *ngIf="!LPGValid" > Loan per gram required </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="ItemGroup.Restrict_Type"  >
+                            <mat-option [value]="option.value" *ngFor="let option of RestrictTypesList">{{ option.text }}</mat-option>
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Restrict Type &nbsp;&nbsp; <span style="font-style: italic;font-size: 12px;" > (If greater than Market Value) </span>
+                    </div>
+                </div>
+            </div> 
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = ItemGroup.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="ItemGroup.Active_Status" [(ngModel)]="ItemGroup.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{ItemGroup.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="ItemGroup.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="ItemGroup.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveItemGroup()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteItemGroup()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

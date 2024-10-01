@@ -1,0 +1,196 @@
+<div class="receiptContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            <i class="fa fa-arrow-circle-left back" aria-hidden="true" (click)="GoBack()" ></i>
+            <p class="heading"> {{Receipt.IsOpen == 1 ? 'Opening Receipt' : 'New Receipt'}} </p>        
+            <span *ngIf="Receipt.ReceiptSno==0" style=" font-size: 1.2rem; color: green;" > (Create New) </span>
+            <span *ngIf="Receipt.ReceiptSno!==0" style="font-size: 1.2rem;color: red;" > (Edit Mode) </span>
+        </div>
+
+        <div class="headerRight">                 
+            <div class="searchBox">
+                <input type="text" required   placeholder="Type here to Search" />
+                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+    
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-save' style='color:green' ></i>
+                        <span>Save Receipt</span>
+                    </div>                    
+                </button>
+                <button mat-menu-item class>
+                    <div class="menuClass">
+                        <i class='bx bx-printer' style='color:gray' ></i>
+                        <span>Print Receipt</span>
+                    </div>
+                </button>
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-trash' style='color:red' ></i>
+                        <span>Delete Receipt</span>
+                    </div>
+                </button>                
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="contentTop">
+            <div class="contentLeft">
+                <!-- <div class="cardDefault"> -->
+                    <div class="row">
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Series'" [DataSource]="VoucherSeriesList" [SelectedItem]="SelectedSeries"  (newItemEvent)="getSeries($event)" ></app-selectionlist>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!ReceiptNumberValid ? 'invalid' : ''">
+                                <input type="hidden" required [(ngModel)]= "Receipt.ReceiptSno"  />        
+                                <input type="text" class="formControl" required [disabled]="AutoSeriesNo" [(ngModel)]= "Receipt.Receipt_No"  style="text-align: center; font-size: 20px; font-weight: bold;" />
+                                <label for="" class="formLabel" >Receipt Number </label>
+                                <div class="errorHint" *ngIf="!ReceiptNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!ReceiptDateValid ? 'invalid' : ''">                                  
+                                <input type="date" class="formControl" required [ngModel]="Receipt.Receipt_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Receipt.Receipt_Date= DateToInt($event); TillDate = Receipt.Receipt_Date; callGetLoan()" />                                           
+                                <label for="" class="formLabel date"> Receipt Date </label>
+                                <div class="errorHint" *ngIf="!ReceiptDateValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!TillDateValid ? 'invalid' : ''">
+                                <!-- <input type="date" class="formControl" [ngModel]="TillDate | date:'yyyy-MM-dd'"/>                                                 -->
+                                <input type="date" class="formControl" required [ngModel]="TillDate! | intToDate | date:'yyyy-MM-dd'" (blur)="TillDate= DateToInt($event); callGetLoan()" />                                           
+                                <label for="" class="formLabel date"> Till Date </label>
+                                <div class="errorHint" *ngIf="!TillDateValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col20">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "Receipt.Remarks"/>
+                                <label for="" class="formLabel"> Bar Code </label>                                                      
+                            </div>
+                        </div>
+                        <div class="col30">                            
+                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                        </div>
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Select by Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer"  (newItemEvent)="getCustomer($event)" ></app-selectionlist>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_Principal"/>
+                                <label for="" class="formLabel" >Principal </label>                                
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl"  NumberInput (blur)="CalculateReceiptValues()" #interest (keydown.enter)="ocredits.focus()" required [(ngModel)]= "Receipt.Rec_Interest"/>
+                                <label for="" class="formLabel">Interest </label>                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #ocredits (keydown.enter)="odebits.focus()" required [(ngModel)]= "Receipt.Rec_Other_Credits"/>
+                                <label for="" class="formLabel" >Other Credits </label>                                
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #odebits (keydown.enter)="default.focus()" required [(ngModel)]= "Receipt.Rec_Other_Debits"/>
+                                <label for="" class="formLabel">Other Debits </label>                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #default (keydown.enter)="addless.focus()" required [(ngModel)]= "Receipt.Rec_Default_Amt"/>
+                                <label for="" class="formLabel" >Default Amount </label>                                
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #addless  required [(ngModel)]= "Receipt.Rec_Add_Less"/>
+                                <label for="" class="formLabel">Add / Less </label>                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="number" class="formControl" readonly required [(ngModel)]= "Receipt.Nett_Payable" style="text-align: center; font-size: 20px; font-weight: bold;"/>
+                                <label for="" class="formLabel"> Nett Payable </label>                                
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col50">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "Receipt.Remarks"/>
+                                <label for="" class="formLabel"> Remarks </label>                                
+                            </div>
+                        </div>         
+                        <div class="col50">
+                            <div class="footerRight">
+                                <button (click)="SaveReceipt()" #btnsave > <i class="fa-regular fa-floppy-disk"></i> &nbsp;&nbsp; Save</button>
+                                <button (click)="DeleteReceipt()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp;&nbsp; Delete</button>  
+                            </div>
+                            
+                        </div>              
+                    </div>
+                <!-- </div> -->
+            </div>
+            <div class="contentRight">                                
+                 <ng-container *ngIf="SelectedLoan && SelectedLoan.Customer && SelectedLoan !== undefined" >
+                    <div class="detailSection">                        
+                        <div class="partyDetails">
+                            <app-customerdetails [Customer]="SelectedLoan.Customer" />
+                        </div>
+
+                        <div class="loanDetails">
+                           <app-loandetails [Loan]="SelectedLoan" [ShowBalInfo]="true" [AsOnDate]="TillDate"/>
+                        </div>
+                    </div>                 
+                 </ng-container>
+            </div>
+        </div>
+
+        <div class="contentBottom">
+            <app-table-view [InterestStructure]="InterestStructure" />
+        </div>
+   </div>
+</div>
+    

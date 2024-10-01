@@ -1,0 +1,137 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Customer History</p>        
+        </div>
+
+        <div class="headerRight">                 
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">               
+                <button mat-menu-item class>
+                    <div class="menuClass">
+                        <i class='bx bx-printer' style='color:gray' ></i>
+                        <span>Print Summary</span>
+                    </div>
+                </button>
+                  
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    
+    <div class="filterHeader">
+        <div class="filterLeft">
+            <div class="row">
+                <div class="col20" >
+                    <div class="formGroup" >
+                        <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  />
+                        <label for="" class="formLabelreadonly"> Bar Code </label>                                
+                    </div>
+                </div>  
+                
+                <div class="col80">
+                    <app-selectionlist [Caption]="'Select Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer"  (newItemEvent)="getCsutomer($event)" ></app-selectionlist>
+                </div>
+            </div>
+        </div>
+
+        <div class="filterRight">        
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="AsOnDate! | intToDate | date:'yyyy-MM-dd'" (blur)="AsOnDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> As On </label>            
+            </div>
+
+            <button class="btn" (click)="LoadDetails()">Load Details</button>
+            
+        </div>
+    </div>
+
+    <div class="body">
+        <ng-container *ngIf="!SelectedCustomer">
+            <div class="noContent">
+                <i class='bx bx-user-x bx-flashing' ></i>
+                <p class="heading">No Customer Selected</p>
+                <p class="desc">Select a Customer from the List above</p>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="SelectedCustomer" >
+            <div class="detailSection">                        
+                <div class="partyDetails">
+                    <app-customerdetails [Customer]="SelectedCustomer" />
+                </div>
+                <ng-container *ngIf="SelectedLoan" >                    
+                    <div class="loanDetails">
+                    <app-loandetails [Loan]="SelectedLoan" [ShowBalInfo]="true" />
+                    </div>
+                </ng-container>
+            </div>               
+            
+            <div class="valuesSection" *ngIf="CustomerDetails">
+                <div class="valGrp">
+                    <p class="caption"> Open Loans </p>
+                    <p class="value"> {{ CustomerDetails.OpenLoans }}</p>
+                </div>
+                
+                <div class="valGrp">
+                    <p class="caption"> Closed Loans </p>
+                    <p class="value"> {{ CustomerDetails.ClosedLoans }}</p>
+                </div>
+
+                <div class="valGrp">
+                    <p class="caption"> Matured Loans </p>
+                    <p class="value"> {{ CustomerDetails.MaturedLoans }}</p>
+                </div>
+
+                <div class="valGrp">
+                    <p class="caption"> Auctioned Loans </p>
+                    <p class="value"> {{ CustomerDetails.AuctionedLoans }}</p>
+                </div>
+            </div>
+
+            <div class="tabSection">    
+                <table>
+                    <thead>
+                        <th>Loan No</th>
+                        <th>Loan Date</th>
+                        <th>Group</th>
+                        <th>Scheme</th>                                
+                        <th>Mature Date</th>                                
+                        <th>Locker</th>                                
+                        <th>Duration</th>                                
+                        <th>Principal</th>                                
+                        <th>Market Value</th>                  
+                        <th>TotNettWt</th>                     
+                    </thead>
+                    <tr *ngFor="let ln of LoanData; let i = index" (click)="SelectedLoan = ln"  >
+                        <td [style.color]="GetStatusColor(ln)" > {{ln.Loan_No}} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Loan_Date | intToDate | date:'dd/MM/yyyy'}} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Grp_Name}} </td>                                
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Scheme_Name}} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Mature_Date | intToDate | date:'dd/MM/yyyy'}} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Loc_Name }} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.Ason_Duration_Months }} months and {{ln.Ason_Duration_Days }} </td>
+                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Principal | number}} </td>
+                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Market_Value | number}} </td>
+                        <td [style.color]="GetStatusColor(ln)"> {{ln.TotNettWt | number}} </td>
+                        
+                    </tr>
+                    <tfoot>
+                        <td colspan="7"> Total </td>
+                        <td> {{PrincipalTotal}} </td>
+                        <td>{{MarketValueTotal}} </td>
+                        <td></td>
+                    </tfoot>
+                </table>
+            </div>
+            
+        </ng-container>
+    </div>
+
+ 
+</div>

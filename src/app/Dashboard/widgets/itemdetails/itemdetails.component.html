@@ -1,0 +1,155 @@
+<!-- <div class="itemContainer">
+    <div class="itemDetails">
+        <div class="formGroup">
+            <input type="text" class="formControl" required e" />
+            <label for="" class="formLabel">Item Name </label>
+        </div>
+
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Qty </label>
+        </div>
+
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Gross Wt </label>
+        </div>
+
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Nett Wt </label>
+        </div>
+
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Purity </label>
+        </div>
+
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Value </label>
+        </div>
+ 
+        <div class="formGroup">
+            <input type="text" class="formControl" required />
+            <label for="" class="formLabel">Remarks </label>
+        </div>
+
+        <div class="addButton">
+            <i class="fa-regular fa-square-plus" (click)="AddItem()" ></i>
+        </div>        
+    </div>
+
+    <div class="gridContainer">
+        <table class="itemTable" >
+            <thead> <th>Item Name</th> <th>Qty</th> <th>Gross Wt</th> <th>Nett Wt</th> <th>Purity</th> <th>Value</th> <th>Remarks</th></thead>
+            <tbody>
+                <tr *ngFor="let item of ItemsList; let i = index" >
+                    <td> {{item.Item_Name}} </td>
+                    <td> {{item.Qty}} </td>
+                    <td> {{item.GrossWt}} </td>
+                    <td> {{item.NettWt}} </td>
+                    <td> {{item.Purity}} </td>
+                    <td> {{item.Value}} </td>
+                    <td> {{item.Remarks}} </td>
+                </tr>
+            </tbody>
+        </table> 
+    </div>
+</div> -->
+<div class="itemContainer" tabindex="1" clickOutside (clickOutside)="PushGridDetailstoParent()" >    
+    <div class="itemDetails">
+
+        <div class="itemsList" *ngFor="let Item of GridList; let i = index" >
+            
+                <div class="itemControls"> 
+                    
+                    <div>
+                        <app-selectionlist [Caption]="'Item Name'" [MasterComponentId]="2" [DataSource]="ItemsList" [SelectedItem]="SelectedItem[i]" (newMasterEmit)="getNewItem($event,i)" (newItemEvent)="getItem($event,i)" > </app-selectionlist>     
+                        <span class="errorHint" *ngIf="errorItem[i] == true" >*   Invalid Item Name</span>    
+                    </div> 
+
+                    <div class="formGroup" [ngClass]="QtyValid == true ? '' : 'invalidInput'" >
+                        <input [ngClass]="errorQty[i]? 'invalidInput':''" type="number" class="formControlType2" required  [(ngModel)] = "Item.Qty" #qty NumberInput MaxValue=0 (keydown.enter)="grosswt.focus()" />
+                        <label for="" class="formLabelType2">Qty </label>                        
+                    </div>
+
+                    <div class="formGroup" [ngClass]="GrossWtValid == true ? '' : 'invalidInput'">
+                        <input [ngClass]="errorGrossWt[i]? 'invalidInput':''" type="number" class="formControlType2" required [(ngModel)] = "Item.Gross_Wt" #grosswt NumberInput MaxValue=0 (blur)="SetNettWt($event,i)" (keydown.enter)="nettwt.focus()"/>
+                        <label for="" class="formLabelType2">GrossWt </label>
+                    </div>
+
+                    <div class="formGroup" [ngClass]="NettWtValid == true ? '' : 'invalidInput'">
+                        <input [ngClass]="errorNettWt[i]? 'invalidInput':''" type="number" class="formControlType2" required [(ngModel)] = "Item.Nett_Wt"  #nettwt NumberInput MaxValue=0 (blur)="ValidateNettWt($event,i)" />
+                        <label for="" class="formLabelType2">NettWt </label>
+                    </div>
+
+                    <div>
+                        <app-selectionlist [Caption]="'Purity'"  [MasterComponentId]="3" [DataSource]="PurityList" [SelectedItem]="SelectedPurity[i]" (newMasterEmit)="getNewPurity($event,i)" #purity (newItemEvent)="getPurity($event,i)" > </app-selectionlist>                             
+                    </div>
+
+
+                    <div class="formGroup" [ngClass]="ValueValid == true ? '' : 'invalidInput'">
+                        <input [ngClass]="errorValue[i]? 'invalidInput':''" type="number" class="formControlType2" [readOnly]="MarketValueReadonly" required [(ngModel)] = "Item.Item_Value" #value NumberInput MaxValue=0 [Decimals]="2" (keydown.enter)="remarks.focus()" />
+                        <label for="" class="formLabelType2">Value </label>
+                    </div>
+
+                    <div class="formGroup">
+                        <input type="text" class="formControlType2" required [(ngModel)] = "Item.Remarks" #remarks NumberInput MaxValue=0 maxlength="30" />
+                        <label for="" class="formLabelType2">Remarks </label>
+                    </div>      
+                    <div class="delButton" (click)="RemoveItem(i)" >
+                        <i class="fa-solid fa-trash-can"></i>
+                    </div>   
+
+                </div>
+                
+        </div>        
+        <div class="addButton">        
+            <i (click)="AddItem()" class="fa-regular fa-plus"></i> <p (click)="AddItem()"> Add Another Item</p>
+        </div>     
+
+        
+    </div> 
+
+    <div class="footer">
+        <div class="footerLeft"> 
+            <button (click)="OpenImagesCreation()" >
+                <i class="fa-regular fa-image"></i> &nbsp;
+                <span>Capture Images</span>
+            </button>
+
+            <div class="imageList">
+                <div class="imageItem" *ngFor="let img of TransImages">
+                    <div *ngIf="img.DelStatus == 0">                                                                        
+                        <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url" />                        
+                    </div>   
+                </div>
+            </div>
+        </div>
+        
+        <div class="footerRight" *ngIf="GridTotals">
+            <h1>Total</h1>
+            <div class="formGroup">
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotQty" readonly />
+                <label for="" class="formLabelreadonly">Qty </label>
+            </div>
+    
+            <div class="formGroup">
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotGrossWt" readonly/>
+                <label for="" class="formLabelreadonly">GrossWt </label>
+            </div>
+    
+            <div class="formGroup">
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotNettWt" readonly/>
+                <label for="" class="formLabelreadonly">NettWt </label>
+            </div>
+    
+            <div class="formGroup">
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotValue" readonly/>
+                <label for="" class="formLabelreadonly">Value </label>
+            </div>
+        </div>
+
+    </div>
+</div>

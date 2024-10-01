@@ -1,0 +1,60 @@
+.rpContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: .6rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #fff;
+
+    .detRow{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: .5px solid #ddd;
+
+        :nth-child(1){
+            width: 33.33%;            
+            margin: auto;
+            display: flex;
+            flex-direction: column;  
+            align-items: center;                                  
+            justify-content: center;
+        }
+        :nth-child(2){
+            width: 33.33%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;  
+            align-items: center;                                  
+            justify-content: center;
+        }
+        :nth-child(3){
+            width: 33.33%;
+            margin: auto;
+            display: flex;
+            flex-direction: column;  
+            align-items: center;                                  
+            justify-content: center;
+        }
+        .colDet{            
+            .caption{                
+                font-weight: normal;
+                text-wrap: nowrap;                
+            }
+            .value{                
+                font-weight: 534;
+                font-size: 1.2rem;
+                text-wrap: nowrap;
+            }
+        }
+        .singleColDet{            
+            display: flex;
+            text-wrap: nowrap;
+        }
+        
+    }
+}

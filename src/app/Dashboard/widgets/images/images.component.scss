@@ -1,0 +1,117 @@
+.mat-grid-tile{
+    border: 1px solid #eee;    
+}
+
+.btn{
+    border: none;
+    background-color: var(--ColorPrimary);
+    padding: 1rem;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.btn:hover
+{
+    background-color: var(--ColorPrimary);
+    color: #fff;
+}
+
+.file-input {
+    display: none;
+  }
+
+.container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+
+    .header{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .caption{            
+            display: flex;       
+            align-items: center;
+            i{
+                font-size: 24px;
+                color: var(--ColorPrimary);
+            }
+            p{                
+                font-size: 24px;
+                font-weight: bold;
+            }
+        }
+
+        .close{
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .close:hover{
+            transition: transform 0.25s 0s; 
+            transform: scale(1.5); 
+        }
+    }
+
+    .body{
+        width: 100%;
+
+        .imagesList{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            row-gap: 1rem;
+
+            .images{
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                border: 1px solid rgb(243, 239, 239);
+                border-radius: 10px;
+                position: relative;
+
+                input{
+                    border: None;
+                }
+                .preview{
+                    position: absolute;
+                    left: -10px;
+                    top: -10px;
+                    font-size: 30px;
+                    color: green
+                }
+            }
+
+            .btn-remove-image
+            {
+                position: absolute;
+                cursor: pointer;
+                top: -10px;
+                right: -5px;
+                background-color: rgb(228, 19, 19);
+                color: #fff;;
+                border-radius: 50%;
+                width: 20px;
+                height: auto;
+                text-align: center;
+            }  
+            
+            .btn-remove-image:hover{
+                transition: transform 0.25s 0s; 
+                transform: scale(1.5); 
+            }
+        }
+
+    }
+
+    .footer{
+        width: 100%;
+        justify-items: flex-end;
+        text-align: right;
+    }
+}

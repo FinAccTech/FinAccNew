@@ -1,0 +1,36 @@
+<div class="postingContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> &nbsp; Reposting Vouchers</p>        
+        </div>
+
+        <div class="headerRight"> 
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="optionsRow">
+            <mat-checkbox [checked]=PostLoans (click)="ChangeOption($event,1)" > Loans  </mat-checkbox>
+            <mat-checkbox [checked]=PostReceipts (click)="ChangeOption($event,2)"> Receipts  </mat-checkbox>
+            <mat-checkbox [checked]=PostRedemptions (click)="ChangeOption($event,3)"> Redemptions  </mat-checkbox>
+            <mat-checkbox [checked]=PostAuctions (click)="ChangeOption($event,4)"> Auctions  </mat-checkbox>
+            <mat-checkbox [checked]=PostRepledges (click)="ChangeOption($event,5)"> Repledges  </mat-checkbox>
+            <mat-checkbox [checked]=PostRpPayments (click)="ChangeOption($event,6)"> Rp Payments  </mat-checkbox>
+            <mat-checkbox [checked]=PostRpClosures (click)="ChangeOption($event,7)"> Rp Closures  </mat-checkbox>
+        </div>
+
+        <div class="executeRow">
+            <div class="buttonCol">
+                <button class="btn" (click)="PostVouchers()" ><i style="font-size: 2.5rem;" class='bx bx-play'></i> &nbsp; Start Posting </button>
+            </div>
+            <div class="progressCol">
+                {{CurrentOperation}}
+            </div>
+        </div>
+
+        <div class="statusContainer" *ngFor="let status of StatusArray;" >
+            <p class="statusItem"> {{status.operation}} </p>            
+
+        </div>
+    </div>

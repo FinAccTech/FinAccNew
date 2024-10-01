@@ -1,0 +1,58 @@
+<div class="modalForm" style="width: 30vw;">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Template </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        
+        <div class="row">
+            <div class="col50">
+                <div class="formGroup">                            
+                    <input type="text" class="formControl" required [(ngModel)]= "data.Template_Name"/>
+                    <label for="" class="formLabel" >Name </label>                            
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                            
+                    <input type="text" class="formControl" required [(ngModel)]= "data.Template_Id"/>
+                    <label for="" class="formLabel" >Template Id </label>                            
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;">
+            <div class="col100">                
+                <!-- <div class="formGroup">                             -->
+                    <!-- <input type="text" class="formControl" required [(ngModel)]= "data.Template_Text"/> -->
+                    <textarea style="width: 100%; padding: 1rem; outline: none; border: 1px solid #ddd " [(ngModel)]= "data.Template_Text" rows="15">
+
+                    </textarea>
+                    <!-- <label for="" class="formLabel" >Template </label>                             -->
+                <!-- </div>                 -->
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;">
+            <div class="col50">
+                <div class="formGroup">                            
+                    <input type="text" class="formControl" readonly [(ngModel)]= "Create_Date"/>
+                    <label for="" class="formLabel" >Create Date </label>                            
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="footer">
+        <div class="contentRight">
+            <button (click)="Submit()" > <i class="fa fa-check" aria-hidden="true"></i> &nbsp; Save Template</button>
+        </div>        
+    </div>
+</div> 

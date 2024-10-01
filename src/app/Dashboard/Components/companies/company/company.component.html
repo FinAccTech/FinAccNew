@@ -1,0 +1,165 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Company </p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Comp.CompSno  />
+                <div class="formGroup">                    
+                    <input type="text" disabled="" class="formControlreadonly" required [(ngModel)] = Comp.Comp_Code   />
+                    <label for="" class="formLabelreadonly"> Company Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!CompNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Comp_Name  />
+                    <label for="" class="formLabel"> Company Name </label>
+                    <div class="errorHint" *ngIf="!CompNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="date" class="formControl" required [ngModel]="Comp.Fin_From! | intToDate | date:'yyyy-MM-dd'" (blur)="Comp.Fin_From = DateToInt($event)" />   
+                    <label for="" class="formLabel"> Fin From </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Comp.Fin_To! | intToDate | date:'yyyy-MM-dd'" (blur)="Comp.Fin_To = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Fin To </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Comp.Books_From! | intToDate | date:'yyyy-MM-dd'" (blur)="Comp.Books_From = DateToInt($event) " />                    
+                    <label for="" class="formLabel"> Books From </label>
+                </div>
+            </div>      
+            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.License_No   />
+                    <label for="" class="formLabel"> License No </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Address1   />
+                    <label for="" class="formLabel"> Address </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Address2   />
+                    <label for="" class="formLabel"> Address </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Address3   />
+                    <label for="" class="formLabel"> Address </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.City   />
+                    <label for="" class="formLabel"> City </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.State   />
+                    <label for="" class="formLabel"> State </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Pincode   />
+                    <label for="" class="formLabel"> Pincode </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">            
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Email   />
+                    <label for="" class="formLabel"> Email </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" required [(ngModel)] = Comp.Phone   />
+                    <label for="" class="formLabel"> Phone </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">    
+            <div class="col50">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Comp.Hide_Status"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1" >Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Hide Company
+                    </div>
+                </div>            
+            </div>
+
+            <div class="col50">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Comp.CommMasters"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1" >Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Common Masters
+                    </div>
+                </div>            
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveCompany()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteCompany()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Area </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Area.AreaSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Area.Area_Code   />
+                    <label for="" class="formLabelreadonly"> Area Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!AreaNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Area.Area_Name  />
+                    <label for="" class="formLabel"> Area Name </label>
+                    <div class="errorHint" *ngIf="!AreaNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = Area.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Area.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Area.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Area.Active_Status" [(ngModel)]="Area.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Area.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+
+            
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveArea()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteArea()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div [ngClass]="CompactView ? 'dashboardCompact' : 'dashboardContainer'" >    
+    <div class="sidenavContainer"  [style.width]="CompactView ? SlideNav ? '15.5rem':'4.75rem' : '' " (mouseover)="SlideNav=true" (mouseleave)="SlideNav=false"  >
+        <app-sidenav [SideNavCompact]="CompactView" ></app-sidenav>
+    </div>  
+
+    <div class="headerContainer" >            
+        <app-header (toggleEvent)="SetCompact($event)" ></app-header>
+    </div>
+
+    <div class="bodyContainer">
+        <app-body></app-body>
+    </div>    
+</div> 

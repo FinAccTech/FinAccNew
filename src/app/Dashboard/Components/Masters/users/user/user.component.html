@@ -1,0 +1,129 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; User </p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div> 
+    </div> 
+
+    <div class="body">
+        <div class="row">
+            <div class="col30" style="overflow: hidden;"> 
+                <div class="imgArea">
+                    <input type="file" style="display: none;" accept="image/*" (change)="selectFile($event)" #fileUpload>            
+                    <div (click)="fileUpload.click()">                    
+                        <ng-container *ngIf="TransImages && TransImages.Image_Url" >
+                            <img [src]="TransImages.SrcType == 0 ? TransImages.Image_File :  TransImages.Image_Url" />
+                        </ng-container>
+                        <ng-container *ngIf="!TransImages || !TransImages.Image_Url" >
+                            <img src="assets/images/partyimagepreview.png" />
+                        </ng-container>                    
+                    </div>             
+                </div>
+            </div>
+            <div class="col70">
+                <div class="row" style="margin-top: 5px;" >
+                    <div class="col50">
+                        <input type="hidden" required [(ngModel)] = User.UserSno  />
+                        <div class="formGroup" [ngClass]="!UserNameValid ? 'invalid' : ''" >
+                            <input type="text" class="formControl" required [(ngModel)] = User.UserName  />
+                            <label for="" class="formLabel"> User Name </label>
+                            <div class="errorHint" *ngIf="!UserNameValid" > Invalid Name </div>
+                        </div>
+                    </div>
+        
+                    <div class="col50"> 
+                        <div class="formGroup" [ngClass]="!PasswordValid ? 'invalid' : ''" >
+                            <input type="password" class="formControl" required [(ngModel)] = User.Password  />
+                            <label for="" class="formLabel"> Password </label>
+                            <div class="errorHint" *ngIf="!PasswordValid" > Invalid Password </div>
+                        </div>
+                    </div>
+                </div> 
+        
+                <div class="row" style="margin-top: 1.2rem; display: flex; flex-direction: row; align-items: center;">
+        
+                    <div class="col50">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="User.User_Type"  >
+                                    <mat-option [value]="0">Basic User</mat-option>
+                                    <mat-option [value]="1">Manager</mat-option>
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                User Type
+                            </div>
+                        </div>
+        
+                    </div>
+                    <div class="col50">
+                        <div class="row">
+                            <div class="col50">
+                                <label class="toggle">                    
+                                    <input class="toggle-checkbox" type="checkbox" [checked]="User.Active_Status" [(ngModel)]="User.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                                    <div class="toggle-switch"></div>
+                                    <span class="toggle-label"> {{User.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                                </label>
+                            </div>
+                            <div class="col50">
+                                <button class="btn" (click)="OpenUserRights()" > User Rights</button>
+                            </div>
+                        </div>                
+                    </div>         
+                </div>
+
+                <div class="row" style="margin-top: 1.2rem;" >
+                    <div class="col100">
+                        <label class="toggle">                    
+                            <input class="toggle-checkbox" type="checkbox" [checked]="User.Enable_WorkingHours" [(ngModel)]="User.Enable_WorkingHours"> <!-- (change)="SetActiveStatus($event)"  -->
+                            <div class="toggle-switch"></div>
+                            <span class="toggle-label"> {{User.Enable_WorkingHours == 1? 'Working Hours Enabled' : 'Working Hours Disabled' }}  </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.2rem;" >
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="time" class="formControl" required [(ngModel)] = User.FromTime  />
+                            <label for="" class="formLabel"> FromTime </label>                            
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="time" class="formControl" required [(ngModel)] = User.ToTime  />
+                            <label for="" class="formLabel"> ToTime </label>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <p style="margin: 1rem;" >***Tick the Companies below you want to give access</p>
+        <table class="compTable">
+            <thead>
+                <th> # </th>
+                <th>Company Name</th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let comp of CompRightsList; let i = index;" >                    
+                    <td style="text-align: center;" > <mat-checkbox (click)="ChangeSelectValue(comp,$event)"  [checked]=comp.Comp_Right >  </mat-checkbox></td>
+                    <td> {{comp.Comp_Name}}  </td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveUser()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteUser()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

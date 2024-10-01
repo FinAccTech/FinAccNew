@@ -1,0 +1,72 @@
+.totalAmountRow{
+    padding-bottom: 1rem;
+    p{
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+}
+
+.modeRow{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 1rem;
+    margin-bottom: 1rem;
+
+    .modeDel{
+        i{
+            color: red;
+        }
+        i:hover{
+            cursor: pointer;
+            transition: transform 0.25s 0s; 
+            transform: scale(1.5); 
+        }
+    }
+
+    .modeLedger{
+     flex: 1;
+    }
+
+    .modeAmount{
+        width: 20%;
+        text-align: right;
+    }
+
+}
+
+.footer{
+    width: 100%;    
+    padding: 1rem;
+
+    .contentLeft{
+        width: 80%;
+        display: flex;
+        column-gap: 2rem;
+        align-items: center;
+        
+        .errDiv{
+            color: red;
+        }
+
+        button{
+            text-wrap: nowrap;
+        }
+    }
+
+    .contentRight{
+        width: 20%;
+        text-align: right;
+
+        button{
+            text-wrap: nowrap;
+        }
+        
+        button:hover{
+            background-color: var(--ColorPrimary);
+            color: #fff;
+        }
+    }
+    
+}

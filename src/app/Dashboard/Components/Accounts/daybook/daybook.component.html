@@ -1,0 +1,72 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Day Book</p>        
+        </div>
+
+        <div class="headerRight">                 
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" (click)="exportexcel()" >                        
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>                
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="filterHeader">
+            <div class="filterLeft">
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                        
+                    <label for="" class="formLabel date"> From Date </label>            
+                </div>
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> To Date </label>            
+                </div>
+    
+                <button class="btn" (click)="FilterDayBook()" >Load Details</button>
+            </div>
+            <div class="filterMiddle">
+                
+            </div>
+            <div class="filterRight">
+                <div class="formGroup" >
+                    <input style="text-align: center; font-size: 1.3rem; font-weight: bold;" type="text" readonly class="formControl" [ngModel]="Opening_Balance" />                                                                                                            
+                    <label for="" class="formLabel date"> Opening Balance </label>            
+                </div>
+                <div class="formGroup" >
+                    <input style="text-align: center; font-size: 1.3rem; font-weight: bold;" type="text" readonly class="formControl" [ngModel]="Closing_Balance" />                                                                                                            
+                    <label for="" class="formLabel date"> Closing Balance </label>            
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="tableBody">
+            <table id="daybook">
+                <thead> <tr><th>Date</th><th>Particulars</th><th>Voucher No</th><th>Credit</th><th>Debit</th> </tr></thead>
+                <tbody>                    
+                    <tr *ngFor="let vou of Daybooklist; let i = index" >                        
+                        <td style="text-align: center;">{{ vou.Vou_Date > 0 ? (vou.Vou_Date | intToDate | date:"dd/MM/yyy") : '' }}</td>
+                        <td>    <span style="font-weight: 400;"> {{vou.Led_Name}} </span> 
+                                <br>  
+                                <span style="font-size: .9rem;"> Vou No: {{vou.Vou_No}} </span>  
+                        </td>
+                        <td style="text-align: center;">{{vou.VouType_Name}}</td>
+                        <td style="text-align: right;" >{{ vou.Credit > 0 ? (vou.Credit | number) : ''  }}</td>
+                        <td style="text-align: right;">{{ vou.Debit > 0 ? (vou.Debit | number) : '' }}</td>                        
+                    </tr>                    
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+ 
+</div>

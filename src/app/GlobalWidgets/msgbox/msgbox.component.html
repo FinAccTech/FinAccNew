@@ -1,0 +1,45 @@
+<div mat-dialog-container>
+    <div mat-dialog-content>
+        <div class="content">
+                
+                <div class="header">
+                    <div class="headerLeft">
+                        <div class="">
+                            <img [src]="logoPath" height="40" width="40" />                            
+                        </div>
+                        <div class="title"> {{appName}}</div>
+                    </div>
+
+                    <div class="headerRight">
+                        <div class="closeBtn" mat-dialog-close >&times;</div>
+                    </div>
+                </div>
+
+                
+                <div class="body">
+                    <div class="icon">
+
+                        <i *ngIf="data.DialogType==1" class="fa-solid fa-circle-info info"></i>
+
+                        <i *ngIf="data.DialogType==2" class="fa-solid fa-circle-question question"></i>
+
+                        <i  *ngIf="data.DialogType==3" class="fa-solid fa-circle-xmark error"></i>
+                    </div>
+            
+                    <div class="message">
+                        <p> {{data.Message}}</p>
+                    </div>
+                </div>         
+
+                <div class="footer" *ngIf="data.DialogType==1 || data.DialogType==3">
+                    <button class="btn" (click)="CloseDialog(1)" >Ok</button>            
+                </div>
+
+                <div class="footer" *ngIf="data.DialogType==2">
+                    <button class="btn" (click)="CloseDialog(1)">Yes</button>            
+                    <button class="btn" (click)="CloseDialog(0)">No</button>            
+                </div>
+
+        </div>
+    </div>
+</div>

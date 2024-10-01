@@ -1,0 +1,131 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Day History</p>        
+        </div>
+
+        <div class="headerRight">    
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> From Date </label>            
+            </div>
+
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> To Date </label>            
+            </div>
+            
+            <button class="newBtn" (click)="LoadDayHistory()"> <i class='bx bx-play'></i> &nbsp; Load Details</button>             
+            
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" (click)="exportexcel()" >                        
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>            
+        </div>
+    </div>
+
+    <div class="body">
+        <mat-tab-group style="background-color: #fff;width: 100%;" >
+            <mat-tab label="Loans">     
+                <div class="responsiveGrid">
+                    <table class="responsive-table" id="Loans" >                      
+                      <thead>
+                        <tr>
+                          <th style="text-align: center;" scope="col">#</th>
+                          <th scope="col">Loan No</th>
+                          <th scope="col">Loan Date</th>
+                          <th scope="col">Customer</th>
+                          <th scope="col">Loan Amount</th>
+                          <th scope="col">Interest</th>
+                          <th scope="col">User</th>                          
+                        </tr>
+                      </thead>
+                      
+                      <tbody>
+                            <tr *ngFor="let ln of LoansList; let i = index" >
+                                <td> {{ ln.TransSno !==0 ? i+1 : ''}}</td>
+                                <td> {{ ln.Trans_No}} </td>
+                                <td> {{ ln.Trans_Date !==0 ? (ln.Trans_Date | intToDate | date: "dd/MM/yyyy"): ''}} </td>
+                                <td [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Party_Name}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Principal | number}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Interest | number}} </td>
+                                <td> {{ln.UserName}} </td>
+                            </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </mat-tab>
+            <mat-tab label="Receipts">                     
+                <div class="responsiveGrid">
+                    <table class="responsive-table" id="Receipts">                      
+                      <thead>
+                        <tr>
+                          <th style="text-align: center;" scope="col">#</th>
+                          <th scope="col">Receipt No</th>
+                          <th scope="col">Receipt Date</th>
+                          <th scope="col">Customer</th>
+                          <th scope="col">Loan No</th>
+                          <th scope="col">Principal</th>
+                          <th scope="col">Interest</th>
+                          <th scope="col">User</th>                          
+                        </tr>
+                      </thead>
+                      
+                      <tbody>
+                            <tr *ngFor="let ln of ReceiptsList; let i = index" >
+                                <td> {{ ln.TransSno !==0 ? i+1 : ''}}</td>
+                                <td> {{ ln.Trans_No}} </td>
+                                <td> {{ ln.Trans_Date !==0 ? (ln.Trans_Date | intToDate | date: "dd/MM/yyyy"): ''}} </td>
+                                <td> {{ln.Party_Name}} </td>
+                                <td [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Ref_No}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Principal | number}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Interest | number}} </td>
+                                <td> {{ln.UserName}} </td>
+                            </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </mat-tab>
+            <mat-tab label="Redemptions">                     
+                <div class="responsiveGrid">
+                    <table class="responsive-table" id="Redemptions" >                      
+                      <thead>
+                        <tr>
+                          <th style="text-align: center;" scope="col">#</th>
+                          <th scope="col">Redemption No</th>
+                          <th scope="col">Redemption Date</th>
+                          <th scope="col">Customer</th>
+                          <th scope="col">Loan No</th>
+                          <th scope="col">Loan Amount</th>
+                          <th scope="col">Interest</th>
+                          <th scope="col">User</th>                          
+                        </tr>
+                      </thead>
+                      
+                      <tbody>
+                            <tr *ngFor="let ln of RedemptionsList; let i = index" >
+                                <td> {{ ln.TransSno !==0 ? i+1 : ''}}</td>
+                                <td> {{ ln.Trans_No}} </td>
+                                <td> {{ ln.Trans_Date !==0 ? (ln.Trans_Date | intToDate | date: "dd/MM/yyyy"): ''}} </td>
+                                <td> {{ln.Party_Name}} </td>
+                                <td [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Ref_No}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Principal | number}} </td>
+                                <td class="numRow" [ngClass]="ln.TransSno ==0 ? 'totalRow' : ''"> {{ln.Interest | number}} </td>
+                                <td> {{ln.UserName}} </td>
+                            </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+        
+    </div>
+
+ 
+</div>

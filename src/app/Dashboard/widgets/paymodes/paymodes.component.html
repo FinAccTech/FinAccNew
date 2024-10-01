@@ -1,0 +1,64 @@
+<div class="modalForm" style="width: 30vw;">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Payment Modes </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="totalAmountRow">
+            <p> Bill Amount :  {{data.Amount}}</p>
+        </div>
+        
+        <div *ngFor="let mode of PayModesList; let i = index" >
+            <div class="modeRow">
+                <div class="modeDel">
+                    <i (click)="RemoveMode(i)" class="fa fa-trash-o" aria-hidden="true"></i>
+                </div>
+                <div class="modeLedger" [ngClass]="!ModeValid[i] ? 'invalidSel' : ''">
+                    <app-selectionlist [Caption]="'Ledger'" [DataSource]="PaymnentModeLedgers" [SelectedItem]="mode.Ledger"  (newItemEvent)="getLedger($event,i)" ></app-selectionlist>
+                </div>
+
+                <div class="modeAmount" [ngClass]="!AmtValid[i] ? 'invalidSel' : ''">
+                    <div class="formGroup">                            
+                        <input type="number" class="formControl" required [(ngModel)]= "mode.Amount" style="text-align: right;"/>
+                        <label for="" class="formLabel" >Amount </label>                            
+                    </div>
+                </div>
+            </div>                    
+        </div>  
+        <!-- <div class="modeRow">
+            <div class="modeDel">
+
+            </div>
+            <div class="modeLedger" style="text-align: right; font-weight: bold; font-size: 1.2rem; " >
+                Total
+            </div>
+            <div class="modeAmount" style="text-align: right; font-weight: bold; padding-right: 1rem;" >
+                <p style=" font-size: 1.2rem;" > {{totalAmount}} </p>
+            </div>
+        </div>     -->
+    </div>
+
+    <div class="footer">
+        <div class="contentLeft">
+            <button (click)="AddMode()"><i class="fa fa-plus" aria-hidden="true"></i> &nbsp; Add Ledger</button>            
+        </div>
+
+        <div class="contentRight">
+            <button (click)="Submit()" > <i class="fa fa-check" aria-hidden="true"></i> &nbsp; Submit</button>
+        </div>        
+    </div>
+
+    <div class="footer">
+        <div class="contentLeft">
+            <div class="errDiv">
+                 {{errText}}
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,82 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Location </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Location.LocationSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Location.Loc_Code   />
+                    <label for="" class="formLabelreadonly"> Location Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!LocationNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Location.Loc_Name  />
+                    <label for="" class="formLabel"> Location Name </label>
+                    <div class="errorHint" *ngIf="!LocationNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            
+
+            <div class="col50">
+                <div class="matGroup">
+                    <div class="matSelect">
+                        <mat-select [(value)]="Location.Loc_Type"  >
+                            <mat-option [value]="0">Internal</mat-option>
+                            <mat-option [value]="1">External</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Location Type
+                    </div>
+                </div>
+
+               
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Location.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Location.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Location.Active_Status" [(ngModel)]="Location.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Location.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+            
+            <div class="col50">
+                <div class="formGroup"> 
+                    <input type="text" class="formControl" required  [(ngModel)] = Location.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>            
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveLocation()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteLocation()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

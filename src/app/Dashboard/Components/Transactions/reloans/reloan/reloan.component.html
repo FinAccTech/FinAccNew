@@ -1,0 +1,250 @@
+<div class="reloanContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            <i class="fa fa-arrow-circle-left back" aria-hidden="true" (click)="GoBack()" ></i>
+            <p class="heading"> ReLoan</p>        
+            <span *ngIf="ReLoan.ReLoanSno==0" style=" font-size: 1.2rem; color: green;" > &nbsp; (Create New) </span>
+            <span *ngIf="ReLoan.ReLoanSno!==0" style="font-size: 1.2rem;color: red;" > &nbsp; (Edit Mode) </span>
+        </div>
+
+        <div class="headerRight">                 
+            <div class="searchBox">
+                <input type="text" required   placeholder="Type here to Search" />
+                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+    
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-save' style='color:green' ></i>
+                        <span>Save ReLoan</span>
+                    </div>                    
+                </button>
+                <button mat-menu-item class>
+                    <div class="menuClass">
+                        <i class='bx bx-printer' style='color:gray' ></i>
+                        <span>Print ReLoan</span>
+                    </div>
+                </button>
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-trash' style='color:red' ></i>
+                        <span>Delete ReLoan</span>
+                    </div>
+                </button>                
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="contentTop">
+            <div class="contentLeft">
+                <!-- <div class="cardDefault"> -->
+                    <div class="row">
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Series'" [DataSource]="ReLoanSeriesList" [SelectedItem]="SelectedReLoanSeries"  (newItemEvent)="getReLoanSeries($event)" ></app-selectionlist>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!ReLoanNumberValid ? 'invalid' : ''">
+                                <input type="hidden" required [(ngModel)]= "ReLoan.ReLoanSno"  />        
+                                <input type="text" class="formControl" required [disabled]="AutoReLoanSeries" [(ngModel)]= "ReLoan.ReLoan_No"  style="text-align: center; font-size: 20px; font-weight: bold;" />
+                                <label for="" class="formLabel" >ReLoan Number </label>
+                                <div class="errorHint" *ngIf="!ReLoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div> 
+                    </div>
+                    
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!ReLoanDateValid ? 'invalid' : ''">                                  
+                                <input type="date" class="formControl" required [ngModel]="ReLoan.ReLoan_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="ReLoan.ReLoan_Date= DateToInt($event)" />                                           
+                                <label for="" class="formLabel date"> ReLoan Date </label>
+                                <div class="errorHint" *ngIf="!ReLoanDateValid" > Invalid Date </div> 
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!TillDateValid ? 'invalid' : ''">
+                                <!-- <input type="date" class="formControl" [ngModel]="TillDate | date:'yyyy-MM-dd'"/>                                                 -->
+                                <input type="date" class="formControl" required [ngModel]="TillDate! | intToDate | date:'yyyy-MM-dd'" (blur)="TillDate= DateToInt($event)" />                                           
+                                <label for="" class="formLabel date"> Till Date </label>
+                                <div class="errorHint" *ngIf="!TillDateValid" > Invalid Date </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col20">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "ReLoan.Remarks"/>
+                                <label for="" class="formLabel"> Bar Code </label>                                                      
+                            </div>
+                        </div>
+                        <div class="col30">                            
+                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                        </div>
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Select by Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer"  (newItemEvent)="getCustomer($event)" ></app-selectionlist>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                         <div class="col50"> <!-- Redemption Details -->
+                            <p style="font-weight: 465;" > Redemption Details </p>
+                            <br>
+                            <div class="row">
+                                <div class="col50">
+                                    <app-selectionlist [Caption]="'Redemption Series'" [DataSource]="RedemptionSeriesList" [SelectedItem]="SelectedRedemptionSeries"  (newItemEvent)="getRedemptionSeries($event)" ></app-selectionlist>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required [disabled]="AutoRedemptionSeries" [(ngModel)]= "ReLoan.Redemption.Redemption_No"  style="text-align: center; font-size: 16px; font-weight: bold;" />
+                                        <label for="" class="formLabel" >Redemption Number </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required readonly [(ngModel)]= "ReLoan.Redemption.Rec_Interest"  />
+                                        <label for="" class="formLabel" >Interest </label>                                        
+                                    </div>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required readonly [(ngModel)]= "ReLoan.Redemption.Rec_Principal"   />
+                                        <label for="" class="formLabel" >Principal </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" (blur)="CalcRedNettPayable()" required [(ngModel)]= "ReLoan.Redemption.Rec_Add_Less"  />
+                                        <label for="" class="formLabel" >Add /Less </label>                                        
+                                    </div>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required  readonly [(ngModel)]= "ReLoan.Redemption.Nett_Payable" style="text-align: center; font-size: 16px; font-weight: bold;" />
+                                        <label for="" class="formLabel" >Nett Payable </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col100">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required [(ngModel)]= "ReLoan.Redemption.Remarks"  />
+                                        <label for="" class="formLabel"> Redemption Remarks </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col50"> <!-- Loan Details -->
+                            <p style="font-weight: 465;" > New Loan Details </p>
+                            <br>
+                            <div class="row">
+                                <div class="col50">
+                                    <app-selectionlist [Caption]="'Series'" [DataSource]="NewLoanSeriesList" [SelectedItem]="SelectedNewLoanSeries"  (newItemEvent)="getNewLoanSeries($event)" ></app-selectionlist>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required [disabled]="AutoNewLoanSeries" [(ngModel)]= "ReLoan.NewLoan.Loan_No"  style="text-align: center; font-size: 16px; font-weight: bold;" />
+                                        <label for="" class="formLabel" >Loan Number </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <app-selectionlist [Caption]="'Scheme'" [DataSource]="NewLoanSchemesList" [SelectedItem]="SelectedNewLoanScheme"  (newItemEvent)="getNewLoanScheme($event)" ></app-selectionlist>                              
+                                    </div>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required [(ngModel)]= "ReLoan.NewLoan.Principal"   />
+                                        <label for="" class="formLabel" >New Principal </label>          
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" (blur)="CalcNewLoanNettPayable()" required [(ngModel)]= "ReLoan.NewLoan.DocChargesAmt"   />
+                                        <label for="" class="formLabel" >Processing Fee </label>                                             
+                                    </div>
+                                </div>
+                                <div class="col50">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required readonly [(ngModel)]= "ReLoan.NewLoan.Nett_Payable" style="text-align: center; font-size: 16px; font-weight: bold;"  />
+                                        <label for="" class="formLabel" >Nett Payable </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 1rem;">
+                                <div class="col100">
+                                    <div class="formGroup">                                        
+                                        <input type="text" class="formControl" required [(ngModel)]= "ReLoan.NewLoan.Remarks"  />
+                                        <label for="" class="formLabel"> Loan Remarks </label>                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;" >
+                        <div class="col70">
+                            <div class="formGroup">                                
+                                <input type="text" class="formControl" required #remarks [(ngModel)]= "ReLoan.Remarks"/>
+                                <label for="" class="formLabel"> ReLoan Remarks </label>                                
+                            </div>
+                        </div>         
+                        <div class="col30">
+                            <div class="footerRight">
+                                <button (click)="SaveReLoan()" #btnsave > <i class="fa-regular fa-floppy-disk"></i> &nbsp;&nbsp; Save</button>
+                                <button (click)="DeleteReLoan()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp;&nbsp; Delete</button>  
+                            </div>
+                            
+                        </div>              
+                    </div>
+                <!-- </div> -->
+            </div>
+            <div class="contentRight">                                
+                 <ng-container *ngIf="SelectedLoan && SelectedLoan.Customer && SelectedLoan !== undefined" >
+                    <div class="detailSection">                        
+                        <div class="partyDetails">
+                            <app-customerdetails [Customer]="SelectedLoan.Customer" />
+                        </div>
+
+                        <div class="loanDetails">
+                           <app-loandetails [Loan]="SelectedLoan" [ShowBalInfo]="true" />
+                        </div>
+                    </div>                 
+                 </ng-container>
+            </div>
+        </div>
+
+     
+   </div>
+</div>
+    

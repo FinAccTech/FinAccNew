@@ -1,0 +1,57 @@
+<div class="listContainer" clickOutside (clickOutside)="clickedOutside(); focused = false">
+    <div class="formGroup"   >
+        <input #InputBox type="text"  (focus)="DisplayList(); focused = true" (blur)="HideList()" (keyup)="FilterList($event)" class="formControl"  required [value]="SelectedParty === undefined ? '' : SelectedParty.Party_Name === undefined ? '' : SelectedParty.Party_Name" />
+        <label for="" class="formLabel">{{Party_Cat == 1 ? 'Customer': Party_Cat==2 ? 'Supplier' : 'Borrower' }}</label>
+
+        <ng-container *ngIf="!SelectedParty || SelectedParty.Party_Name === undefined">
+            <i class="rightIcon fa-solid fa-arrow-down" style="color:#3f3939; font-size: 14px;"  (click)="DisplayList()"></i>        
+        </ng-container>
+         
+        <ng-container *ngIf="SelectedParty && SelectedParty.Party_Name !== undefined" >
+            <!-- <i class="rightIcon fa-solid fa-xmark" style="color: red; font-size: 18px;"  (click)="ClearParty()" ></i>  -->
+            <i *ngIf="focused" class="rightIcon fa-solid fa-xmark" style="color: red; opacity: .6; font-size: 16px;"  (click)="ClearParty()" ></i>             
+            <i *ngIf="!focused" class="rightTopCornerIcon fa-solid fa-circle-check" style="color: rgb(6, 165, 6); opacity: 1; font-size: 16px;"  ></i> 
+        </ng-container>
+        
+        <div class="listBox" *ngIf="showList == true" >
+            <div class="addBar" (click)= "OpenPartyMaster()" >
+                <i class="fa-solid fa-user-plus"></i>
+                <p>Add New </p>            
+                <hr>     
+            </div>  
+
+            <div class="content">
+                <ul *ngFor="let pty of FilteredData; let i = index" >
+                    <li class="listItems" (click)="SelectParty(i)" [ngClass]="{active: i===activeIndex}">  
+
+                        <div class="imgParty">
+                            <img [src]='!pty.ProfileImage ? "assets/images/partyimagepreview.png": pty.ProfileImage'  />
+                        </div>
+
+                        <div class="details">
+                            <div class="nameandCode">
+                                <p class="name" >{{pty.Party_Name}} </p>
+                                <p class="code" >{{pty.Party_Code}} </p>
+                            </div>    
+                            <div class="relInfo">
+                                <p >{{pty.Rel ==0 ? 'S/o. ' : pty.Rel == 1 ? 'D/o. ' : pty.Rel == 2 ? 'W/o. ' : 'C/o. '  }} </p>
+                                <p >{{pty.RelName}} </p>
+                            </div>                                                    
+                            <p class="mobile" > <i class="fa-solid fa-phone-volume"></i> &nbsp; {{pty.Mobile}} </p>
+                        </div>       
+                        
+                        <div class="buttonsArea">
+                            <i class="fa-solid fa-check-double selectItem"></i>
+                            <i class="fa-solid fa-user-pen"></i>
+                        </div>
+
+                    </li>                    
+                </ul>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+

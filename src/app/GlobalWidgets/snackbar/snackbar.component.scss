@@ -1,0 +1,52 @@
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 500px;
+    height: 100%;
+    padding: 10px;
+    background-color: green;
+    position: relative;
+    
+    .content{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        column-gap: 2rem;
+        padding-left: 20px;
+
+        .icon{
+            i{
+                font-size: 28px;
+                color: #fff;                
+            }            
+        } 
+
+        .message{            
+            color: #fff;
+            font-size: 14px;
+        }
+    }
+    
+
+    .closeIcon{
+        position: absolute;        
+        top: 3px;
+        right: 10px;
+        color:#fff;
+        font-size: 22px;
+        cursor: pointer;        
+    }
+
+    .closeIcon:hover{
+        transition: transform 0.25s 0s; 
+        transform: scale(1.25); 
+    }
+}
+
+.container.error{
+    background-color: rgb(245, 59, 59);
+}

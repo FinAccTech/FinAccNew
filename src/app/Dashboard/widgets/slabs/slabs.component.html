@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="header">
+        <div class="caption">
+            <i class='bx bx-list-check'></i>
+            <p>&nbsp; Slabs </p>
+        </div>
+        
+        <p class="close" mat-dialog-close="" >&times;</p>
+    </div>
+
+    <div class="content">
+        <button (click)="AddSlabLine()"> <i class='bx bx-plus'></i> &nbsp; Add Line</button>
+        <table>
+            <thead> <th># </th> <th> {{SlbTypeCaption}} From</th> <th>{{SlbTypeCaption}} To</th> <th> {{SlbType == 2 ? 'Fee %' : 'Roi' }} </th> </thead>
+            <tbody>
+                <ng-container *ngIf="SlbType==0"> 
+                    <tr *ngFor="let slb of SlabList; let i = index;">
+                        <td style="text-align: center;" >  <i class="fa-solid fa-trash-can delTrash" [style.color]="i !== (SlabList.length-1) ? 'lightgray' : 'red'" [ngClass]="i !== (SlabList.length-1) ? 'disabledDiv' : '' " (click)="RemoveSlabLine(i)" ></i> </td>
+                        <td><input class="gridInput" readonly type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].FromPeriod  /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].ToPeriod /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].Roi /></td>                    
+                    </tr>                    
+                </ng-container>
+
+                <ng-container *ngIf="SlbType==1"> 
+                    <tr *ngFor="let slb of SlabList; let i = index;">
+                        <td style="text-align: center;" >  <i class="fa-solid fa-trash-can delTrash" [style.color]="i !== (SlabList.length-1) ? 'lightgray' : 'red'" [ngClass]="i !== (SlabList.length-1) ? 'disabledDiv' : '' " (click)="RemoveSlabLine(i)" ></i> </td>
+                        <td><input class="gridInput" readonly type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].FromAmount  /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].ToAmount /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].Roi /></td>                    
+                    </tr>                    
+                </ng-container>
+
+                <ng-container *ngIf="SlbType==2"> 
+                    <tr *ngFor="let slb of SlabList; let i = index;">
+                        <td style="text-align: center;" >  <i class="fa-solid fa-trash-can delTrash" [style.color]="i !== (SlabList.length-1) ? 'lightgray' : 'red'" [ngClass]="i !== (SlabList.length-1) ? 'disabledDiv' : '' " (click)="RemoveSlabLine(i)" ></i> </td>
+                        <td><input class="gridInput" readonly type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].FromAmount  /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].ToAmount /> </td>
+                        <td><input class="gridInput" type="number" NumberInput maxlength="3" [(ngModel)] = SlabList[i].FeePer /></td>                    
+                    </tr>                    
+                </ng-container>
+            </tbody>
+        </table> 
+        <div class="footer">
+            <div class="errDiv">
+                {{SlabErrors}}
+            </div>
+            <button class="submit" (click)="SubmitSlab()"> <i class='bx bx-check'></i> &nbsp; Submit</button>
+        </div>
+        
+    </div>
+</div>

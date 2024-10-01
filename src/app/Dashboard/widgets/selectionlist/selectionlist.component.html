@@ -1,0 +1,49 @@
+<div class="listContainer" clickOutside (clickOutside)="clickedOutside(); focused = false;" >
+    <div class="formGroup" >
+        <input #InputBox type="text"  (focus)="DisplayList(); focused= true;"  (blur)="HideList();" (keyup)="FilterList($event)" class="formControl"  required [value]="SelectedItem === undefined ? '' : SelectedItem.Name === undefined ? '' : SelectedItem.Name" />
+        <label for="" class="formLabel">{{Caption}}</label>
+
+        <ng-container *ngIf="!SelectedItem || SelectedItem.Name === undefined">
+            <i class="rightIcon fa-solid fa-arrow-down" style="color:#3f3939; font-size: 14px;" ></i>        
+        </ng-container>
+         
+        <ng-container *ngIf="SelectedItem && SelectedItem.Name !== undefined && SelectedItem.Name !== ''" >
+            <!-- <i class="rightTopCornerIcon fa-solid fa-circle-check" style="color: green;" ></i> -->
+            <i *ngIf="focused" class="rightIcon fa-solid fa-xmark" style="color: red; opacity: .6; font-size: 16px;"  (click)="ClearItem()" ></i>             
+            <i *ngIf="!focused" class="rightTopCornerIcon fa-solid fa-circle-check" style="color: rgb(6, 165, 6); opacity: 1; font-size: 16px;"  ></i>             
+        </ng-container>
+        
+        <div class="listBox" *ngIf="showList == true">
+            
+            <div class="addBar">
+                <i (click)="OpenMaster()" class="fa-solid fa-user-plus"></i>
+                <p (click)="OpenMaster()" >Add New </p>            
+                <hr>    
+            </div> 
+
+            <div class="content">
+                <ul *ngFor="let pty of FilteredData; let i = index" >
+                    <li class="listItems" (click)="SelectItem(i)" [ngClass]="{active: i===activeIndex}">  
+
+
+                        <div class="details"> 
+                            <p class="name" >{{pty.Name}} </p>
+                            <p class="area" >{{pty.Details}} </p>
+                            
+                        </div>       
+                        
+                        <div class="buttonsArea">
+                            <i class="fa-solid fa-check-double selectItem"></i>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+
+                    </li>                    
+                </ul>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+

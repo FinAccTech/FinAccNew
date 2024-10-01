@@ -1,0 +1,34 @@
+<div class="responsiveGrid">
+    <table class="responsive-table">
+      <caption>Interest Statement</caption>
+      <thead>
+        <tr>
+          <th scope="col">From Date</th>
+          <th scope="col">To Date</th>
+          <th scope="col">Duration</th>
+          <th scope="col">Int Accured</th>
+          <th scope="col">Tot Accured</th>
+          <th scope="col">Int Paid</th>
+          <th scope="col">Principal Paid</th>
+          <th scope="col">Addded Principal</th>
+          <th scope="col">Adj Principal</th>
+          <th scope="col">New Principal</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let struc of InterestStructure; let i = index">
+            <td> {{struc.FromDate | date:"dd/MM/yyyy"}} </td>
+            <td> {{struc.ToDate | date:"dd/MM/yyyy" }} </td>
+            <td> {{struc.Duration }} {{ struc.DurType == 0 ? ' Months' : 'Days' }} </td>
+            <td> {{struc.IntAccured}} </td>
+            <td> {{struc.TotIntAccured}} </td>
+            <td> {{struc.IntPaid}} </td>
+            <td> {{struc.PrinPaid}} </td>
+            <td> {{struc.AddedPrincipal }} </td>
+            <td> {{struc.AdjPrincipal}} </td>
+            <td> {{struc.NewPrincipal}} </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

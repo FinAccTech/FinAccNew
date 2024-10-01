@@ -1,0 +1,27 @@
+<div class="cardContainer">
+    <div class="partyDetails">
+
+        <div class="imgArea">
+            <ng-container *ngIf="Customer.ProfileImage"> 
+                <img [src]="Customer.ProfileImage" />
+            </ng-container>
+            <ng-container *ngIf="!Customer.ProfileImage"> 
+                <img src="assets/images/partyimagepreview.png" />
+            </ng-container>
+            
+        </div>
+        <div class="detailsArea">
+            <p class="name">{{Customer.Party_Name}}</p>
+            <p > {{(Customer.Rel == 0) ? 'S/o. ' : (Customer.Rel == 1) ?  'D/o. ' : (Customer.Rel == 2) ?  'W/o. ' :  'C/o. '}}  {{Customer.RelName}}</p>
+            <p >{{Customer.Address1}}</p>
+            <p >{{Customer.Address2}}</p>
+            <p >{{Customer.Address3}}</p>
+            <p >{{Customer.Address4}}</p>
+            <p >{{Customer.City}}</p>
+            <p class="middleItems"><i style="font-size: 1.5rem;" class='bx bx-mobile'></i> &nbsp; {{Customer.Mobile}}</p>
+            <p class="code"> Code:  <strong> {{Customer.Party_Code}} </strong> </p>
+            <p class="nominee"> Nominee:  <strong> <span *ngIf="!Customer.Nominee" [style.color]="!Customer.Nominee? 'red':''" >Not Updated</span>   {{Customer.Nominee}}</strong></p>
+        </div>
+        
+    </div>
+</div>

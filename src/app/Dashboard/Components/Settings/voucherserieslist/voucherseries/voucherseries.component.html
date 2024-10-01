@@ -1,0 +1,231 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Voucher Series </p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body"> 
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Series.SeriesSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Series.Series_Name   />
+                    <label for="" class="formLabel"> Series Name </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <app-selectionlist [Caption]="'Voucher Type'" [DataSource]="VtypeList" [SelectedItem]="SelectedVouType"  (newItemEvent)="getVoucherType($event)"></app-selectionlist>                                    
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Num_Method"  >
+                            <mat-option [value]="0">Manual</mat-option>
+                            <mat-option [value]="1">Semi</mat-option>                            
+                            <mat-option [value]="2">Auto</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Numbering Method
+                    </div>
+                </div>               
+            </div>
+
+            <div class="col50">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Allow_Duplicate"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                                                                                    
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Allow Duplicate
+                    </div>
+                </div>  
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" >
+                <div class="formGroup">                    
+                    <input type="number" NumberInput class="formControl"  required [(ngModel)] = Series.Start_No   />
+                    <label for="" class="formLabel"> Start Number </label>
+                </div>             
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="number" NumberInput class="formControl"  required [(ngModel)] = Series.Current_No   />
+                    <label for="" class="formLabel"> Current Number </label>
+                </div>  
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50">
+                <div class="row">
+                    <div class="col50" >
+                        <div class="formGroup">                    
+                            <input type="text" class="formControl"  required [(ngModel)] = Series.Prefix   />
+                            <label for="" class="formLabel"> Prefix </label>
+                        </div>             
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">                    
+                            <input type="text" class="formControl"  required [(ngModel)] = Series.Suffix   />
+                            <label for="" class="formLabel"> Suffix </label>
+                        </div>  
+                    </div>
+                </div>            
+            </div>
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50" >
+                        <div class="formGroup">                    
+                            <input type="number" NumberInput class="formControl"  required [(ngModel)] = Series.Width   />
+                            <label for="" class="formLabel"> Width </label>
+                        </div>             
+                    </div>
+        
+                    <div class="col50">
+                        <div class="formGroup">                    
+                            <input type="text" class="formControl"  required [(ngModel)] = Series.Prefill   />
+                            <label for="" class="formLabel"> Prefill </label>
+                        </div>  
+                    </div>   
+                </div> 
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50">
+                <app-selectionlist [Caption]="'Scheme'" [MasterComponentId]="4" [DataSource]="SchemesList" [SelectedItem]="SelectedScheme"  (newItemEvent)="getScheme($event)" ></app-selectionlist>
+            </div> 
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Print_Voucher"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Print Voucher
+                    </div>
+                </div>               
+            </div>
+
+            <div class="col50">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Print_On_Save"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                                                                                    
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Print On Save
+                    </div>
+                </div>  
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Show_Preview"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Show Preview
+                    </div>
+                </div>               
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = Series.Print_Style   />
+                    <label for="" class="formLabel"> Print Style </label>
+                </div>  
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect"  >
+                        <mat-select [(value)]="Series.IsDefault"  >
+                            <mat-option  [value]="false">No</mat-option>
+                            <mat-option  [value]="true">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Is Default
+                    </div>
+                </div>               
+            </div>
+
+            <div class="col50" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect"  >
+                        <mat-select [(value)]="Series.IsStd"  >
+                            <mat-option disabled="" [value]="false">No</mat-option>
+                            <mat-option disabled="" [value]="true">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Is Standard
+                    </div>
+                </div>               
+            </div>
+               
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="Series.Active_Status"  >
+                            <mat-option [value]="false">No</mat-option>
+                            <mat-option [value]="true">Yes</mat-option>                                                        
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Active Status
+                    </div>
+                </div> 
+            </div>   
+
+            <div class="col50" >
+                <div class="formGroup">                    
+                    <input type="date" class="formControl" required [ngModel]="Series.Create_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Series.Create_Date= DateToInt($event);" />                                                               
+                    <label for="" class="formLabel"> Create Date </label>
+                </div> 
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveSeries()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteSeries()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

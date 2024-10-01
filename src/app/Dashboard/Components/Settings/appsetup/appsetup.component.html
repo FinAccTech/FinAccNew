@@ -1,0 +1,393 @@
+<div class="setupContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> &nbsp; Application Setup</p>        
+        </div>
+
+        <div class="headerRight"> 
+            <button class="newBtn" (click)="SaveSettings()" >
+                <i class='bx bxs-save'></i> &nbsp; Update Settings
+            </button>            
+        </div>
+    </div>
+
+    <div class="content" *ngIf="AppSetup" >
+        <div class="colLeft">
+            <div class="rows">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.AreaCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Area Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.AreaCode_Prefix   />
+                    <label for="" class="formLabel"> Area Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.AreaCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.PartyCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Party Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.PartyCode_Prefix   />
+                    <label for="" class="formLabel"> Party Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.PartyCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.GrpCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Group Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.GrpCode_Prefix   />
+                    <label for="" class="formLabel"> Group Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.GrpCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.ItemCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Item Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.ItemCode_Prefix   />
+                    <label for="" class="formLabel"> Item Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.ItemCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.SchemeCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Scheme Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.SchemeCode_Prefix   />
+                    <label for="" class="formLabel"> Scheme Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.SchemeCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.LocCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Locattion Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.LocCode_Prefix   />
+                    <label for="" class="formLabel"> Location Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.LocCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.PurityCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Purity Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.PurityCode_Prefix   />
+                    <label for="" class="formLabel"> Purity Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.PurityCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;">
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.BranchCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Branch Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.BranchCode_Prefix   />
+                    <label for="" class="formLabel"> Branch Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.BranchCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+        </div>   
+        <div class="colRight">
+            <div class="rows">
+                
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_RegLang"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Regional Language
+                    </div>
+                </div>
+
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.Reg_FontName   />
+                    <label for="" class="formLabel"> Reg Font Name </label>
+                </div>
+
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.Reg_FontSize   />
+                    <label for="" class="formLabel"> Reg Font Size </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top: 15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_Opening"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Opening
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Allow_NullInterest"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Allow Null Interest
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Show_CashBalance"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Show Cash Balance
+                    </div>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top: 15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_FingerPrint"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Finger Print
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.MakeFp_Mandatory"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Make FP Mandatory
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="rows" style="margin-top: 15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Images_Mandatory"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Images Mandatory
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_ReturnImage"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Return Image
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Allow_DuplicateItems"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Allow Duplicate Items
+                    </div>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top: 15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Disable_AddLess"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Disable Add Less
+                    </div>
+                </div>
+
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.Entries_LockedUpto   />
+                    <label for="" class="formLabel"> Entries Locked Upto </label>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_Authentication"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Authentication
+                    </div>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top: 15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_OldEntries"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Old Entries
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.IntCalcinDays"  >
+                            <mat-option [value]="0">360</mat-option>
+                            <mat-option [value]="1">365</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Int Calc In Days
+                    </div>
+                </div>
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Show_CashBalance"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Show Cash Balance
+                    </div>
+                </div>
+            </div>
+        </div>     
+    </div>
+
+</div>
+

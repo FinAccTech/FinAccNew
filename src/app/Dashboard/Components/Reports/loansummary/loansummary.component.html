@@ -1,0 +1,134 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            
+            <p class="heading"> Loan Summary</p>        
+
+        </div>
+
+        <div class="headerRight">                 
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass">
+                        <i class='bx bx-save' style='color:green' ></i>
+                        <span>Make Redemption</span>
+                    </div>                    
+                </button>
+                <button mat-menu-item class>
+                    <div class="menuClass">
+                        <i class='bx bx-printer' style='color:gray' ></i>
+                        <span>Print Summary</span>
+                    </div>
+                </button>
+                  
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    
+    <div class="filterHeader">
+        <div class="filterLeft">
+            <div class="row">
+                <div class="col20" >
+                    <div class="formGroup" >
+                        <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  />
+                        <label for="" class="formLabelreadonly"> Bar Code </label>                                
+                    </div>
+                </div>  
+                <div class="col80">
+                    <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                </div>
+            </div>
+        </div>
+
+        <div class="filterRight">        
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="AsOnDate! | intToDate | date:'yyyy-MM-dd'" (blur)="AsOnDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> As On </label>            
+            </div>
+
+            <button class="btn" (click)="LoadDetails()">Load Details</button>
+            
+        </div>
+    </div>
+
+    <div class="body">
+        <ng-container *ngIf="!SelectedLoan">
+            <div class="noContent">
+                <i class='bx bx-receipt bx-flashing' ></i>
+                <p class="heading">
+                    No Loan Selected
+                </p>
+                <p class="desc">
+                    Select a Loan from the List above
+                </p>
+                
+                
+            </div>
+            
+        </ng-container>
+        <ng-container *ngIf="SelectedLoan && SelectedLoan !== undefined" >
+            <div class="detailSection">                        
+                <div class="partyDetails">
+                    <app-customerdetails [Customer]="SelectedLoan.Customer" />
+                </div>
+                <div class="loanDetails">
+                  <app-loandetails [Loan]="SelectedLoan"  />
+                </div>
+            </div>               
+            
+            <div class="valuesSection">
+                <div class="valGrp">
+                    <p class="caption"> Principal Bal </p>
+                    <p class="value" *ngIf="InterestDetails" > {{ InterestDetails.Principal_Balance | number }} </p>
+                </div>
+                <div class="valGrp">
+                    <p class="caption">Interest Bal </p>
+                    <p class="value" *ngIf="InterestDetails" > {{InterestDetails.Interest_Balance | number}}  </p>
+                </div>
+                <div class="valGrp">
+                    <p class="caption">Nett Payable</p>
+                    <p class="value" *ngIf="InterestDetails" > {{(+InterestDetails.Interest_Balance + +InterestDetails.Principal_Balance) | number }}    </p>
+                </div>         
+            </div>
+
+            <div class="tabSection">
+                <mat-tab-group style="background-color: #fff;height: 100%;">
+                    <mat-tab label="Loan Statement"  >                     
+                        <table>
+                            <thead>
+                                <th>Number</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Principal</th>
+                                <th>Interest</th>
+                                <th>Nett Amt</th>
+                            </thead>
+                            <tr *ngFor="let stmt of Statement; let i = index">
+                                <td> {{stmt.Number}} </td>
+                                <td> {{stmt.Series_Name}} </td>
+                                <td> {{stmt.Date | intToDate | date:'dd/MM/yyyy'}} </td>
+                                <td> {{stmt.Principal}} </td>
+                                <td> {{stmt.Interest}} </td>
+                                <td> {{stmt.Nett_Payable}} </td>
+                            </tr>
+                        </table>
+                    </mat-tab>
+                    <mat-tab label="Interest Structure">                     
+                        <app-table-view [InterestStructure]="InterestStructure" />
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+            
+        </ng-container>
+    </div>
+
+ 
+</div>

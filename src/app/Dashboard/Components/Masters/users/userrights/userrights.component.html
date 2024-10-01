@@ -1,0 +1,48 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; User Rights </p>
+        </div>
+        <div class="headerRight">
+            <p (click)="CloseDialog()" >&times;</p>
+        </div> 
+    </div>
+
+    <div class="body" style="overflow: auto; height: 50vh;" >
+        <div class="buttonHeader">
+            <button (click)="SelectAll()" >Select All</button>
+            <button (click)="UnSelectAll()">UnSelect All</button>
+        </div>
+        
+        <table class="compTable" >
+            <thead>
+                <th>Form</th>
+                <th>View Right</th>
+                <th>Create Right</th>
+                <th>Edit Right</th>
+                <th>Delete Right</th>
+                <th>Print Right</th>
+                <th>Date Access</th>
+                <th>Search Access</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let right of UserRights; let i = index">
+                    <td> {{right.Form_Name}} </td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,1)" [checked]=right.View_Right> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,2)" [checked]=right.Create_Right> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,3)" [checked]=right.Edit_Right> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,4)" [checked]=right.Delete_Right> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,5)" [checked]=right.Print_Right> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,6)" [checked]=right.Date_Access> </mat-checkbox></td>
+                    <td> <mat-checkbox  (click)="ChangeSelectValue(right,$event,7)" [checked]=right.Search_Access> </mat-checkbox></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveUserRights()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save Rights</button>        
+    </div>
+</div>

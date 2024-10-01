@@ -1,0 +1,78 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Purity </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Purity.PuritySno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Purity.Purity_Code   />
+                    <label for="" class="formLabelreadonly"> Purity Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!PurityNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Purity.Purity_Name  />
+                    <label for="" class="formLabel"> Purity Name </label>
+                    <div class="errorHint" *ngIf="!PurityNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            <div class="col50" [ngClass]="!GrpNameValid ? 'invalidSel' : ''" >               
+                <app-selectionlist [Caption]="'Item Group'" [DataSource]="GroupsList" [SelectedItem]="SelectedGroup"  (newItemEvent)="getGroup($event)"></app-selectionlist>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!PurityValid ? 'invalid' : ''" >
+                    <input type="number" class="formControl" required  NumberInput MaxValue="99.99" [(ngModel)] = Purity.Purity />
+                    <label for="" class="formLabel"> <span class="labelName"> Purity </span> </label>
+                    <div class="errorHint" *ngIf="!PurityValid" > Invalid Purity </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Purity.Active_Status" [(ngModel)]="Purity.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Purity.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Purity.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Purity.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col100">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = Purity.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SavePurity()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeletePurity()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

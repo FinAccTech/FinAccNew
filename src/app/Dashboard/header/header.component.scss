@@ -1,0 +1,100 @@
+.headerContainer{        
+    width: 100%;    
+    background-color: #fff; 
+    display: flex;
+    flex-direction: row;
+    
+    justify-content: space-between;
+    height: 100%;
+    
+    .headerLeft{
+        display: flex;
+        flex-direction: row;
+        column-gap: 15px;
+        padding: 20px;
+        align-items: center;
+
+        i{
+            font-size: 15px;
+            color: rgb(109, 107, 107);                             
+        }
+
+        .compName{
+            font-size: 20px;
+        }
+
+        .compIcon{
+            font-size: 25px;
+        }
+        
+    }
+
+    .headerRight{
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        column-gap: 15px;
+        align-items: center;
+
+        i{
+            font-size: 25px;
+            color: rgb(109, 107, 107);     
+        }
+
+        .profilePicture{
+            img{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+        }
+    }
+}
+
+.headerContainer{    
+    i:hover{
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
+.heaaderCompact{
+    height: 66px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .headerLeft{
+        padding: 20px;
+    }
+
+    .headerCenter{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
+        
+        p{            
+            font-weight: bolder;
+            font-size: 2.5vw;            
+        }
+    }
+
+    .headerRight{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 20px;
+        column-gap: 15px;
+
+        .profilePicture{
+            img{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+        }
+    }
+}

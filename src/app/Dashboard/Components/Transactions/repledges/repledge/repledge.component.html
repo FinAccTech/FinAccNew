@@ -1,0 +1,319 @@
+<div class="repledgeContainer">
+    <div class="headerCard">
+        <div class="headerLeft">     
+            <i class="fa fa-arrow-circle-left back" aria-hidden="true" (click)="GoBack()" ></i>
+            <p class="heading"> &nbsp; {{Repledge.IsOpen == 1 ? 'Opening Repledge' : 'New Repledge' }} </p>        
+            <span *ngIf="Repledge.RepledgeSno==0" style=" font-size: 1.2rem; color: green;"> &nbsp; (Create New) </span>
+            <span *ngIf="Repledge.RepledgeSno!==0" style="font-size: 1.2rem;color: red;" > &nbsp; (Edit Mode) </span>
+        </div>
+
+        <div class="headerRight">                 
+            <div class="searchBox">
+                <input type="text" required   placeholder="Type here to Search" />
+                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+    
+            
+            <button class="newBtn"[matMenuTriggerFor]="menu" >
+                <!-- <i class='bx bx-plus bx-tada' ></i>Action -->
+                <i class='bx bxs-edit-alt'></i> Actions <i class='bx bx-dots-vertical-rounded' ></i>
+            </button>
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                
+
+                <button mat-menu-item  [disabled]="Repledge.RepledgeSno == 0 || Repledge.Cancel_Status==2 " (click)="CancelRepledge()" >
+                    <div class="menuClass">
+                        <i class='bx bx-repeat' style='color:red' ></i>
+                        <span>Cancel this Repledge</span>
+                    </div>
+                </button>
+
+                <button mat-menu-item  [disabled]="Repledge.RepledgeSno == 0">
+                    <div class="menuClass">
+                        <i class='bx bx-repeat' style='color:purple' ></i>
+                        <span>ReRepledge</span>
+                    </div>
+                </button>
+                
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="docHeader">
+            <div class="row">
+                <div class="col100" >
+                    <div class="row">
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Series'" [DataSource]="VoucherSeriesList" [SelectedItem]="SelectedSeries" [MasterComponentId]="8"  (newItemEvent)="getSeries($event)" (newMasterEmit)="getNewSeries($event)" ></app-selectionlist>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                                <input type="hidden" required [(ngModel)]= "Repledge.RepledgeSno"  />        
+                                <input type="text" class="formControl" required [disabled]="AutoSeriesNo" [(ngModel)]= "Repledge.Repledge_No"  style="text-align: center; font-size: 20px; font-weight: bold;" />
+                                <label for="" class="formLabel" >Repledge Number </label>
+                                <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Number </div> 
+                            </div>                            
+                        </div> 
+                    </div>
+                    
+                    <div class="row" style="margin-top: 1rem;">
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!RefNumberValid ? 'invalid' : ''">                            
+                                <input type="text" class="formControl" required [(ngModel)]= "Repledge.Ref_No"/>
+                                <label for="" class="formLabel" >Bank Loan Number </label>   
+                                <div class="errorHint" *ngIf="!RefNumberValid" > Invalid Number </div>                                                          
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!RepledgeDateValid ? 'invalid' : ''">
+                                <!-- <input type="date" class="formControl" [ngModel]="RepledgeDate | date:'yyyy-MM-dd'" (ngModelChange)="RepledgeDate = $event"/>      -->
+                                <input type="date" class="formControl" required [ngModel]="Repledge.Repledge_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Repledge.Repledge_Date= DateToInt($event); SetMatureDate()" />                                                               
+                                <label for="" class="formLabel date"> Repledge Date </label>
+                                <div class="errorHint" *ngIf="!RepledgeDateValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="col50">
+                    
+                </div>
+            </div> 
+        </div>
+        <div class="statusHeader">
+            <div class="statusLeft">
+                <ng-container *ngIf="Repledge.RepledgeSno !==0">
+                    <div class="row">
+                        <div class="col50">
+                          
+                        </div>
+
+                        <div class="col50">                      
+                            <ng-container *ngIf="Repledge.RepledgeSno !==0 && Repledge.Cancel_Status == 2">
+                                <span class="cancelChip"> Cancelled</span>
+                                    
+                                
+                            </ng-container>
+                        </div>
+                    </div>                    
+                </ng-container>
+                    <div class="row">
+                        <div class="col50">
+
+                        </div>
+                        <div class="col50">
+                            
+                        </div>
+                    </div>
+
+            </div>            
+
+            <div class="statusRight">
+                 
+                <div [ngClass]="(Repledge.Repledge_Status == 1) ? 'statusLabelOpen' : (Repledge.Repledge_Status == 2) ? 'statusLabelClosed' : (Repledge.Repledge_Status == 3)? 'statusLabelMatured' :'statusLabelAuctioned' " >
+                    <div class="caption">Repledge Staus</div>
+                    <div class="value">{{Repledge.Repledge_Status == 1 ? 'Open' : Repledge.Repledge_Status == 2 ? 'Closed' : Repledge.Repledge_Status == 3 ? 'Matured' : 'Auctioned' }}</div>
+                </div>                  
+            </div>            
+        </div>
+    </div>
+
+    <div class="partySection">
+        <div class="sectionLeft">
+            <div class="row">
+                <div class="col100">
+                    <div class="row">                    
+                        <div class="col50" [ngClass]="!SupplierValid ? 'invalidSel' : ''">
+                            <app-partyselection [Party_Cat]= 2 [parties] = "SuppliersList"  [SelectedParty] = "SelectedSupplier" (newPartyEvent)="getSupplier($event)" ></app-partyselection>
+                        </div>                                      
+                        <div class="col50" [ngClass]="!BorrowerValid ? 'invalidSel' : ''">
+                            <app-partyselection [Party_Cat]= 3 [parties] = "BorrowersList"  [SelectedParty] = "SelectedBorrower" (newPartyEvent)="getBorrower($event)" ></app-partyselection>
+                        </div>                                      
+                    </div>
+
+                    <div class="row" style="margin-top: 1.2rem;" >
+                        <div class="col50">
+                            <app-selectionlist [Caption]="'Scheme'" [MasterComponentId]="4"  [DataSource]="SchemesList" [SelectedItem]="SelectedScheme"  (newItemEvent)="getScheme($event)" (newMasterEmit)="getNewScheme($event)" ></app-selectionlist>
+                        </div>
+                        <div class="col50" >
+                            <button class="btnDefault" (click)="SelectLoans()" >Select Loans</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="RepledgeData" >
+            <div class="sectionRight" [ngStyle]="{'height': RepledgeData ? '130px': ''}" >
+                <table>
+                    <thead> 
+                        <th>#</th>
+                        <th>Repledge No</th>
+                        <th>Repledge Date</th>                                         
+                        <th>Principal</th>                        
+                        <th>Nett Wt</th> 
+                        <th>Duration</th> 
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let Repledge of RepledgeData; let i = index" >
+                            <td [style.color]="GetStatusColor(Repledge)"> {{i+1}} </td>
+                            <td [style.color]="GetStatusColor(Repledge)" > {{Repledge.Repledge_No}} </td>
+                            <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.Repledge_Date | intToDate | date: "dd/MM/yyyy" }} </td>                            
+                            <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.Principal}} </td>
+                            <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.TotNettWt.toFixed(3) }} </td>
+                            <td [style.color]="GetStatusColor(Repledge)">  {{Repledge.Ason_Duration_Months!==0 ? Repledge.Ason_Duration_Months + ' months ':'' }} {{ (Repledge.Ason_Duration_Months !==0 && Repledge.Ason_Duration_Days) ? ' and ' : '' }}  {{Repledge.Ason_Duration_Days !==0 ? Repledge.Ason_Duration_Days + ' days' :''}} </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="itemandamountSection">        
+         
+        <div class="itemDetails">
+            <div class="loans">
+                
+                    <table class="responsiveTable">
+                        <thead>
+                            <th>#</th>
+                            <th>Loan No</th>
+                            <th>Loan Date</th>
+                            <th>Customer</th>
+                            <th>Principal</th>
+                            <th>NettWt</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ln of LoansList; let i = index" >
+                                <td style="text-align: center;" > {{i + 1}} </td>
+                                <td> {{ln.Loan_No}} </td>
+                                <td> {{ln.Loan_Date | intToDate | date:'dd/MM/yyyy' }} </td>
+                                <td> {{ln.Party_Name}} </td>
+                                <td> {{ln.Principal}} </td>
+                                <td> {{ln.TotNettWt}} </td>
+                                <td style="text-align: center;" class="zoomOnFocus" ><i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="RemoveLoan(i); $event.stopPropagation();"  ></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+            </div>
+            <div class="totals">
+                <p>Total Principal : {{TotalPrincipal}}</p>
+                <p>Total Weight : {{TotalNettWt}} Gms</p>
+            </div>
+        </div>
+        
+        <div class="amtDetails">
+            <div class="col30 RepledgeAmount">
+                <div class="row" >                    
+                    <div class="col100">
+                        <div class="formGroup" [ngClass]="!PrincipalValid ? 'invalid' : ''">
+                            <input type="text" class="formControl"  required style="font-size: 20px;text-align: right;" [(ngModel)]= "Repledge.Principal" (blur)="GetRoi($event)"  NumberInput MaxValue=0 (keydown.enter)="roi.focus()" (keyup)="CalculateRepledgeValues()" />
+                            <label for="" class="formLabel" >Repledge Amount </label>    
+                            <div class="errorHint" *ngIf="!PrincipalValid" > Invalid Repledge Amount </div>                         
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 1rem;" >                    
+                    <div class="col50">
+                        <div class="formGroup" [ngClass]="!IntRateValid ? 'invalid' : ''">
+                            <input type="number" class="formControl" required #roi [(ngModel)]= "Repledge.Roi" NumberInput MaxValue=99 (change)="CalculateRepledgeValues()" />
+                            <label for="" class="formLabel">Interest Rate </label>
+                            <i class="rightIcon">%</i>
+                            <div class="errorHint" *ngIf="!IntRateValid" > Invalid Interest </div> 
+                        </div>
+                    </div>
+                    <div class="col50">
+                        
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">                    
+                    <div class="col50">
+                   
+                    </div>
+                    <div class="col50">
+                        
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">                                        
+                    <div class="col50">
+                        <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                            <input type="number" class="formControl" required [(ngModel)]= "Repledge.DocChargesPer" NumberInput MaxValue=30 #doccharges (keydown.enter)="docchargesamt.focus()" (keyup)="CalculateRepledgeValues()">
+                            <label for="" class="formLabel">Doc Charges </label>
+                            <i class="rightIcon">%</i>
+                            <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Name </div> 
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                            <input type="number" class="formControl" required [(ngModel)]= "Repledge.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0/>
+                            <label for="" class="formLabel"> Doc Charges Amt </label>
+                            <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Name </div> 
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="row" style="margin-top: 1rem;">                    
+                    <div class="col100">
+                        <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                            <input type="number" class="formControl" required style="font-size: 20px;text-align: right;font-weight: bold;" [(ngModel)]= "Repledge.Nett_Payable" NumberInput MaxValue=0 readonly />
+                            <label for="" class="formLabel">Nett Payable </label>
+                            <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Name </div> 
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">                     
+                    <div class="col100">
+                        <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                            <!-- <input type="date" class="formControl" [ngModel]="MatureDate | date:'yyyy-MM-dd'" (ngModelChange)="MatureDate = $event" #maturedate (keydown.enter)="paymode.focus()" />     -->
+                            <input type="date" class="formControl" #maturedate required [ngModel]="Repledge.Mature_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Repledge.Mature_Date= DateToInt($event)" />                                                               
+                            <label for="" class="formLabel date"> Mature Date </label>
+                            <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Name </div> 
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="row" style="margin-top: 1rem;">                    
+                    <div class="col50">
+                        <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
+                    </div>   
+                    <div class="col50">
+                        <!-- <div class="formGroup" [ngClass]="!RepledgeNumberValid ? 'invalid' : ''">
+                            <input type="text" class="formControl" required [(ngModel)]= "Repledge.PayModeSno"  #paymode />
+                            <label for="" class="formLabel">Payment Mode </label>
+                            <div class="errorHint" *ngIf="!RepledgeNumberValid" > Invalid Name </div> 
+                        </div>  -->
+                    </div>                 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footerLeft">
+            <div class="formGroup">
+                <input type="text" class="formControl" required [(ngModel)]= "Repledge.Remarks" #remarks (keydown.enter)="btnsave.focus()"/>
+                <label for="" class="formLabel">Remarks </label>
+            </div>
+        </div>
+        <div class="footerRight">
+            <button (click)="SaveRepledge()" #btnsave > <i class="fa-regular fa-floppy-disk"></i> &nbsp;&nbsp; Save</button>
+            <button (click)="DeleteRepledge()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp;&nbsp; Delete</button>                
+        </div>
+    </div>
+</div>
