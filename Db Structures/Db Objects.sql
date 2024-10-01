@@ -3183,7 +3183,7 @@ BEGIN
 
     IF @Calc_Method = 0  -- Simple Calculation Method
 		BEGIN
-            SELECT   CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+            SELECT   CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0)))  AS DECIMAL(10,2)) as Interest_Balance,
                         CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
                         --(SELECT ISNULL(MAX(Receipt_Date),0) FROM VW_RECEIPTS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 						(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
@@ -3196,7 +3196,7 @@ BEGIN
 		END
 	ELSE IF @Calc_Method = 1 -- Multiple Calculation Method
 		BEGIN  
-			      SELECT  CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
                        CAST( ((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
                         (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
@@ -3208,7 +3208,7 @@ BEGIN
 		END
 	ELSE IF @Calc_Method = 2 -- COMPOUND Calculation Method
 		BEGIN  -----------------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
-			      SELECT  CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
                         CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
                         (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
@@ -3221,7 +3221,7 @@ BEGIN
 
 	ELSE IF @Calc_Method = 3 -- EMI Calculation Method
 		BEGIN  ---------CAST(--------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
-			      SELECT      CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+			      SELECT      CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
                         CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
                         (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
@@ -3236,7 +3236,7 @@ BEGIN
 		BEGIN
 			IF @Custom_Style = 0
 				BEGIN -- IF CUSTOM STYLE IS ZERO (0) THEN SIMPLY CALL SIMPLE INTEREST CALCULATION STRUCTURE ELSE CALL CUSTOM STRUCTURES
-					SELECT		CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
 								CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
 								(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 								(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
@@ -3248,7 +3248,7 @@ BEGIN
 				END
 			ELSE IF @Custom_Style = 1
 				BEGIN		-- THIS IS THE CUSTOM STYLE FOR VELUSAMY BANKERS, THENI
-					SELECT		CAST((SUM(IntAccured)-SUM(IntPaid)) AS DECIMAL(10,2)) as Interest_Balance,
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
 								    CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
 								    (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
 								    (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
@@ -3361,7 +3361,7 @@ RETURN
 			      ( SELECT    Rp.*,Scheme_Name as 'Scheme.Scheme_Name'
               FROM      VW_REPLEDGES Rp
               WHERE     PartySno = Pty.PartySno
-              ORDER BY  Repledge_Date DESC FOR JSON PATH) Loans_Json
+              ORDER BY  Repledge_Date DESC FOR JSON PATH) RepledgeLoans_Json
 
   FROM		Party Pty
 			
