@@ -162,9 +162,10 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
 
                 case "numtoword":
                     const toWords = new ToWords();
-                    let words = toWords.convert(Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]);      
+                    let words = toWords.convert(Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]);  
+                                            
                     StrHtml += `
-                        <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
+                        <div style="position:absolute;text-wrap: wrap;width:`+ fld.width +`px; left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
                             ` +  words  + `      only
                         </div>                      
                         `;    
