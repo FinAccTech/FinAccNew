@@ -484,6 +484,7 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Rec_No = Trans.Receipt_No;
             PrintFields.Receipt_Rec_Date = this.globals.IntToDateString (Trans.Receipt_Date);
             PrintFields.Receipt_Loan_No = Trans.Loan_No;
+            PrintFields.Receipt_Loan_Date = this.globals.IntToDateString (Trans.Loan.Loan_Date);
             PrintFields.Receipt_Party_Code = Trans.Loan.Customer.Party_Code;
             PrintFields.Receipt_Mobile   = Trans.Loan.Customer.Mobile;
             PrintFields.Receipt_Party_Name = Trans.Loan.Customer.Party_Name;
@@ -502,6 +503,8 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Party_Nominee= Trans.Loan.Customer.Nominee;
             PrintFields.Receipt_Party_Remarks= Trans.Loan.Customer.Remarks;
             PrintFields.Receipt_Party_Profile_Image= Trans.Loan.Customer.ProfileImage;
+            PrintFields.ReLoan_Type = Trans.Loan.ReLoan_Type;
+
             PrintFields.Receipt_Principal = Trans.Rec_Principal;
             PrintFields.Receipt_Interest = Trans.Rec_Interest;
             PrintFields.Receipt_Other_Credits = Trans.Rec_Other_Credits;
@@ -510,44 +513,53 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_AddLess = Trans.Rec_Add_Less;
             PrintFields.Receipt_Nett_Payable = Trans.Nett_Payable;
             PrintFields.Receipt_Remarks = Trans.Remarks;
+            PrintFields.Receipt_Tot_Qty = Trans.Loan.TotQty ;
+
+            PrintFields.Receipt_Tot_Gross_Wt = Trans.Loan.TotGrossWt;
+            PrintFields.Receipt_Tot_Nett_Wt = Trans.Loan.TotNettWt;
             PrintFields.ItemDetails_In_Line = Trans.Item_Details;
             break;
 
         case this.globals.VTypLoanRedemption:
-            PrintFields.Receipt_RecSno = Trans.RedemptionSno;
-            PrintFields.Receipt_Rec_No = Trans.Redemption_No;
-            PrintFields.Receipt_Rec_Date = this.globals.IntToDateString (Trans.Redemption_Date);
-            PrintFields.Receipt_Loan_No = Trans.Loan_No;
-            PrintFields.Receipt_Party_Code = Trans.Loan.Customer.Party_Code;
-            PrintFields.Receipt_Mobile   = Trans.Loan.Customer.Mobile;
-            PrintFields.Receipt_Party_Name = Trans.Loan.Customer.Party_Name;
-            PrintFields.Receipt_Party_Address1 = Trans.Loan.Customer.Address1;
-            PrintFields.Receipt_Party_Address2 = Trans.Loan.Customer.Address2;
-            PrintFields.Receipt_Party_Address3 = Trans.Loan.Customer.Address3;
-            PrintFields.Receipt_Party_Address4= Trans.Loan.Customer.Address4;
-            PrintFields.Receipt_Party_State= Trans.Loan.Customer.State;
-            PrintFields.Receipt_Party_Pincode= Trans.Loan.Customer.Pincode;
-            PrintFields.Receipt_Party_City= Trans.Loan.Customer.City;
-            PrintFields.Receipt_Party_Area_Name= Trans.Loan.Customer.Area_Name;
-            PrintFields.Receipt_Party_Phone= Trans.Loan.Customer.Phone;
-            PrintFields.Receipt_Party_Email= Trans.Loan.Customer.Email;
-            PrintFields.Receipt_Party_Aadhar_No= Trans.Loan.Customer.Aadhar_No;
+            console.log(Trans);
+            
+            PrintFields.Receipt_RecSno          = Trans.RedemptionSno;
+            PrintFields.Receipt_Rec_No          = Trans.Redemption_No;
+            PrintFields.Receipt_Rec_Date        = this.globals.IntToDateString (Trans.Redemption_Date);
+            PrintFields.Receipt_Loan_No         = Trans.Loan_No;
+            PrintFields.Receipt_Loan_Date       = this.globals.IntToDateString (Trans.Loan.Loan_Date);
+            PrintFields.Receipt_Party_Code      = Trans.Loan.Customer.Party_Code;
+            PrintFields.Receipt_Mobile          = Trans.Loan.Customer.Mobile;
+            PrintFields.Receipt_Party_Name      = Trans.Loan.Customer.Party_Name;
+            PrintFields.Receipt_Party_Address1  = Trans.Loan.Customer.Address1;
+            PrintFields.Receipt_Party_Address2  = Trans.Loan.Customer.Address2;
+            PrintFields.Receipt_Party_Address3  = Trans.Loan.Customer.Address3;
+            PrintFields.Receipt_Party_Address4  = Trans.Loan.Customer.Address4;
+            PrintFields.Receipt_Party_State     = Trans.Loan.Customer.State;
+            PrintFields.Receipt_Party_Pincode   = Trans.Loan.Customer.Pincode;
+            PrintFields.Receipt_Party_City      = Trans.Loan.Customer.City;
+            PrintFields.Receipt_Party_Area_Name = Trans.Loan.Customer.Area_Name;
+            PrintFields.Receipt_Party_Phone     = Trans.Loan.Customer.Phone;
+            PrintFields.Receipt_Party_Email     = Trans.Loan.Customer.Email;
+            PrintFields.Receipt_Party_Aadhar_No = Trans.Loan.Customer.Aadhar_No;
             PrintFields.Receipt_Party_Occupation= Trans.Loan.Customer.Occupation;
             PrintFields.Receipt_Party_Nominee= Trans.Loan.Customer.Nominee;
-            PrintFields.Receipt_Party_Remarks= Trans.Loan.Customer.Remarks;
+            PrintFields.Receipt_Party_Remarks   = Trans.Loan.Customer.Remarks;
             PrintFields.Receipt_Party_Profile_Image= Trans.Loan.Customer.ProfileImage;
-            PrintFields.Receipt_Principal = Trans.Rec_Principal;
-            PrintFields.Receipt_Interest = Trans.Rec_Interest;
-            PrintFields.Receipt_Other_Credits = Trans.Rec_Other_Credits;
-            PrintFields.Receipt_Other_Debits = Trans.Rec_Other_Debits;
-            PrintFields.Receipt_Default_Amt = Trans.Rec_Default_Amt;
-            PrintFields.Receipt_AddLess = Trans.Rec_Add_Less;
-            PrintFields.Receipt_Nett_Payable = Trans.Nett_Payable;
-            PrintFields.Receipt_Remarks = Trans.Remarks;
-            PrintFields.ItemDetails_In_Line = Trans.Item_Details;
-
-            break;
-            
+            PrintFields.Receipt_Principal       = Trans.Rec_Principal;
+            PrintFields.Receipt_Interest        = Trans.Rec_Interest;
+            PrintFields.Receipt_Other_Credits   = Trans.Rec_Other_Credits;
+            PrintFields.Receipt_Other_Debits    = Trans.Rec_Other_Debits;
+            PrintFields.Receipt_Default_Amt     = Trans.Rec_Default_Amt;
+            PrintFields.Receipt_AddLess         = Trans.Rec_Add_Less;
+            PrintFields.Receipt_Nett_Payable    = Trans.Nett_Payable;
+            PrintFields.Receipt_Remarks         = Trans.Remarks;            
+            PrintFields.Receipt_Tot_Qty         = Trans.Loan.TotQty;            
+            PrintFields.Receipt_Tot_Gross_Wt    = Trans.Loan.TotGrossWt;
+            PrintFields.Receipt_Tot_Nett_Wt     = Trans.Loan.TotNettWt;
+            PrintFields.ItemDetails_In_Line     = Trans.Item_Details;
+            PrintFields.ReLoan_Type             = Trans.Loan.ReLoan_Type;
+            break;            
     }
     return PrintFields;
    }
@@ -603,6 +615,7 @@ GetPrintFields(Trans: any, VouType: number){
         Receipt_Rec_No: "",
         Receipt_Rec_Date: "",
         Receipt_Loan_No: "",
+        Receipt_Loan_Date: "",
         Receipt_Party_Name:"",
         Receipt_Party_Rel_Caption: "",
         Receipt_Party_Rel_Name:  "",
@@ -632,6 +645,10 @@ GetPrintFields(Trans: any, VouType: number){
         Receipt_AddLess: 0,
         Receipt_Nett_Payable: 0,
         Receipt_Remarks: 0,
+
+        Receipt_Tot_Qty: 0,
+        Receipt_Tot_Gross_Wt: 0,
+        Receipt_Tot_Nett_Wt: 0,
 
         ItemDetails_In_Line: "",
         ItemDetails_With_Qty: "",
@@ -692,6 +709,7 @@ interface TypePrintFields {
     Receipt_Rec_No: string;
     Receipt_Rec_Date: string;
     Receipt_Loan_No: string;
+    Receipt_Loan_Date: string;
     Receipt_Party_Code:string;
     Receipt_Party_Name:string;
     Receipt_Party_Rel_Caption: string;
@@ -722,6 +740,9 @@ interface TypePrintFields {
     Receipt_Nett_Payable: number;
     Receipt_Remarks: number
 
+    Receipt_Tot_Qty: number;
+    Receipt_Tot_Gross_Wt: number;
+    Receipt_Tot_Nett_Wt: number;
     ItemDetails_In_Line: string;
     ItemDetails_With_Qty: string;
     ItemDetails: TypeItemFields[];

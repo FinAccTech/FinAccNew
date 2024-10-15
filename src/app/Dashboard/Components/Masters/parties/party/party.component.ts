@@ -62,23 +62,23 @@ export class PartyComponent implements OnInit {
       case 2:
         this.PartyCaption = "Suppliers";
         break;
+      case 3:
+          this.PartyCaption = "Borrowers";
+          break;
     }    
-    
-    
-    console.log(this.Party);
     
     
     if (this.Party.PartySno == 0){         
       if (!this.globals.AppSetup){
         this.globals.AppSetup =  JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
       }
-      if (this.globals.AppSetup.PartyCode_AutoGen == 1){
+      // if (this.globals.AppSetup.PartyCode_AutoGen == 1){
         this.CodeAutoGen = true;
         let it = new ClsParties(this.dataService)
-        it.getPartyCode().subscribe(data => {
+        it.getPartyCode(this.Party.Party_Cat!).subscribe(data => {
           this.Party.Party_Code = data.apiData;
         })
-      }
+      // }
     }
 
     let ar = new ClsAreas(this.dataService);

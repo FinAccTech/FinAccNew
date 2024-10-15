@@ -33,9 +33,18 @@ export class ClsAppSetup{
             AreaCode_AutoGen : 0,
             AreaCode_Prefix: "",
             AreaCode_CurrentNo   : 0,
+
             PartyCode_AutoGen:   0,
             PartyCode_Prefix:    "",
             PartyCode_CurrentNo: 0,
+
+            SuppCode_AutoGen:   0,
+            SuppCode_Prefix:    "",
+            SuppCode_CurrentNo:  0,
+
+            BwrCode_AutoGen:   0,
+            BwrCode_Prefix:    "",
+            BwrCode_CurrentNo  : 0,
 
             GrpCode_AutoGen: 0,
             GrpCode_Prefix: "",
@@ -91,9 +100,18 @@ export interface TypeAppSetup{
     AreaCode_AutoGen : number;
     AreaCode_Prefix: string;
     AreaCode_CurrentNo   : number;
+    
     PartyCode_AutoGen:   number;
     PartyCode_Prefix:    string;
     PartyCode_CurrentNo  : number;
+
+    SuppCode_AutoGen:   number;
+    SuppCode_Prefix:    string;
+    SuppCode_CurrentNo  : number;
+
+    BwrCode_AutoGen:   number;
+    BwrCode_Prefix:    string;
+    BwrCode_CurrentNo  : number;
 
     GrpCode_AutoGen:     number;
     GrpCode_Prefix:      string;

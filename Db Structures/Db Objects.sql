@@ -448,6 +448,15 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @PartyCode_Prefix    CHAR(4),
   @PartyCode_CurrentNo  INT,
 
+  @SuppCode_AutoGen   BIT,
+  @SuppCode_Prefix    CHAR(4),
+  @SuppCode_CurrentNo  INT,
+
+  @BwrCode_AutoGen   BIT,
+  @BwrCode_Prefix    CHAR(4),
+  @BwrCode_CurrentNo  INT,
+
+
   @GrpCode_AutoGen     BIT,
   @GrpCode_Prefix      CHAR(4),
   @GrpCode_CurrentNo    INT,
@@ -498,8 +507,11 @@ BEGIN
 	BEGIN TRANSACTION
 		
 			BEGIN
-				UPDATE Transaction_Setup SET  BranchSno=@BranchSno,AreaCode_AutoGen = @AreaCode_AutoGen, AreaCode_Prefix = @AreaCode_Prefix, AreaCode_CurrentNo = @AreaCode_CurrentNo, PartyCode_AutoGen = @PartyCode_AutoGen,
-                                      PartyCode_Prefix = @PartyCode_Prefix, PartyCode_CurrentNo = @PartyCode_CurrentNo, GrpCode_AutoGen = @GrpCode_AutoGen, GrpCode_Prefix = @GrpCode_Prefix,
+				UPDATE Transaction_Setup SET  BranchSno=@BranchSno,AreaCode_AutoGen = @AreaCode_AutoGen, AreaCode_Prefix = @AreaCode_Prefix, AreaCode_CurrentNo = @AreaCode_CurrentNo,
+                                      PartyCode_AutoGen = @PartyCode_AutoGen, PartyCode_Prefix = @PartyCode_Prefix, PartyCode_CurrentNo = @PartyCode_CurrentNo,
+                                      SuppCode_AutoGen = @SuppCode_AutoGen, SuppCode_Prefix = @SuppCode_Prefix, SuppCode_CurrentNo = @SuppCode_CurrentNo,
+                                      BwrCode_AutoGen = @BwrCode_AutoGen, BwrCode_Prefix = @BwrCode_Prefix, BwrCode_CurrentNo = @BwrCode_CurrentNo,
+                                      GrpCode_AutoGen = @GrpCode_AutoGen, GrpCode_Prefix = @GrpCode_Prefix,
                                       GrpCode_CurrentNo = @GrpCode_CurrentNo, ItemCode_AutoGen = @ItemCode_AutoGen, ItemCode_Prefix = @ItemCode_Prefix, ItemCode_CurrentNo = @ItemCode_CurrentNo,  
                                       SchemeCode_AutoGen = @SchemeCode_AutoGen, SchemeCode_Prefix = @SchemeCode_Prefix, SchemeCode_CurrentNo = @SchemeCode_CurrentNo, LocCode_AutoGen = @LocCode_AutoGen,
                                       LocCode_Prefix = @LocCode_Prefix, LocCode_CurrentNo = @LocCode_CurrentNo, PurityCode_AutoGen = @PurityCode_AutoGen, PurityCode_Prefix = @PurityCode_Prefix,

@@ -21,8 +21,8 @@ export class ClsParties{
         return this.dataService.HttpGet(postdata, "/getParties");                
     }
 
-    getPartyCode(){
-        let postdata ={ "BranchSno" :  this.BranchSno }; 
+    getPartyCode(Party_Type: number){
+        let postdata ={ "BranchSno" :  this.BranchSno, "Party_Type" :  Party_Type }; 
         return this.dataService.HttpGet(postdata, "/getPartyCode");                
     }
 

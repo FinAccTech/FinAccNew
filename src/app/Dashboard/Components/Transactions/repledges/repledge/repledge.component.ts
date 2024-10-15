@@ -17,7 +17,6 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ClsRepledges, TypeRepledge } from 'src/app/Dashboard/Classes/ClsRepledges';
 import { RepledgeService } from '../repledge.service';
 import { TypeVoucherSeries } from 'src/app/Dashboard/Classes/ClsVoucherSeries';
-import { ClsReports } from 'src/app/Dashboard/Classes/ClsReports';
 import { LoanSelectionComponent } from 'src/app/Dashboard/widgets/loan-selection/loan-selection.component';
 import { ClsTransactions } from 'src/app/Dashboard/Classes/ClsTransactions';
 

@@ -101,6 +101,14 @@ CREATE TABLE Transaction_Setup
   PartyCode_Prefix    CHAR(4),
   PartyCode_CurrentNo  INT,
 
+  SuppCode_AutoGen   BIT,
+  SuppCode_Prefix    CHAR(4),
+  SuppCode_CurrentNo  INT,
+
+  BwrCode_AutoGen   BIT,
+  BwrCode_Prefix    CHAR(4),
+  BwrCode_CurrentNo  INT,
+
   GrpCode_AutoGen     BIT,
   GrpCode_Prefix      CHAR(4),
   GrpCode_CurrentNo    INT,

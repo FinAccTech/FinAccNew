@@ -55,7 +55,7 @@ export class RedemptionsComponent {
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
-        this.RedemptionsList = JSON.parse(data.apiData);                
+        this.RedemptionsList = JSON.parse(data.apiData);          
         this.LoadDataIntoMatTable();        
         if (FromDate === 999 || ToDate === 999){ this.FromDate = data.ExtraData; this.ToDate = data.ExtraData;}
       }

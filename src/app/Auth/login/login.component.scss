@@ -1,6 +1,6 @@
 .loginContainer{
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background-color: var(--ColorPrimary);
     padding-top: 5%;    
     padding-left: 15%;    
@@ -19,8 +19,7 @@
         
         .contentLeft{
             width: 40%;
-            background-color: rgb(243, 218, 172);
-            height: 100%;
+            background-color: rgb(243, 218, 172);            
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -120,7 +119,7 @@
                     flex-direction: row;
                     align-items: center;
                     column-gap: .5rem;
-                    p{font-size: 14px;}
+                    p{font-size: 1.2rem;}
 
                     i{color: grey;}
                     i:hover{
@@ -137,7 +136,7 @@
                     flex-direction: row;    
                     align-items: center;                
                     column-gap: .5rem;
-                    p{font-size: 14px;}
+                    p{font-size: 1.2rem;}
                     i{color: grey;}
                 }
             }

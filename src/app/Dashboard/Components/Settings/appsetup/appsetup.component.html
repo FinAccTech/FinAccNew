@@ -19,7 +19,7 @@
                         <mat-select [(value)]="AppSetup.AreaCode_AutoGen"  >
                             <mat-option [value]="0">No</mat-option>
                             <mat-option [value]="1">Yes</mat-option>                            
-                        </mat-select>
+                        </mat-select> 
                     </div>
                     <div class="matLabel">
                         &nbsp;&nbsp; Auto Gen Area Code
@@ -53,6 +53,50 @@
                 </div>
                 <div class="formGroup">                    
                     <input type="text" class="formControl"  required [(ngModel)] = AppSetup.PartyCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.SuppCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Supplier Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.SuppCode_Prefix   />
+                    <label for="" class="formLabel"> Supplier Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.SuppCode_CurrentNo   />
+                    <label for="" class="formLabel"> Current No </label>
+                </div>
+            </div>
+
+            <div class="rows" style="margin-top:15px;" >
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.BwrCode_AutoGen"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Auto Gen Borrower Code
+                    </div>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.BwrCode_Prefix   />
+                    <label for="" class="formLabel"> Borrower Prefix </label>
+                </div>
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = AppSetup.BwrCode_CurrentNo   />
                     <label for="" class="formLabel"> Current No </label>
                 </div>
             </div>
