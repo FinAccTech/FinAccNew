@@ -128,6 +128,7 @@ export interface TypeLoanHistory extends TypeLoan{
 
 export interface TypePendingReport extends TypeLoan{
     Pending_Dues: number;
+    Pending_Days: number;
 }
 
 export interface TypeDayHistyory {

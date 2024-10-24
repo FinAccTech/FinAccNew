@@ -65,6 +65,7 @@ export class ImagesComponent implements OnInit {
             DelStatus:0,
             // Favorite: false,
           };          
+          
           this.TransImages.push (fileHandle);
           //this.TransImages[0].Favorite = true;
         }

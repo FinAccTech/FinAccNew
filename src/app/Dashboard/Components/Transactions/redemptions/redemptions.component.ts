@@ -33,7 +33,7 @@ export class RedemptionsComponent {
   ToDate: number = 0;
 
   FromDateValid: boolean = true;
-  ToDateValid: boolean = true;
+  ToDateValid: boolean = true; 
 
   RedemptionsList!: TypeRedemption[];
   dataSource!: MatTableDataSource<TypeRedemption>;  
@@ -43,9 +43,9 @@ export class RedemptionsComponent {
   @ViewChild(MatSort) sort!: MatSort;  
 
   ngOnInit(){
-    this.LoadRedemptionsList(999,999);
     this.FromDate = this.globals.DateToInt(new Date());
-    this.ToDate = this.globals.DateToInt(new Date());
+    this.ToDate = this.globals.DateToInt(new Date());    
+    this.LoadRedemptionsList(999,999);        
   } 
  
   LoadRedemptionsList(FromDate: number, ToDate: number){
@@ -55,7 +55,7 @@ export class RedemptionsComponent {
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
-        this.RedemptionsList = JSON.parse(data.apiData);          
+        this.RedemptionsList = JSON.parse(data.apiData);                  
         this.LoadDataIntoMatTable();        
         if (FromDate === 999 || ToDate === 999){ this.FromDate = data.ExtraData; this.ToDate = data.ExtraData;}
       }
@@ -117,7 +117,7 @@ export class RedemptionsComponent {
     }
   }
 
-  FilterByDate(){
+  FilterByDate(){ 
     this.LoadRedemptionsList(this.FromDate, this.ToDate)
   }
 

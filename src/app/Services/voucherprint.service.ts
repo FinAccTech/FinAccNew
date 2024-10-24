@@ -487,6 +487,9 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Loan_Date = this.globals.IntToDateString (Trans.Loan.Loan_Date);
             PrintFields.Receipt_Party_Code = Trans.Loan.Customer.Party_Code;
             PrintFields.Receipt_Mobile   = Trans.Loan.Customer.Mobile;
+            PrintFields.Party_Rel_Caption = Trans.Loan.Customer.Rel == 0 ? 'S/o' : Trans.Loan.Customer.Rel == 1 ? 'D/o' : Trans.Loan.Customer.Rel == 2 ? 'W/o' : 'C/o' ;
+            PrintFields.Party_Rel_Name = Trans.Loan.Customer.RelName!;
+            PrintFields.Party_Mobile = Trans.Loan.Customer.Mobile!;
             PrintFields.Receipt_Party_Name = Trans.Loan.Customer.Party_Name;
             PrintFields.Receipt_Party_Address1 = Trans.Loan.Customer.Address1;
             PrintFields.Receipt_Party_Address2 = Trans.Loan.Customer.Address2;
@@ -518,11 +521,10 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Tot_Gross_Wt = Trans.Loan.TotGrossWt;
             PrintFields.Receipt_Tot_Nett_Wt = Trans.Loan.TotNettWt;
             PrintFields.ItemDetails_In_Line = Trans.Item_Details;
+            PrintFields.Party_Profile_Image = Trans.Loan.Customer.ProfileImage;
             break;
 
         case this.globals.VTypLoanRedemption:
-            console.log(Trans);
-            
             PrintFields.Receipt_RecSno          = Trans.RedemptionSno;
             PrintFields.Receipt_Rec_No          = Trans.Redemption_No;
             PrintFields.Receipt_Rec_Date        = this.globals.IntToDateString (Trans.Redemption_Date);
@@ -531,6 +533,9 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Party_Code      = Trans.Loan.Customer.Party_Code;
             PrintFields.Receipt_Mobile          = Trans.Loan.Customer.Mobile;
             PrintFields.Receipt_Party_Name      = Trans.Loan.Customer.Party_Name;
+            PrintFields.Party_Rel_Caption       = Trans.Loan.Customer.Rel == 0 ? 'S/o' : Trans.Loan.Customer.Rel == 1 ? 'D/o' : Trans.Loan.Customer.Rel == 2 ? 'W/o' : 'C/o' ;
+            PrintFields.Party_Mobile = Trans.Loan.Customer.Mobile!;
+            PrintFields.Party_Rel_Name          = Trans.Loan.Customer.RelName!;
             PrintFields.Receipt_Party_Address1  = Trans.Loan.Customer.Address1;
             PrintFields.Receipt_Party_Address2  = Trans.Loan.Customer.Address2;
             PrintFields.Receipt_Party_Address3  = Trans.Loan.Customer.Address3;
@@ -559,6 +564,7 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Tot_Nett_Wt     = Trans.Loan.TotNettWt;
             PrintFields.ItemDetails_In_Line     = Trans.Item_Details;
             PrintFields.ReLoan_Type             = Trans.Loan.ReLoan_Type;
+            PrintFields.Party_Profile_Image     = Trans.Loan.Customer.ProfileImage;
             break;            
     }
     return PrintFields;

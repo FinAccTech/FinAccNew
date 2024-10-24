@@ -11,11 +11,19 @@ import { AuthService } from 'src/app/Services/auth.service';
 import { ClsVoucherSeries } from 'src/app/Dashboard/Classes/ClsVoucherSeries';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-loans',
   templateUrl: './loans.component.html',
-  styleUrls: ['./loans.component.scss']
+  styleUrls: ['./loans.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 }) 
 
 @AutoUnsubscribe
@@ -48,7 +56,9 @@ export class LoansComponent{
   LoansList!: TypeLoan[];
   dataSource!: MatTableDataSource<TypeLoan>;  
   columnsToDisplay: string[] = [ '#', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date','Approval_Status', 'Cancel_Status', 'crud'];
-  
+  columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
+  expandedElement!: TypeLoan | null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
 
@@ -73,14 +83,21 @@ InitLoansList(){
     let ln = new ClsLoans(this.dataService);    
     
     ln.getLoans(0,FromDate, ToDate,this.globals.LoanStatusAll, this.globals.ApprovalStatusAll, this.globals.CancelStatusAll, this.IsOpen).subscribe( data => {         
-      
       if (data.queryStatus == 0){
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
         this.loanService.LoadedFromDate = FromDate;
         this.loanService.LoadedToDate = ToDate;                
-        this.LoansList = JSON.parse(data.apiData);               
+        this.LoansList = JSON.parse(data.apiData);                       
+        this.LoansList.map(ln=>{
+          ln.Customer = JSON.parse(ln.Party_Json)[0];
+          if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
+          ln.IGroup = JSON.parse(ln.Group_Json)[0];
+          ln.Location  = JSON.parse(ln.Location_Json)[0];          
+          ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
+        });
+        
         this.LoadDataIntoMatTable();
         if (FromDate === 999 || ToDate === 999){ this.FromDate = data.ExtraData; this.ToDate = data.ExtraData;}
       }

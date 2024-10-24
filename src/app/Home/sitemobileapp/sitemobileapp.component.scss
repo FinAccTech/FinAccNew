@@ -1,0 +1,245 @@
+.mobileappContainer{
+    width: 100%;
+    background-color: var(--ColorPrimary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+
+    @keyframes smooth-appear {
+        to{          
+          opacity:1;
+        }
+      }
+
+    img{
+        width: 20vw;
+        border-radius: 2rem;                
+        opacity:0;         
+        animation: smooth-appear 5s ease forwards;
+    }
+
+    .loans{
+        position: absolute;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        background-color: #fff;
+        
+        left: 0;
+        top: 20%;        
+        animation: loans-appear 2s ease forwards;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+
+        .loan{
+            background-color:var(--ColorPrimary);                        
+            border-radius: 50%;
+            width: 9.5rem;
+            height: 9.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .innerLoan{
+                background-color:#fff;                        
+                border-radius: 50%;
+                width: 8.5rem;
+                height: 8.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    font-weight: 500;
+                    font-size: 1.5rem;
+                    text-align: center;
+                }
+            }
+        }
+        p{
+            color: var(--ColorPrimary);
+        }
+    }
+
+    @keyframes loans-appear {
+        to{          
+          left: 30%;          
+        }
+      }
+
+      .recents{
+        position: absolute;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        background-color: #fff;
+        
+        left: 0;
+        bottom: 20%;        
+        animation: recents-appear 4s ease forwards;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+
+        .recent{
+            background-color:var(--ColorPrimary);                        
+            border-radius: 50%;
+            width: 9.5rem;
+            height: 9.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .innerrecent{
+                background-color:#fff;                        
+                border-radius: 50%;
+                width: 8.5rem;
+                height: 8.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    font-weight: 500;
+                    font-size: 1.2rem;
+                    text-align: center;
+                }
+            }
+        }
+        p{
+            color: var(--ColorPrimary);
+        }
+    }
+
+    @keyframes recents-appear {
+        to{          
+          
+          left: 30%;          
+        }
+      }
+
+      .graphs{
+        position: absolute;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        background-color: #fff;
+        
+        right: 0;
+        top: 20%;        
+        animation: graphs-appear 2s ease forwards;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+
+        .graph{
+            background-color:var(--ColorPrimary);                        
+            border-radius: 50%;
+            width: 9.5rem;
+            height: 9.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .innergraph{
+                background-color:#fff;                        
+                border-radius: 50%;
+                width: 8.5rem;
+                height: 8.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    font-weight: 500;
+                    font-size: 1.2rem;
+                    text-align: center;
+                }
+            }
+        }
+        p{
+            color: var(--ColorPrimary);
+        }
+    }
+
+    @keyframes graphs-appear {
+        to{                    
+          right: 30%;          
+        }
+      }
+
+      .customers{
+        position: absolute;
+        width: 10rem;
+        height: 10rem;
+        border-radius: 50%;
+        background-color: #fff;
+        
+        right: 0;
+        bottom: 20%;        
+        animation: graphs-appear 4s ease forwards;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+
+        .customer{
+            background-color:var(--ColorPrimary);                        
+            border-radius: 50%;
+            width: 9.5rem;
+            height: 9.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .innercustomer{
+                background-color:#fff;                        
+                border-radius: 50%;
+                width: 8.5rem;
+                height: 8.5rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                p{
+                    font-weight: 500;
+                    font-size: 1.2rem;
+                    text-align: center;
+                }
+            }
+        }
+        p{
+            color: var(--ColorPrimary);
+        }
+    }
+
+    @keyframes customers-appear {
+        to{                    
+          right: 30%;          
+        }
+      }
+}
+
+@media only screen and (max-width: 1024px) {
+    .mobileappContainer{
+        padding: 1.5rem;
+
+        .loans, .recents, .graphs, .customers {
+            display: none;
+        }
+        
+        img{
+            border-radius: 1rem;
+        }
+    }
+}

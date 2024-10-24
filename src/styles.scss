@@ -70,7 +70,8 @@ input[type=number] {
   max-width: 10rem;
   border: 1px solid var(--ColorPrimary);
   flex-wrap: nowrap;
-
+  border-radius: 5px;
+  
   i{
     font-size: 1.5rem;
   }
@@ -282,7 +283,7 @@ input[type=number] {
     .matLabel {
       top: -8px;
       left: 10px;    
-      font-size: 12px;
+      font-size: 1rem;
       background-color: #fff;
       position: absolute;    
     }
@@ -1087,6 +1088,36 @@ input[type=number] {
     }
 }
 
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.expandDetails{    
+  display: flex; 
+  width: 100%;
+  align-items: center;     
+  color: black;
+  border: 1px solid var(--ColorPrimary);
+  padding: 1rem;
+}
 
 
 // Breakpoints

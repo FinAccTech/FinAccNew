@@ -1,0 +1,57 @@
+<div class="headerContainer">
+    <div class="headerLeft">
+        <div class="logoSection">
+            <img src="assets/images/newlogo.png"  />
+        </div>
+        <div class="menuSection">
+            <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Features</li>
+                <li>Screenshots</li>
+                <li>Videos</li>
+                <li>Pricing</li>
+                <li>Contact</li>
+            </ul>
+        </div>
+        
+    </div>
+
+    <div class="headerRight">
+        <p> Contact Sales</p>
+        <button class="btn btnsansback">Client Login</button>
+        <button class="btn">Get Started</button>
+    </div>
+</div>
+
+<div class="mobileHeader">
+    <div class="headerLeft">
+        <div class="logoSection">
+            <img src="assets/images/newlogo.png"  />
+        </div>
+    </div>
+
+    <div class="headerRight">
+        <ng-container *ngIf="!ShowMobileMenu" >
+            <i class='bx bx-list-ul bx-tada bx-flip-horizontal' (click)="ShowMobileMenu = !ShowMobileMenu"  ></i>
+        </ng-container>
+        <ng-container *ngIf="ShowMobileMenu" >
+            <i class='bx bx-x bx-tada' (click)="ShowMobileMenu = !ShowMobileMenu" ></i>
+        </ng-container>
+    </div>
+
+    <ng-container *ngIf="ShowMobileMenu" >
+        <div class="menuList">
+            <ul>
+                <li>Home</li>
+                <li>About</li>
+                <li>Pricing</li>
+            </ul>
+
+            <div class="buttonSection">
+                <button class="btn btnsansback">Client Login</button>            
+                <button class="btn">Get Started</button>
+            </div>        
+        </div>
+    </ng-container>
+</div>

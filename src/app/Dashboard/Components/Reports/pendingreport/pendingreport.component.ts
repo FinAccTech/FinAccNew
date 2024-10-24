@@ -1,3 +1,4 @@
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,7 +12,14 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @Component({
   selector: 'app-pendingreport',
   templateUrl: './pendingreport.component.html',
-  styleUrls: ['./pendingreport.component.scss']
+  styleUrls: ['./pendingreport.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 @AutoUnsubscribe
@@ -21,8 +29,10 @@ export class PendingreportComponent {
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date', 'Pending_Dues'];
-  
+  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Last_Receipt_Date', 'Mature_Date','Pending_Days', 'Pending_Dues'];
+  columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
+  expandedElement!: TypeLoan | null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
   
@@ -31,6 +41,12 @@ export class PendingreportComponent {
   FilteredList:    TypePendingReport[] = [];    
 
   PendingDues: number = 0;
+
+  ShowFilterOptions: boolean = false;
+  FilteMonthsParams: number = 0;
+  FilteDaysParams: number = 0;
+  FilterMonths:number = 0;
+  FilterDays: number = 0;
 
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
@@ -48,6 +64,14 @@ export class PendingreportComponent {
         }
         else{                
           this.LoansList = JSON.parse (data.apiData);      
+          this.LoansList.map(ln=>{
+            ln.Customer = JSON.parse(ln.Party_Json)[0];
+            if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
+            ln.IGroup = JSON.parse(ln.Group_Json)[0];
+            ln.Location  = JSON.parse(ln.Location_Json)[0];          
+            ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
+          });
+          
           this.FilteredList = this.LoansList;  
           this.LoadDataIntoMatTable();        
         }
@@ -88,4 +112,30 @@ export class PendingreportComponent {
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
   }
+
+  FilterByParams(Type: number){
+    // if (Type == 0){
+    //   if (this.FilterMonths == 0) { return; }      
+    // }
+    // else{
+    //   if (this.FilterDays == 0) { return; }
+    // }
+
+    switch ( (Type==0 ? this.FilteMonthsParams : this.FilteDaysParams) ) {
+      case 0:
+        this.FilteredList =  (this.LoansList.filter(ln =>{ return (Type==0 ? ln.Pending_Dues : ln.Pending_Days)  ===   +(Type==0 ? this.FilterMonths : this.FilterDays)  }));
+        break;
+      case 1:
+        this.FilteredList =  (this.LoansList.filter(ln =>{ return (Type==0 ? ln.Pending_Dues : ln.Pending_Days) >  +(Type==0 ? this.FilterMonths : this.FilterDays) }));
+        break;
+      case 2:
+          this.FilteredList =  (this.LoansList.filter(ln =>{ return (Type==0 ? ln.Pending_Dues : ln.Pending_Days) <  +(Type==0 ? this.FilterMonths : this.FilterDays) }));
+          break;
+    }
+    
+    this.LoadDataIntoMatTable();
+    this.ShowFilterOptions = false;
+  }
+
+  
 }

@@ -1,3 +1,4 @@
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,7 +12,14 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @Component({
   selector: 'app-auctionhistory',
   templateUrl: './auctionhistory.component.html',
-  styleUrls: ['./auctionhistory.component.scss']
+  styleUrls: ['./auctionhistory.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 
 @AutoUnsubscribe
@@ -22,7 +30,9 @@ export class AuctionhistoryComponent {
   
   dataSource!: MatTableDataSource<TypeLoan>;  
   columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date'];
-  
+  columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
+  expandedElement!: TypeLoan | null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
   
@@ -46,7 +56,13 @@ export class AuctionhistoryComponent {
       }
       else{                
         this.LoansList = JSON.parse (data.apiData);
-        console.log(this.LoansList);        
+        this.LoansList.map(ln=>{
+          ln.Customer = JSON.parse(ln.Party_Json)[0];
+          if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
+          ln.IGroup = JSON.parse(ln.Group_Json)[0];
+          ln.Location  = JSON.parse(ln.Location_Json)[0];          
+          ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
+        });
         this.LoadDataIntoMatTable();        
       }
     },

@@ -33,8 +33,8 @@ export class ReceiptsComponent {
   }
   
   @ViewChild('TABLE')  table!: ElementRef; 
-  FromDate: number = 0;
-  ToDate: number = 0;
+  FromDate: number  = 0;
+  ToDate: number    = 0;
 
   FromDateValid: boolean = true;
   ToDateValid: boolean = true;

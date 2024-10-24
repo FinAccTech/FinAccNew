@@ -545,6 +545,8 @@ RETURN
 	WHERE	  (SetupSno=@SetupSno OR @SetupSno=0) AND (CompSno=@CompSno) AND (BranchSno=@BranchSno)
 
 GO
+update transaction_Setup set intcalcindays = 0, suppcode_Autogen=0, suppcode_prefix='', suppcode_currentno=0, bwrcode_Autogen=0, bwrcode_prefix='', bwrcode_currentno=0
+GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getVoucherTypes') BEGIN DROP FUNCTION Udf_getVoucherTypes END
 GO
@@ -3339,20 +3341,34 @@ CREATE FUNCTION Udf_getPendingReport(@CompSno INT, @AsOn INT)
   RETURNS TABLE
   WITH ENCRYPTION AS
 RETURN
-	SELECT		Ln.*, Pending_Dues = CASE 
+	  SELECT		Ln.*, Pending_Dues = CASE 
 										WHEN Ln.Last_Receipt_Date = 0 
 											THEN DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
 																										ELSE [dbo].IntToDate(@AsOn) END) 
 																										
-										ELSE 
-											DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
+										  ELSE 
+											  DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
 																										ELSE [dbo].IntToDate(@AsOn) END) 
-																										END
+																										END,
+
+                     Pending_Days = CASE 
+										  WHEN Ln.Last_Receipt_Date = 0 
+											  THEN DATEDIFF(DAY, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
+																										WHEN 0 THEN GETDATE() 
+																										ELSE [dbo].IntToDate(@AsOn) END) 
+																										
+										  ELSE 
+											  DATEDIFF(DAY, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
+																										WHEN 0 THEN GETDATE() 
+																										ELSE [dbo].IntToDate(@AsOn) END) 
+																										END			  																						
+                   
     FROM		Udf_getLoans(0,@CompSno,0,2,1,0) Ln
 	
 GO
+
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_getRepledgeDetailed') BEGIN DROP PROCEDURE Sp_getRepledgeDetailed END

@@ -43,7 +43,6 @@ import { AuthGuard } from './Auth/auth.guard';
 import { CompGuard } from './Auth/comp.guard';
 import { DeactivateGuard } from './Auth/deactivate.guard';
 import { RightsGuard } from './Auth/rights.guard';
-import { GlobalsService } from './Services/globals.service';
 import { VoucherpostingComponent } from './Dashboard/Components/Settings/voucherposting/voucherposting.component';
 import { AlertssetupComponent } from './Dashboard/Components/Settings/alertssetup/alertssetup.component';
 import { DayhistoryComponent } from './Dashboard/Components/Reports/dayhistory/dayhistory.component';
@@ -55,10 +54,12 @@ import { RpclosuresComponent } from './Dashboard/Components/Transactions/rpclosu
 import { RpclosureComponent } from './Dashboard/Components/Transactions/rpclosures/rpclosure/rpclosure.component';
 import { CustomerhistoryComponent } from './Dashboard/Components/Reports/partyhistory/customerhistory.component';
 import { SupplierhistoryComponent } from './Dashboard/Components/Reports/supplierhistory/supplierhistory.component';
+import { HomeComponent } from './Home/home/home.component';
 
 
 const routes: Routes = [
   { path:'', component: LoginComponent}, 
+  // { path:'', component: HomeComponent},
   { path:'dashboard', component: DashboardComponent,canActivate: [AuthGuard], canDeactivate: [DeactivateGuard],
 
     children:[

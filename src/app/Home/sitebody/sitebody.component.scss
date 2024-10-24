@@ -1,0 +1,106 @@
+.sidebodyContainer{
+    background-color: #f5f2f2;
+    width: 100%;
+    padding: 4rem 10rem 4rem 10rem;    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    z-index: 10;
+    h1{
+        font-size: 4rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    h2{
+        font-size: 2rem;
+        font-weight: 400;
+        padding: 4rem;
+        text-align: center;
+    }
+
+    .inputGrp{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 40rem;
+        text-align: center;        
+        background-color: var(--ColorPrimary);
+        .grpLeft{
+            width: 70%;
+            input{
+                width: 100%;
+                padding: 1rem;
+                border: none;        
+            }
+            border: 2px solid var(--ColorPrimary);
+        }
+        .grpRight{
+            width: 30%;
+            .btn{
+                border: none;
+                padding: 1rem;                
+                width: 100%;
+                background-color: var(--ColorPrimary);
+                color: #fff;
+                font-size: 1.2rem;
+            }
+
+            .btn:hover{
+                cursor: pointer;
+            }
+
+
+        }
+    }
+
+    .videoDiv{
+        margin-top: 4rem;
+    }
+
+    .videoDiv{
+        width: 50vw;
+        height: 60vh;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .sidebodyContainer{
+        padding: 2rem 2rem 2rem 2rem;    
+        margin-top: 0;
+        h1{
+            font-size: 2.5rem;
+        }
+
+        h2{
+            font-size: 2rem;
+            font-weight: 400;        
+            text-align: justify;            
+
+        }
+
+        .inputGrp{
+            width: 30rem;
+            background-color: var(--ColorPrimary);
+            .grpRight{
+                width: 30%;
+                .btn{
+                    border: none;
+                    padding: .87rem;                
+                    width: 100%;
+                    background-color: var(--ColorPrimary);
+                    color: #fff;
+                    font-size: 1.2rem;
+                }
+            }
+        }
+
+        .videoDiv{
+            width: 80vw;
+            height: 30vh;
+        }
+    }
+    
+  }

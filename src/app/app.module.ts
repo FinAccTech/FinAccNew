@@ -117,6 +117,15 @@ import { RpclosuresComponent } from './Dashboard/Components/Transactions/rpclosu
 import { RpclosureComponent } from './Dashboard/Components/Transactions/rpclosures/rpclosure/rpclosure.component';
 import { SupplierhistoryComponent } from './Dashboard/Components/Reports/supplierhistory/supplierhistory.component';
 import { CustomerhistoryComponent } from './Dashboard/Components/Reports/partyhistory/customerhistory.component';
+import { HomeComponent } from './Home/home/home.component';
+import { SiteheaderComponent } from './Home/siteheader/siteheader.component';
+import { SitebodyComponent } from './Home/sitebody/sitebody.component';
+import { SimplifyComponent } from './Home/simplify/simplify.component';
+import { SiteschemesComponent } from './Home/siteschemes/siteschemes.component';
+import { SitemodulesComponent } from './Home/sitemodules/sitemodules.component';
+import { SitecashflowComponent } from './Home/sitecashflow/sitecashflow.component';
+import { SiterepledgeComponent } from './Home/siterepledge/siterepledge.component';
+import { SitemobileappComponent } from './Home/sitemobileapp/sitemobileapp.component';
 
 @NgModule({
   declarations: [
@@ -173,7 +182,7 @@ import { CustomerhistoryComponent } from './Dashboard/Components/Reports/partyhi
     RedemptionsComponent,    
     
     RedemptionComponent, LoanhistoryComponent, AuctionhistoryComponent, PendingreportComponent, AuctionentriesComponent, AuctionentryComponent, StatusupdateComponent, 
-    ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, 
+    ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, 
      
     
   ],
