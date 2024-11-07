@@ -1,11 +1,11 @@
 <div class="reportContainer">
     <div class="headerCard">
         <div class="headerLeft">                 
-            <p class="heading"> Pending Report</p>        
+            <p class="heading"> Age Analysis</p>        
         </div>
 
         <div class="headerRight">                  
-            <i class='bx bx-message-rounded-dots' style="color: royalblue" (click)="SendAlerts()"  ></i>
+            <i class='bx bx-message-rounded-dots' style="color: royalblue" (click)="SendSms()"  ></i>
 
             <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
 
@@ -51,12 +51,6 @@
             </div>
     
             <div class="filterRight">                
-                <div class="formGroup" style="width: 50%;">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = PendingDues   />
-                    <label for="" class="formLabel"> PendingDues </label>
-                </div>
-
-                <button class="btn" (click)="LoadPendingReport()"><i class='bx bx-filter'></i> Filter</button>
                 <button class="btn" (click)="ShowFilterOptions=!ShowFilterOptions"><i class='bx bx-filter-alt' ></i> More Filter</button>
                 <button class="btn" (click)="ClearFilter()" ><i class='bx bxs-eraser'></i>Clear </button>
             </div>
@@ -69,7 +63,7 @@
     
                   <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                         <p [style.text-align]="(column == 'Principal' || column == 'TotNettWt' || column == 'Pending_Interest'  )? 'right' : 'left'"  > {{ column=="crud"? '': column.replace("_"," ")}} </p>
+                         <p [style.text-align]="(column == 'Principal' || column == 'TotNettWt' || column == 'Pending_Interest'  )? 'right' : 'left'"  > {{ column=="crud"? '':column=="Ason_Duration_Months" ? "Total Months":column=="Ason_Duration_Days" ? "Days"  : column.replace("_"," ")}} </p>
                         </th>
                         
                       <td mat-cell *matCellDef="let element; let i = dataIndex"
@@ -157,7 +151,7 @@
             </div>
 
             <div class="row" style="margin-top: 1.5rem;" >
-                <p>Pending Months</p>
+                <p>Total Months</p>
                 <div class="matGroup" >
                     <div class="matSelect">
                         <mat-select [(value)]="FilteMonthsParams"  >
@@ -179,7 +173,7 @@
             <br>
 
             <div class="row">
-                <p>Pending Days</p>
+                <p>Total Days</p>
                 <div class="matGroup" >
                     <div class="matSelect">
                         <mat-select [(value)]="FilteDaysParams"  >
@@ -198,7 +192,17 @@
                 </div>
                 <button class="btnDefault" (click)="FilterByParams(1)"> Filter </button>
             </div>   
-            
+
+            <div class="row" style="margin-top: 1.5rem;" >
+                <div class="col100">
+                    <label class="toggle">                    
+                        <input class="toggle-checkbox" type="checkbox" [checked]="WithReceipt" [(ngModel)]="WithReceipt"> <!-- (change)="SetActiveStatus($event)"  -->
+                        <div class="toggle-switch"></div>
+                        <span class="toggle-label"> {{WithReceipt == true? 'With Receipt' : 'Without Receipt' }}  </span>
+                    </label>
+                </div>
+            </div>
+          
         </div>
     </ng-container>
 </div>

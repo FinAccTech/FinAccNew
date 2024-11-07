@@ -1,0 +1,68 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <p>Select Template</p>
+        </div>
+
+        <div class="headerRight">
+            <p matDialogClose="" > &times; </p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col50">
+                <div class="row">
+                    <div class="col100">
+                        <app-selectionlist [Caption]="'Template'" [DataSource]="TemplatesList" [SelectedItem]="SelectedTemplate"  (newItemEvent)="getTemplate($event)" ></app-selectionlist>
+                    </div>
+                </div>
+                
+                <div class="row" style="margin-top: 1.5rem;" >
+                    <div class="col100">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="SelectedAlertMode"  >
+                                    <mat-option [value]=1>SMS Alert</mat-option>
+                                    <mat-option [value]=2>WhatsApp Alert</mat-option>                            
+                                    <mat-option [value]=3>Email Alert</mat-option>                            
+                                    <mat-option [value]=4>Voice Alert</mat-option>                            
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; Alert Mode
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 1.5rem;" >
+                    <div class="col100">
+                        <div class="formGroup">                            
+                            <input type="text" class="formControl" required [(ngModel)]= "Auction_Date"/>
+                            <label for="" class="formLabel" >Auction Date (Optional) </label>                               
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="col50">
+
+                <div class="formGroup">                                
+                    <input type="text" class="formControl" readonly [(ngModel)]= "SelectedTemplate.Template_Name"/>
+                    <label for="" class="formLabel"> Template Name </label>                                                      
+                </div>
+                <br>
+                <textarea style="width: 100%; padding: 1rem; outline: none; border: 1px solid #ddd" readonly [(ngModel)]= "SelectedTemplate.Template_Text" rows="15">
+
+                </textarea>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="footer">
+        <button (click)="Submit()" > Submit</button>
+    </div>
+</div>

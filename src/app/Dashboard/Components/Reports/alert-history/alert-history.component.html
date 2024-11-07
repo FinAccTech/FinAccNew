@@ -1,0 +1,102 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Alerts History</p>        
+        </div>
+
+        <div class="headerRight">                  
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-excel" style="color: green;" ></i>
+                        <span> &nbsp; Excel</span>
+                    </div>                    
+                </button>             
+                <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-csv" style="color: rgb(168, 15, 168);" ></i>
+                        <span> &nbsp; Csv</span>
+                    </div>                    
+                </button>             
+                <button mat-menu-item (click)="exporter.exportTable('json', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fab fa-js" style="color: yellowgreen;"></i>
+                        <span> &nbsp; Json</span>
+                    </div>                    
+                </button>         
+                <button mat-menu-item (click)="exporter.exportTable('txt', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-alt" style="color: chocolate;" ></i>
+                        <span> &nbsp; Text</span>
+                    </div>                    
+                </button>                    
+            </mat-menu>     
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="filterHeader">
+            <div class="filterLeft">
+                <div class="searchBox">
+                    <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />
+                    <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                    <div class="iconRight">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div> 
+                </div>
+            </div>
+    
+            <div class="filterRight">                
+                
+            </div>
+        </div>
+
+        
+        <div class="tableBody">
+            <div class="mat-elevation-z8 tableContainer" #TABLE>
+                <table class="table" mat-table [dataSource]="dataSource" matSort matTableExporter #exporter="matTableExporter"  >
+    
+                  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                         <p [style.text-align]="(column == 'Principal' || column == 'TotNettWt' || column == 'Pending_Interest'  )? 'right' : 'left'"  > {{ column=="crud"? '': column.replace("_"," ")}} </p>
+                        </th>
+                        
+                      <td  mat-cell *matCellDef="let element; let i = index" style="color: rgb(88, 84, 84); padding: 1rem;"  > 
+                        {{  
+                          column == "Approval_Status"  
+                            ? element[column] == 1 
+                              ? "Approved"
+                              : "UnApproved"                        
+    
+                            : column == "#"
+                                ? i+1
+    
+                           
+                    
+                          : element[column]                         
+                        }}                     
+    
+                      </td>            
+                      
+                  </ng-container>
+               
+                  
+                       
+                  <tr mat-header-row *matHeaderRowDef ="columnsToDisplay; sticky: true;"></tr>
+                  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                    class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element"
+                    (click)="expandedElement = expandedElement === element ? null : element">
+                  </tr>
+                  
+                  
+                  
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 10 aria-label="Select page of users"></mat-paginator> 
+            </div>
+        </div>
+    </div>
+
+</div>

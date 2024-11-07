@@ -85,8 +85,8 @@ export class ClsSchemes{
 
 export interface TypeScheme {    
     SchemeSno: number;
-    Scheme_Code?: String;
-    Scheme_Name?: String;
+    Scheme_Code?: string;
+    Scheme_Name?: string;
     Roi?: number;
     OrgRoi?: number;
     IsStdRoi?: boolean;

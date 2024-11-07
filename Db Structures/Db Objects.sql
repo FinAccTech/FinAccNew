@@ -2648,8 +2648,8 @@ BEGIN
 
   VALUES                       (      1, 'AR',0, 1,'PR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BR', 0, 1, 0, '', 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno)
 
-  INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance)
-  VALUES                    (@CompSno, '','','','','','','')
+  INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
+  VALUES                    (@CompSno, '','','','','','','',0,0)
 END
 
 GO
@@ -3278,6 +3278,108 @@ END
 
 GO
 
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getBalanceSummary') BEGIN DROP FUNCTION Udf_getBalanceSummary END
+GO
+CREATE FUNCTION Udf_getBalanceSummary(@LoanSno    INT,  @AsOn       INT,  @IsCompound BIT)
+  RETURNS @Result TABLE (Interest_Balance MONEY, Principal_Balance MONEY, Last_Receipt_Date INT , Ason_Duration_Months TINYINT, Ason_Duration_Days INT, Struc_Json NVARCHAR(MAX), Statement_Json NVARCHAR(MAX) )
+  WITH ENCRYPTION AS
+  BEGIN
+	DECLARE @Calc_Method TINYINT
+	DECLARE @Custom_Style TINYINT
+    SELECT @Calc_Method=Calc_Method, @Custom_Style=Custom_Style FROM Schemes WHERE SchemeSno=(SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
+
+    IF @Calc_Method = 0  -- Simple Calculation Method
+		BEGIN
+		INSERT INTO @Result
+            SELECT   CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0)))  AS DECIMAL(10,2)) as Interest_Balance,
+                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        --(SELECT ISNULL(MAX(Receipt_Date),0) FROM VW_RECEIPTS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						            (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						            (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+	ELSE IF @Calc_Method = 1 -- Multiple Calculation Method
+		BEGIN  
+		INSERT INTO @Result
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+                       CAST( ((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn)
+		END
+	ELSE IF @Calc_Method = 2 -- COMPOUND Calculation Method
+		BEGIN  -----------------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
+		INSERT INTO @Result
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+
+	ELSE IF @Calc_Method = 3 -- EMI Calculation Method
+		BEGIN  ---------CAST(--------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
+		INSERT INTO @Result
+			SELECT      CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+				CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+				(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+				(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+				(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+				(SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+				(SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+
+	ELSE IF @Calc_Method = 4 -- CUSTOMIZED CALCULATION METHODS
+		BEGIN
+			IF @Custom_Style = 0
+				BEGIN -- IF CUSTOM STYLE IS ZERO (0) THEN SIMPLY CALL SIMPLE INTEREST CALCULATION STRUCTURE ELSE CALL CUSTOM STRUCTURES
+				INSERT INTO @Result
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+								CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+								(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+								(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+								(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+								(SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+					FROM		Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+				END
+			ELSE IF @Custom_Style = 1
+				BEGIN		-- THIS IS THE CUSTOM STYLE FOR VELUSAMY BANKERS, THENI
+					INSERT INTO @Result	
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+								    CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+								    (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+								    (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+								    (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+								    (SELECT * FROM Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                    (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+					FROM		Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound)
+
+				END
+		END
+		RETURN
+	END
+
+GO
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoanHistory') BEGIN DROP FUNCTION Udf_getLoanHistory END
 GO
 
@@ -3341,7 +3443,9 @@ CREATE FUNCTION Udf_getPendingReport(@CompSno INT, @AsOn INT)
   RETURNS TABLE
   WITH ENCRYPTION AS
 RETURN
-	  SELECT		Ln.*, Pending_Dues = CASE 
+	  SELECT		Ln.*, Pending_Interest = (SELECT Interest_Balance FROM Udf_getBalanceSummary(Ln.LoanSno,@AsOn,0)),
+
+                    Pending_Dues = CASE 
 										WHEN Ln.Last_Receipt_Date = 0 
 											THEN DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
@@ -3366,6 +3470,8 @@ RETURN
 																										END			  																						
                    
     FROM		Udf_getLoans(0,@CompSno,0,2,1,0) Ln
+
+    WHERE   Ln.Loan_Status IN (1,3)
 	
 GO
 
@@ -4622,6 +4728,7 @@ CloseNow:
 END
 GO
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Templates') BEGIN DROP PROCEDURE Sp_Templates END
 GO
 CREATE PROCEDURE Sp_Templates
@@ -4698,7 +4805,9 @@ CREATE PROCEDURE Sp_Alerts_Setup
     @Sms_Username       VARCHAR(20),
     @Sms_Password       VARCHAR(20),
     @Sms_Peid           VARCHAR(50),
-    @WhatsApp_Instance  VARCHAR(100),    
+    @WhatsApp_Instance  VARCHAR(100),
+    @Add_91             BIT,
+    @Add_91Sms             BIT,
     @AlertXml           XML,
 	  @RetSno	            INT OUTPUT
 
@@ -4710,7 +4819,7 @@ BEGIN
     IF EXISTS(SELECT SetupSno FROM Alerts_Setup WHERE SetupSno=@SetupSno)
 			BEGIN
 				UPDATE Alerts_Setup SET CompSno=@CompSno,Admin_Mobile=@Admin_Mobile, Sms_Api=@Sms_Api, Sms_Sender_Id=@Sms_Sender_Id, Sms_Username=@Sms_Username, Sms_Password=@Sms_Password,
-                                Sms_Peid=@Sms_Peid, WhatsApp_Instance=@WhatsApp_Instance
+                                Sms_Peid=@Sms_Peid, WhatsApp_Instance=@WhatsApp_Instance,Add_91=@Add_91,Add_91Sms=@Add_91Sms
 				WHERE SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow
 
@@ -4719,8 +4828,8 @@ BEGIN
 			END
 		ELSE
 			BEGIN
-				INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance )
-        VALUES                    (@CompSno, @Admin_Mobile, @Sms_Api, @Sms_Sender_Id, @Sms_Username, @Sms_Password, @Sms_Peid, @WhatsApp_Instance)
+				INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
+        VALUES                    (@CompSno, @Admin_Mobile, @Sms_Api, @Sms_Sender_Id, @Sms_Username, @Sms_Password, @Sms_Peid, @WhatsApp_Instance,@Add_91,@Add_91Sms)
 
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @SetupSno = @@IDENTITY
@@ -4781,6 +4890,8 @@ CloseNow:
 END
 
 GO
+
+
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAlertsSetup') BEGIN DROP FUNCTION Udf_getAlertsSetup END
 GO
@@ -4945,7 +5056,6 @@ RETURN
 	      WHERE	  (Red.Redemption_Date BETWEEN @HistFromDate AND @HistToDate) AND Red.CompSno=@CompSno AND (Red.Cancel_Status <> 2)
 GO
 
-
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoansforRepledge') BEGIN DROP FUNCTION Udf_getLoansforRepledge END
 GO
 
@@ -4956,6 +5066,44 @@ RETURN
     SELECT  *
     FROM    VW_LOANS
     WHERE   (CompSno=@CompSno) AND (Loan_Repledge_Status=0) AND (Loan_Status IN (1,3))
+
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAgeAnalysis') BEGIN DROP FUNCTION Udf_getAgeAnalysis END
+GO
+CREATE FUNCTION Udf_getAgeAnalysis(@CompSno INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+SELECT		*
+
+FROM		Udf_getLoans(0,@CompSno,0,2,1,0) Ln
+
+WHERE		Ln.Loan_Status IN (1,3)
+
+GO
+
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAlertHistory') BEGIN DROP FUNCTION Udf_getAlertHistory END
+GO
+CREATE FUNCTION Udf_getAlertHistory(@CompSno INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+SELECT		Ah.HisSno, CAST(Ah.Alert_Date AS VARCHAR) AS Alert_Date, Ah.Alert_Destination, Ah.Alert_Text, 
+          Alert_Type = CASE Alert_Type  WHEN 1 THEN 'New Loan' WHEN 2 THEN 'New Receipt' WHEN 3 THEN 'New Redemption' WHEN 4 THEN 'OTP Validation' WHEN 5 THEN 'Int Reminder' ELSE 'Unknown' END,
+          Alert_Mode = CASE Alert_Mode WHEN 1 THEN 'SMS' WHEN 2 THEN 'WhatsApp' WHEN 3 THEN 'Email' WHEN 4 THEN 'Voice Message' ELSE 'Unknown' END,
+          Ah.TrackSno, Ah.Response,
+          Alert_Status = CASE Alert_Status WHEN 1 THEN 'Pending' WHEN 2 THEN  'Delivered' WHEN 3 THEN 'Failed' END,
+          Ah.Retry_Count, Ah.CompSno
+
+FROM		  Alerts_History Ah
+
+WHERE		  CompSno=@CompSno
 
 GO
 

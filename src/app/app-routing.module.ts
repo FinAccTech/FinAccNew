@@ -55,6 +55,8 @@ import { RpclosureComponent } from './Dashboard/Components/Transactions/rpclosur
 import { CustomerhistoryComponent } from './Dashboard/Components/Reports/partyhistory/customerhistory.component';
 import { SupplierhistoryComponent } from './Dashboard/Components/Reports/supplierhistory/supplierhistory.component';
 import { HomeComponent } from './Home/home/home.component';
+import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
+import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
 
 
 const routes: Routes = [
@@ -111,12 +113,15 @@ const routes: Routes = [
       { path:'loanhistory', component: LoanhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":21} },     
       { path:'auctionhistory', component: AuctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":22} }, 
       { path:'pendingreport', component: PendingreportComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 23} }, 
+      { path:'ageanalysis', component: AgeAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 34 }}, 
       
+
       { path:'appsetup', component: AppsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },     
       { path:'voucherseries', component: VoucherserieslistComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },        
       { path:'users', component: UsersComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       { path:'printsetup', component: PrintsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"printSetupCheck":true}},    
-      { path:'alertsetup', component: AlertssetupComponent, canActivate:[AuthGuard, CompGuard],data:{"admincheck":true}},          
+      { path:'alertsetup', component: AlertssetupComponent, canActivate:[AuthGuard, CompGuard],data:{"admincheck":true}}, 
+      { path:'alerthistory', component: AlertHistoryComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },              
       { path:'voucherposting', component: VoucherpostingComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       
   ]},  

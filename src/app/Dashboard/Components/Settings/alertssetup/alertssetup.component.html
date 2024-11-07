@@ -5,6 +5,9 @@
         </div>
 
         <div class="headerRight"> 
+            <button class="newBtn" (click)="OpenAlertHistory()" >
+                <i class='bx bxs-report'></i> &nbsp; Alerts History
+            </button>
             <button class="newBtn" (click)="SaveSetup()" >
                 <i class='bx bxs-save'></i> &nbsp; Update Settings
             </button>
@@ -74,10 +77,31 @@
             </ng-container>
 
             <ng-container *ngIf="AlertSetup">
-                <div class="formGroup">
-                    <input type="text" class="formControl" required [(ngModel)] = AlertSetup.WhatsApp_Instance  />
-                    <label for="" class="formLabel"> WhatsApp Instance </label>                    
-                </div> 
+                <div class="row">
+                    <div class="col100">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.WhatsApp_Instance  />
+                            <label for="" class="formLabel"> WhatsApp Instance </label>                    
+                        </div> 
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col30">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="AlertSetup.Add_91"  >
+                                    <mat-option [value]=0>No</mat-option>
+                                    <mat-option [value]=1>Yes</mat-option>                            
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; Add 91 WA
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <p style="font-weight: 500;" >SMS Api Details</p>
                 <div class="row">
                     <div class="col50">
@@ -85,6 +109,19 @@
                             <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Admin_Mobile  />
                             <label for="" class="formLabel"> Admin Mobile </label>                    
                         </div> 
+                    </div>
+                    <div class="col30">
+                        <div class="matGroup">
+                            <div class="matSelect">
+                                <mat-select [(value)]="AlertSetup.Add_91Sms"  >
+                                    <mat-option [value]=0>No</mat-option>
+                                    <mat-option [value]=1>Yes</mat-option>                            
+                                </mat-select>
+                            </div>
+                            <div class="matLabel">
+                                &nbsp;&nbsp; Add 91 SMS
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -94,7 +131,7 @@
                             <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_Api  />
                             <label for="" class="formLabel"> SMS Api </label>                    
                         </div> 
-                    </div>
+                    </div>                   
                 </div>
 
                 <div class="row" >
@@ -115,7 +152,7 @@
                 <div class="row">
                     <div class="col50">
                         <div class="formGroup">
-                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_UserName  />
+                            <input type="text" class="formControl" required [(ngModel)] = AlertSetup.Sms_Username  />
                             <label for="" class="formLabel"> SMS Username </label>                    
                         </div> 
                     </div>

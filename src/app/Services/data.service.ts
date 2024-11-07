@@ -152,4 +152,26 @@ HttpSavePrintStyle(StyleName: string, JsonContent: string, savetype:string)
       return data;      
   }
 
+  
+  QueAlertsinServer(){
+    let postdata: string =JSON.stringify({"StyleName": "StyleName"}); 
+    
+    let params = new HttpParams()
+    .set('data', postdata)
+    
+      
+    let apiURL = "https://finaccsaas.com/data/QueAlertsinServer.php";
+  
+    let header = new HttpHeaders();
+    header.set('Access-Control-Allow-Origin', '*');      
+    header.set("content-type", "text/html; charset=UTF-8");      
+    // let data = this.http.post<any>(apiURL, params) ;
+    let data = this.http.get<any>(apiURL, { params })
+      .pipe(map(datarecd => {                      
+      //  this.progressService.sendUpdate("stop","");    
+          return ( datarecd);                        
+      }),
+      );      
+    return data;      
+  }
 }

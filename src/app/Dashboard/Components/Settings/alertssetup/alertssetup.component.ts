@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { LogarithmicScale } from 'chart.js';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ClsAlertSetup, TypeAlertsSetup, TypeTemplate } from 'src/app/Dashboard/Classes/ClsAlertsSetup';
@@ -15,41 +16,34 @@ import { GlobalsService } from 'src/app/Services/globals.service';
  
 @AutoUnsubscribe
 export class AlertssetupComponent {
-  constructor(private dataService: DataService, private globals: GlobalsService, private dialog: MatDialog){}
+  constructor(private dataService: DataService, private router: Router, private globals: GlobalsService, private dialog: MatDialog){}
 
   AlertSetup!: TypeAlertsSetup;
   
   ngOnInit(){
     let astp = new ClsAlertSetup(this.dataService);
-    astp.getAlertSetup(0).subscribe(data=>{
-      console.log(JSON.parse(data.apiData));
-      
+    astp.getAlertSetup(0).subscribe(data=>{      
       this.AlertSetup = JSON.parse(data.apiData)[0];
+      console.log(this.AlertSetup);
       
       if (!this.AlertSetup.Alerts_Json){
         this.AlertSetup.Alerts = this.globals.GetStandardAlerts();
       }
       else{
         this.AlertSetup.Alerts = JSON.parse(this.AlertSetup.Alerts_Json)
-        console.log(this.AlertSetup.Alerts);
-        
       }
 
       if (this.AlertSetup.Templates_Json){
         this.AlertSetup.Templates = JSON.parse(this.AlertSetup.Templates_Json);
       } else{
         this.AlertSetup.Templates = [];
-      }
-      
-      
-      // if (JSON.parse(data.apiData).length < 1 ){
-      //   this.AlertSetup = astp.Initialize();
-      //   this.AlertSetup.Alerts = this.globals.GetStandardAlerts();
-      // }      
+      }      
     })
   }
 
   getSelectedSmsTemplate($event: TypeTemplate, alertType: number){    
+    console.log($event);
+    
     this.AlertSetup.Alerts[alertType-1].Sms_Alert_Template = $event;
   }
 
@@ -68,10 +62,7 @@ export class AlertssetupComponent {
   SaveSetup(){
     let astp = new ClsAlertSetup(this.dataService);    
     this.AlertSetup.AlertXml = this.globals.GetAlertXml(this.AlertSetup.Alerts);
-
-    // console.log(this.AlertSetup.AlertXml);
-    // return;
-    
+ 
     astp.AlertSetup = this.AlertSetup;
     astp.saveAlertSetup().subscribe(data=>{
       if (data.queryStatus ==1){
@@ -83,9 +74,14 @@ export class AlertssetupComponent {
       
     })
   }
-
+ 
   AddNewTemplate(){
-    this.OpenTemplate({"TempSno":0,"Create_Date":0,"SetupSno":this.AlertSetup.SetupSno,"Template_Id":'dfdfd2323', "Template_Name":'',"Template_Text":'', "Name":'', "Details":''})
+    this.OpenTemplate({"TempSno":0,"Create_Date":0,"SetupSno":this.AlertSetup.SetupSno,"Template_Id":'', "Template_Name":'',"Template_Text":'', "Name":'', "Details":''})
+  }
+
+
+  OpenAlertHistory(){
+    this.router.navigate(['dashboard/alerthistory']);
   }
 
   OpenTemplate(temp:TypeTemplate){    
@@ -101,18 +97,19 @@ export class AlertssetupComponent {
       dialogRef.afterClosed().subscribe((result: TypeTemplate) => {        
         if (result){  
           let astp = new ClsAlertSetup(this.dataService);
+          
           astp.saveTemplate(result).subscribe(data=>{            
             if (data.queryStatus == 1){
               result.TempSno = data.RetSno;
               this.globals.SnackBar("info","Template Added successfully");                          
-              this.AlertSetup.Templates.push(result);
+              if (result.TempSno == 0){
+                this.AlertSetup.Templates.push(result);
+              }
             }
             else{
               this.globals.SnackBar("error","Error adding Template");            
             }            
           })
-            
-          
         }      
       }); 
   }

@@ -167,6 +167,9 @@ export class UserrightsComponent implements OnInit {
       case 33:
         FormName = "SupplierHistory";
       break;                   
+      case 34:
+        FormName = "AgeAnalysis";
+      break;                   
     }
     return FormName;
   }

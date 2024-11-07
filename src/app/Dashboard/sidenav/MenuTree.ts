@@ -69,6 +69,7 @@ export const menuTree =[
             {   Caption: "Loan History", Iconn: "", RouterLink:"loanhistory"   },
             {   Caption: "Auction History", Iconn: "", RouterLink:"auctionhistory"   },
             {   Caption: "Pending Report", Iconn: "", RouterLink:"pendingreport"   },
+            {   Caption: "Age Analysis", Iconn: "", RouterLink:"ageanalysis"   },
             
         ]
     },

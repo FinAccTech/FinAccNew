@@ -79,7 +79,7 @@ InitLoansList(){
   }
 }
 
-  LoadLoansList(FromDate: number, ToDate: number){
+  LoadLoansList(FromDate: number, ToDate: number){ 
     let ln = new ClsLoans(this.dataService);    
     
     ln.getLoans(0,FromDate, ToDate,this.globals.LoanStatusAll, this.globals.ApprovalStatusAll, this.globals.CancelStatusAll, this.IsOpen).subscribe( data => {         
@@ -98,6 +98,12 @@ InitLoansList(){
           ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
         });
         
+        let arrayKeys = this.LoansList.keys();
+
+        for (let key of arrayKeys) {
+          console.log(`Index: ${key}, Name: ${this.LoansList[key]}.name` );
+        }
+
         this.LoadDataIntoMatTable();
         if (FromDate === 999 || ToDate === 999){ this.FromDate = data.ExtraData; this.ToDate = data.ExtraData;}
       }

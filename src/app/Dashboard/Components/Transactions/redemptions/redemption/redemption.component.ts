@@ -231,7 +231,7 @@ SaveRedemption(){
           return;
         }
         else{                           
-          if (this.Redemption.RedemptionSno == 0) {this.alertService.CreateAlert(this.globals.AlertTypeNewRedemption, this.Redemption,this.globals.AlertTransTypeRedemption);}                    
+          if (this.Redemption.RedemptionSno == 0) {this.alertService.CreateRedemptionAlert(this.globals.AlertTypeNewRedemption, this.Redemption);}                    
           this.globals.SnackBar("info", this.Redemption.RedemptionSno == 0 ? "Redemption Created successfully" : "Redemption updated successfully");     
           this.router.navigate(['dashboard/redemptions']);
         }

@@ -100,11 +100,18 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                     break;
         
                 case "field":
+                    // StrHtml += `
+                    //     <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
+                    //         ` + Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1] + `
+                    //     </div>
+                    //     `;    
+
                     StrHtml += `
-                        <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
-                            ` + Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1] + `
-                        </div>
-                        `;    
+                    <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin+ +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `;" >
+                        ` + (fld.prefix ? fld.prefix + `&nbsp;` : ``) + Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]  + (fld.suffix ? `&nbsp;` + fld.suffix   : ``) + `
+                    </div>
+                    `;    
+
                     break;
         
                 case "date":
@@ -483,6 +490,7 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_RecSno = Trans.ReceiptSno;
             PrintFields.Receipt_Rec_No = Trans.Receipt_No;
             PrintFields.Receipt_Rec_Date = this.globals.IntToDateString (Trans.Receipt_Date);
+            PrintFields.Receipt_Loan_No         = Trans.Loan.LoanSno;
             PrintFields.Receipt_Loan_No = Trans.Loan_No;
             PrintFields.Receipt_Loan_Date = this.globals.IntToDateString (Trans.Loan.Loan_Date);
             PrintFields.Receipt_Party_Code = Trans.Loan.Customer.Party_Code;
@@ -528,6 +536,7 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_RecSno          = Trans.RedemptionSno;
             PrintFields.Receipt_Rec_No          = Trans.Redemption_No;
             PrintFields.Receipt_Rec_Date        = this.globals.IntToDateString (Trans.Redemption_Date);
+            PrintFields.Receipt_Loan_No         = Trans.Loan.LoanSno;
             PrintFields.Receipt_Loan_No         = Trans.Loan_No;
             PrintFields.Receipt_Loan_Date       = this.globals.IntToDateString (Trans.Loan.Loan_Date);
             PrintFields.Receipt_Party_Code      = Trans.Loan.Customer.Party_Code;
@@ -620,6 +629,7 @@ GetPrintFields(Trans: any, VouType: number){
         Receipt_RecSno: 0,
         Receipt_Rec_No: "",
         Receipt_Rec_Date: "",
+        Receipt_LoanSno: 0,
         Receipt_Loan_No: "",
         Receipt_Loan_Date: "",
         Receipt_Party_Name:"",
@@ -714,6 +724,7 @@ interface TypePrintFields {
     Receipt_RecSno: number;
     Receipt_Rec_No: string;
     Receipt_Rec_Date: string;
+    Receipt_LoanSno: number;
     Receipt_Loan_No: string;
     Receipt_Loan_Date: string;
     Receipt_Party_Code:string;

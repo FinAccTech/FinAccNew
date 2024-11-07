@@ -238,7 +238,7 @@ SaveReceipt(){
           return;
         }
         else{          
-          if (this.Receipt.ReceiptSno == 0) {this.alertService.CreateAlert(this.globals.AlertTypeNewReceipt, this.Receipt,this.globals.AlertTransTypeReceipt);}                    
+          if (this.Receipt.ReceiptSno == 0) {this.alertService.CreateReceiptAlert(this.globals.AlertTypeNewReceipt, this.Receipt);}                    
           this.globals.SnackBar("info", this.Receipt.ReceiptSno == 0 ? "Receipt Created successfully" : "Receipt updated successfully");     
           this.router.navigate(['dashboard/receipts/' + this.IsOpen]);
         }

@@ -14,8 +14,11 @@ export class CustomHttpInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        this.progressService.sendUpdate("start","In Progress")
-
+        if (req.url !== "https://finaccsaas.com/data/RestApi.php/app/insertAlerts") 
+            {   
+                this.progressService.sendUpdate("start","In Progress");
+            }
+        
         return next.handle(req)
              .pipe(tap((event: HttpEvent<any>) => {
                     if (event instanceof HttpResponse) {

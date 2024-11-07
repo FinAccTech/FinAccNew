@@ -54,9 +54,9 @@ export class LoansummaryComponent {
     rep.getLoanDetailed(this.SelectedLoan.LoanSno, this.AsOnDate).subscribe(data => {
       console.log(data);
       
-      this.InterestDetails = JSON.parse (data.apiData)[0];        
-      this.InterestStructure = JSON.parse (this.InterestDetails.Struc_Json);    
-      this.Statement = JSON.parse (this.InterestDetails.Statement_Json);     
+      this.InterestDetails    = JSON.parse (data.apiData)[0];        
+      this.InterestStructure  = JSON.parse (this.InterestDetails.Struc_Json);    
+      this.Statement          = JSON.parse (this.InterestDetails.Statement_Json);     
     })
   }
 

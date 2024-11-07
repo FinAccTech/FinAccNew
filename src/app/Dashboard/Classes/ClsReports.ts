@@ -69,6 +69,16 @@ export class ClsReports{
         let postdata ={"CompSno": this.CompSno,  "HistFromDate" :  HistFromDate, "HistToDate": HistToDate }; 
         return this.dataService.HttpGet(postdata, "/getDayHistory");                
     }
+
+    getAgeAnalysis(): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getAgeAnalysis");                
+    }
+
+    getAlertHistory(): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getAlertHistory");                
+    }
 }
 
 export interface TypeCustomerDetailed extends TypeParties{
@@ -131,6 +141,12 @@ export interface TypePendingReport extends TypeLoan{
     Pending_Days: number;
 }
 
+export interface TypeAgeAnalysis extends TypeLoan{
+    Ason_Duration_Months: number;
+    Ason_Duration_Days: number;
+    Last_Receipt_Date: number;
+}
+
 export interface TypeDayHistyory {
     TransSno: number;
     Trans_No: string;
@@ -141,4 +157,18 @@ export interface TypeDayHistyory {
     Principal: number;
     Interest: number;
     UserName: string;
+}
+
+export interface TypeAlertHistory{
+    HisSno: number;
+    Alert_Date: string;
+    Alert_Destination: string;
+    Alert_Text: string;
+    Alert_Type: string;
+    Alert_Mode: string;
+    TrackSno: number;
+    Response: string;
+    Alert_Status: string;
+    Retry_Count: number;
+    CompSno: number;
 }

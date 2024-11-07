@@ -678,6 +678,7 @@ CREATE TABLE Voucher_Details
 )
 GO
 
+
 CREATE TABLE Alerts_Setup
 (
   SetupSno INT PRIMARY KEY IDENTITY(1,1),
@@ -688,7 +689,25 @@ CREATE TABLE Alerts_Setup
   Sms_Username      VARCHAR(20),
   Sms_Password      VARCHAR(20),
   Sms_Peid          VARCHAR(50),
-  WhatsApp_Instance VARCHAR(100)
+  WhatsApp_Instance VARCHAR(100),
+  Add_91            BIT
+)
+GO
+
+CREATE TABLE Alerts_History
+(
+  HisSno            INT PRIMARY KEY IDENTITY(1,1),
+  Alert_Date        DATETIME,
+  Alert_Destination VARCHAR(50),
+  Alert_Text        VARCHAR(MAX),
+  Alert_Url         VARCHAR(MAX),
+  Alert_Type        TINYINT,
+  Alert_Mode        TINYINT, --Sms / WhatsApp/ Email / Voice
+  TrackSno          INT,
+  Response          VARCHAR(100),  
+  Alert_Status      TINYINT, -- 1-Pending, 2-Sent, 3-Failed
+  Retry_Count       TINYINT,
+  CompSno           INT
 )
 GO
 
@@ -716,19 +735,10 @@ CREATE TABLE Alerts
 )
 GO
 
-CREATE TABLE Alerts_History
-(
-  HisSno INT PRIMARY KEY IDENTITY(1,1),
-  Alert_Date DATETIME,
-  Alert_Destination VARCHAR(50),
-  Alert_Text VARCHAR(1000),
-  Alert_Url VARCHAR(1000),
-  Alert_Type TINYINT,
-  Alert_Mode TINYINT, --Sms / WhatsApp/ Email / Voice
-  TrackSno INT,
-  Response VARCHAR(100),  
-  Alert_Status TINYINT, -- 1-Pending, 2-Sent, 3-Failed
-  Retry_Count TINYINT
-)
-GO
+
+
+
+
+
+
 

@@ -19,6 +19,8 @@ export class ClsAlertSetup{
     }
 
     saveAlertSetup(): Observable<TypeHttpResponse> {        
+        console.log(this.AlertSetup);
+        
         let postdata = this.AlertSetup;
         return this.dataService.HttpPost(postdata, "/saveAlertsSetup");                        
     }
@@ -33,11 +35,17 @@ export class ClsAlertSetup{
         return this.dataService.HttpPost(postdata, "/deleteTemplate");                        
     }
 
-    insertAlert(Alert: TypeAlertHistory): Observable<TypeHttpResponse> {        
-        let postdata = Alert;
-        return this.dataService.HttpPost(postdata, "/insertAlert");                        
+    insertSingleAlert(Alert: TypeAlertHistory): Observable<TypeHttpResponse> {                
+        let postdata = Alert;        
+        return this.dataService.HttpPost(postdata, "/insertSingleAlert");                        
     }
-    
+
+    insertAlerts(Alert: TypeAlertsPostData): Observable<TypeHttpResponse> {        
+        Alert.CompSno = this.CompSno;
+        let postdata = Alert;        
+        return this.dataService.HttpPost(postdata, "/insertAlerts");                        
+    }
+
     Initialize(){
         let AlertSetup: TypeAlertsSetup = {
             SetupSno: 0,
@@ -45,10 +53,12 @@ export class ClsAlertSetup{
             Admin_Mobile: "",
             Sms_Api: "",
             Sms_Sender_Id: "",
-            Sms_UserName: "",
+            Sms_Username: "",
             Sms_Password: "",
             Sms_Peid: "",
             WhatsApp_Instance: "",
+            Add_91:0,
+            Add_91Sms:0,
             Templates: [],
             TemplateXml: "",
             Templates_Json: "",
@@ -83,10 +93,12 @@ export interface TypeAlertsSetup{
     Admin_Mobile: string;
     Sms_Api: string;
     Sms_Sender_Id: string;
-    Sms_UserName: string;
+    Sms_Username: string;
     Sms_Password: string;
     Sms_Peid: string;
     WhatsApp_Instance: string;
+    Add_91: number;
+    Add_91Sms:number;
     Templates: TypeTemplate[];
     TemplateXml: string;
     Templates_Json: string;
@@ -109,7 +121,7 @@ export interface TypeTemplate{
 export interface TypeAlert{    
     AlertSno: number;
     SetupSno: number;
-    Alert_Type: number;
+    Alert_Type: number; 
     Alert_Caption: string;
     Sms_Alert_Template: TypeTemplate;
     WhatsApp_Alert_Template: TypeTemplate;
@@ -129,4 +141,14 @@ export interface TypeAlertHistory{
     Response: string,  
     Alert_Status: number, /* -- 1-Pending, 2-Sent, 3-Failed */
     Retry_Count: number,
+}
+
+export interface TypeAlertsPostData{
+    RecvrList: any[];    
+    TempSno: number;
+    Alert_Type: number;
+    Alert_Mode: number;
+    CompSno:number;    
+    Auction_Date: string;
+    BulkInsert: number;
 }

@@ -23,6 +23,7 @@ import { TypeLedger } from 'src/app/Dashboard/Classes/ClsLedgers';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ClsAlertSetup } from 'src/app/Dashboard/Classes/ClsAlertsSetup';
 
 
 @Component({
@@ -370,7 +371,6 @@ SaveLoan(){
   Ln.Loan.ImageDetailXML  = StrImageXml;    
   Ln.Loan.PaymentModesXML = this.globals.GetPaymentModeXml(this.Loan.PaymentMode, this.globals.VTypLoanPayment);
   
-
   Ln.Loan.fileSource      = this.Loan.fileSource;
   Ln.Loan.BranchSno = this.auth.SelectedBranchSno;
   //Ln.Loan.VouDetailXML = this.globals.GetLoanVoucherXml(Ln.Loan, this.StdLedgerList);
@@ -379,9 +379,10 @@ SaveLoan(){
         if (data.queryStatus == 0) {
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
           return;
-        }
-        else{                              
-          if (this.Loan.LoanSno == 0) {this.alertService.CreateAlert(this.globals.AlertTypeNewLoan, this.Loan,this.globals.AlertTransTypeLoan);}
+        }        
+        else{      
+          
+          if (this.Loan.LoanSno == 0) {this.alertService.CreateLoanAlert(this.globals.AlertTypeNewLoan, this.Loan);}
 
           this.globals.SnackBar("info", this.Loan.LoanSno == 0 ? "Loan Created successfully" : "Loan updated successfully");     
           this.router.navigate(['dashboard/loans/' + this.IsOpen]);  

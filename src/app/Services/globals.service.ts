@@ -149,6 +149,7 @@ export class GlobalsService
 
      FormIdDayHistory = 32;
      FormIdSupplierHistory = 33;
+     FormIdAgeAnalysis = 34;
 
      
     //UserRight Types
@@ -165,6 +166,7 @@ export class GlobalsService
       AlertTypeNewReceipt = 2;
       AlertTypeNewRedemption = 3;
       AlertTypeOtpValidation = 4;
+      AlertTypeIntReminder = 5;
 
       // Alert Modes
       AlertModeSms = 1;
