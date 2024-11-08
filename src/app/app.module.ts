@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { WebcamModule } from 'ngx-webcam';
 
 /* *********************** ANGULAR MATERIAL LIBRARIES *******************************/
@@ -130,103 +130,94 @@ import { AlertconfirmationComponent } from './Dashboard/widgets/alertconfirmatio
 import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
 import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
 
-@NgModule({
-  declarations: [
-    NumberInputDirective,
-    AppComponent,
-    IntToDatePipe,    
-    DashboardComponent,
-    SidenavComponent,
-    HeaderComponent,
-    BodyComponent,
-    LoginComponent,
-    CompaniesComponent, 
-    WebcamComponent,
-    
-    MsgboxComponent,
-    SnackbarComponent,
-    IndexpageComponent,
-    ItemgroupsComponent,
-    ItemgroupComponent,
-    ItemsComponent,
-    ItemComponent,
-    PuritiesComponent,
-    PurityComponent,
-    SelectionlistComponent,
-    AreasComponent,
-    AreaComponent,
-    SchemesComponent,
-    SchemeComponent,
-    LocationsComponent,
-    LocationComponent,
-    PartiesComponent,
-    PartyComponent,
-    ProgressComponent,
-    ImagesComponent,
-    CompanyComponent,
-    LoansComponent,
-    LoanComponent,
-    PartyselectionComponent,
-    PartycardComponent,
-    ItemdetailsComponent,
-    ReceiptsComponent,
-    ReceiptComponent,
-    TableViewComponent,
-    SlabsComponent,
-    AddPrincipalComponent,
-    LoanSelectionComponent,
-    LoansummaryComponent,
-    CustomerdetailsComponent,
-    LoandetailsComponent,
-    CustomerhistoryComponent,
-    AppsetupComponent,
-    VoucherserieslistComponent,
-    VoucherseriesComponent,
-    RedemptionsComponent,    
-    
-    RedemptionComponent, LoanhistoryComponent, AuctionhistoryComponent, PendingreportComponent, AuctionentriesComponent, AuctionentryComponent, StatusupdateComponent, 
-    ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, AgeAnalysisComponent, AlertHistoryComponent, 
-     
-    
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    WebcamModule,    
-    MatSlideToggleModule,
-    MatDialogModule,    
-    MatMenuModule,
-    MatListModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatTabsModule,
-    MatIconModule,
-    MatGridListModule,
-    MatProgressBarModule,   
-    MatSortModule,
-    NgxEchartsDirective, 
-    MatTableExporterModule,
-    NgxEchartsModule.forRoot({
-      /**
-       * This will import all modules from echarts.
-       * If you only need custom modules,
-       * please refer to [Custom Build] section.
-       */
-      echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
-    }),
-  ],
-  providers: [
-    provideEcharts(),
-    {provide: HTTP_INTERCEPTORS,
-      useClass: CustomHttpInterceptor,
-      multi: true
-    }],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        NumberInputDirective,
+        AppComponent,
+        IntToDatePipe,
+        DashboardComponent,
+        SidenavComponent,
+        HeaderComponent,
+        BodyComponent,
+        LoginComponent,
+        CompaniesComponent,
+        WebcamComponent,
+        MsgboxComponent,
+        SnackbarComponent,
+        IndexpageComponent,
+        ItemgroupsComponent,
+        ItemgroupComponent,
+        ItemsComponent,
+        ItemComponent,
+        PuritiesComponent,
+        PurityComponent,
+        SelectionlistComponent,
+        AreasComponent,
+        AreaComponent,
+        SchemesComponent,
+        SchemeComponent,
+        LocationsComponent,
+        LocationComponent,
+        PartiesComponent,
+        PartyComponent,
+        ProgressComponent,
+        ImagesComponent,
+        CompanyComponent,
+        LoansComponent,
+        LoanComponent,
+        PartyselectionComponent,
+        PartycardComponent,
+        ItemdetailsComponent,
+        ReceiptsComponent,
+        ReceiptComponent,
+        TableViewComponent,
+        SlabsComponent,
+        AddPrincipalComponent,
+        LoanSelectionComponent,
+        LoansummaryComponent,
+        CustomerdetailsComponent,
+        LoandetailsComponent,
+        CustomerhistoryComponent,
+        AppsetupComponent,
+        VoucherserieslistComponent,
+        VoucherseriesComponent,
+        RedemptionsComponent,
+        RedemptionComponent, LoanhistoryComponent, AuctionhistoryComponent, PendingreportComponent, AuctionentriesComponent, AuctionentryComponent, StatusupdateComponent,
+        ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, AgeAnalysisComponent, AlertHistoryComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        WebcamModule,
+        MatSlideToggleModule,
+        MatDialogModule,
+        MatMenuModule,
+        MatListModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatTabsModule,
+        MatIconModule,
+        MatGridListModule,
+        MatProgressBarModule,
+        MatSortModule,
+        NgxEchartsDirective,
+        MatTableExporterModule,
+        NgxEchartsModule.forRoot({
+            /**
+             * This will import all modules from echarts.
+             * If you only need custom modules,
+             * please refer to [Custom Build] section.
+             */
+            echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
+        })], providers: [
+        provideEcharts(),
+        { provide: HTTP_INTERCEPTORS,
+            useClass: CustomHttpInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
