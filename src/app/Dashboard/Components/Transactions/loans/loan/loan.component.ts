@@ -95,6 +95,7 @@ export class LoanComponent implements OnInit {
   
   IsOpen: number = 0;
 
+  
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
