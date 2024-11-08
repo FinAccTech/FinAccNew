@@ -207,7 +207,7 @@ export class SchemeComponent implements OnInit {
   ValidateInputs(): boolean{             
     this.Scheme.Series = this.SelectedSeries;
     if (!this.Scheme.Scheme_Name!.length )  { this.SchemeNameValid = false;  return false; }  else  {this.SchemeNameValid = true; }      
-    if (!this.Scheme.Series || this.Scheme.Series.SeriesSno == 0) {this.SeriesNameValid = false; return false;} else {this.SeriesNameValid = true; }
+    // if (!this.Scheme.Series || this.Scheme.Series.SeriesSno == 0) {this.SeriesNameValid = false; return false;} else {this.SeriesNameValid = true; }
     if (this.Scheme.Enable_AmtSlab && this.AmtSlab.length < 2) { this.globals.SnackBar("error","Invalid Amout Slab Details"); return false }
     if (this.Scheme.Calc_Method == 1 && this.SchemeSlab.length < 2) { this.globals.SnackBar("error","Invalid Multiple Scheme Slab Details"); return false }
     if (this.Scheme.Enable_FeeSlab && this.FeeSlab.length < 2) { this.globals.SnackBar("error","Invalid Fee Slab Details"); return false }
