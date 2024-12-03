@@ -19,7 +19,7 @@ IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='SDateDiff') BEGIN DROP FUNCTION 
 GO
 
 CREATE FUNCTION [dbo].SDateDiff(@FromDate DATETIME,@ToDate DATETIME)
-  RETURNS @Det TABLE(Months INTEGER,Days INTEGER)
+  RETURNS @Det TABLE(Months INTEGER,Days INTEGER)p
   WITH ENCRYPTION AS
 
 BEGIN
@@ -386,6 +386,7 @@ GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getUsers') BEGIN DROP FUNCTION Udf_getUsers END
 GO
+
 CREATE FUNCTION Udf_getUsers(@UserSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -498,7 +499,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Entries_LockedUpto    INT,
   @Enable_Authentication BIT,
   @Enable_OldEntries     BIT,
-  @IntCalcinDays          BIT
+  @IntCalcinDays          BIT,
+  @MobileNumberMandatory BIT
 
   
 WITH ENCRYPTION AS
@@ -519,7 +521,7 @@ BEGIN
                                       Enable_Opening = @Enable_Opening, Enable_RegLang = @Enable_RegLang, Reg_FontName = @Reg_FontName, Reg_FontSize = @Reg_FontSize, Enable_FingerPrint = @Enable_FingerPrint,
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
-                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays  
+                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -545,7 +547,7 @@ RETURN
 	WHERE	  (SetupSno=@SetupSno OR @SetupSno=0) AND (CompSno=@CompSno) AND (BranchSno=@BranchSno)
 
 GO
-update transaction_Setup set intcalcindays = 0, suppcode_Autogen=0, suppcode_prefix='', suppcode_currentno=0, bwrcode_Autogen=0, bwrcode_prefix='', bwrcode_currentno=0
+
 GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getVoucherTypes') BEGIN DROP FUNCTION Udf_getVoucherTypes END
@@ -856,7 +858,7 @@ GO
 CREATE PROCEDURE Sp_Area
 	@AreaSno INT,
 	@Area_Code VARCHAR(10),
-	@Area_Name VARCHAR(20),
+	@Area_Name VARCHAR(200),
 	@Remarks VARCHAR(50),
 	@Active_Status BIT,
 	@Create_Date INT,
@@ -957,18 +959,18 @@ GO
 CREATE PROCEDURE Sp_Party
 	@PartySno        INT,
   @Party_Code      VARCHAR(20),
-  @Party_Name      VARCHAR(50),
-  @Print_Name      VARCHAR(50),
+  @Party_Name      VARCHAR(100),
+  @Print_Name      VARCHAR(100),
   @Party_Cat       TINYINT,
   @AreaSno         INT,
   @Rel             TINYINT,
-  @RelName         VARCHAR(50),
-  @Address1        VARCHAR(50),
-  @Address2        VARCHAR(50),
-  @Address3        VARCHAR(50),
-  @Address4        VARCHAR(50),
-  @City            VARCHAR (50),
-  @State           VARCHAR(20),
+  @RelName         VARCHAR(100),
+  @Address1        VARCHAR(200),
+  @Address2        VARCHAR(200),
+  @Address3        VARCHAR(200),
+  @Address4        VARCHAR(200),
+  @City            VARCHAR (200),
+  @State           VARCHAR(200),
   @Pincode         VARCHAR(10),
   @Phone           VARCHAR(20),
   @Mobile          VARCHAR(20),
@@ -1020,7 +1022,7 @@ BEGIN
         GOTO CloseNow
     END
 
-    IF (@PartySno=0) AND (EXISTS(SELECT PartySno FROM Party WHERE Mobile=@Mobile AND CompSno=@CompSno))
+    IF (@PartySno=0) AND (LEN(TRIM(@Mobile)) <> 0) AND (EXISTS(SELECT PartySno FROM Party WHERE Mobile=@Mobile AND CompSno=@CompSno))
     BEGIN
         Raiserror ('Party exists with this Mobile Number' , 16, 1) 
         GOTO CloseNow
@@ -1159,7 +1161,8 @@ RETURN
                       Pty.Verify_Status < (CASE WHEN @Verify_Status=0 THEN 3 ELSE @Verify_Status END ) AND
                       Pty.Fp_Status < (CASE WHEN @Fp_Status=0 THEN 3 ELSE @Fp_Status END ) AND
                       Pty.Active_Status < (CASE WHEN @Active_Status=0 THEN 3 ELSE @Active_Status END ) AND
-                      (Pty.CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno)))        
+                      (Pty.CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno)))
+              ORDER BY  Pty.Create_Date DESC
               FOR JSON PATH) AS Json_Result
 
 GO
@@ -1699,7 +1702,7 @@ GO
 CREATE PROCEDURE Sp_Items
 	@ItemSno INT ,
   @Item_Code VARCHAR(10),
-  @Item_Name VARCHAR(200),
+  @Item_Name VARCHAR(100),
   @GrpSno INT,
   @Remarks VARCHAR(50),
   @Active_Status     BIT,
@@ -2639,14 +2642,16 @@ BEGIN
   INSERT INTO Purity(Purity_Code,Purity_Name, Purity, GrpSno, Remarks, Active_Status, Create_Date, UserSno, CompSno)
   VALUES ('916','916',91.6,1,'',1,[dbo].DateToInt(GETDATE()),1,@CompSno) 
 
-  
-  INSERT INTO Transaction_Setup(      AreaCode_AutoGen, AreaCode_Prefix, AreaCode_CurrentNo, PartyCode_AutoGen,PartyCode_Prefix, PartyCode_CurrentNo, GrpCode_AutoGen, GrpCode_Prefix, GrpCode_CurrentNo,
-                                      ItemCode_AutoGen, ItemCode_Prefix, ItemCode_CurrentNo, SchemeCode_AutoGen, SchemeCode_Prefix, SchemeCode_CurrentNo, LocCode_AutoGen, LocCode_Prefix, LocCode_CurrentNo,
-                                      PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo, Enable_Opening, Enable_RegLang, Reg_FontName,
-                                      Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance, Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess,
-                                      Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,CompSno,BranchSno)
+  INSERT INTO Transaction_Setup(      AreaCode_AutoGen, AreaCode_Prefix, AreaCode_CurrentNo, PartyCode_AutoGen,PartyCode_Prefix, PartyCode_CurrentNo, SuppCode_AutoGen,SuppCode_Prefix,
+                                      SuppCode_CurrentNo,BwrCode_AutoGen, BwrCode_Prefix, BwrCode_CurrentNo, GrpCode_AutoGen, GrpCode_Prefix, GrpCode_CurrentNo,
+                                      ItemCode_AutoGen, ItemCode_Prefix, ItemCode_CurrentNo, SchemeCode_AutoGen, SchemeCode_Prefix, SchemeCode_CurrentNo, LocCode_AutoGen, LocCode_Prefix,
+                                      LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
+                                      Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
+                                      Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
+                                      CompSno,BranchSno,MobileNumberMandatory)
 
-  VALUES                       (      1, 'AR',0, 1,'PR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BR', 0, 1, 0, '', 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno)
+  VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0)
 
   INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
   VALUES                    (@CompSno, '','','','','','','',0,0)
@@ -2702,7 +2707,7 @@ AS
       --1 REPLEDGED --0 NOT REPLEDGED
       Loan_Repledge_Status = CASE WHEN EXISTS(SELECT DetSno FROM Repledge_Details WHERE LoanSno=Trans.TransSno)
                                   THEN
-                                      (CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno= (SELECT TransSno FROM Repledge_Details WHERE LoanSno=Trans.TransSno) AND VouTypeSno=19 ) THEN 0 ELSE 1 END)
+                                      (CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno= (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=Trans.TransSno) AND VouTypeSno=19 ) THEN 0 ELSE 1 END)
                                   ELSE 0
                              END
 
@@ -3402,7 +3407,7 @@ RETURN
     FROM      Udf_getLoans(0,@CompSno,0,2,1,0) Ln
     WHERE     (Ln.Loan_Status=@LoanStatus OR @LoanStatus=0 AND Ln.Cancel_Status=1)
 
-GO    
+GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoanStatusCount') BEGIN DROP FUNCTION Udf_getLoanStatusCount END
 GO
@@ -3420,6 +3425,7 @@ GO
     
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAuctionList') BEGIN DROP FUNCTION Udf_getAuctionList END
 GO
+
 CREATE FUNCTION Udf_getAuctionList(@CompSno INT, @AsOn INT)
   RETURNS TABLE
   WITH ENCRYPTION AS
@@ -3434,22 +3440,23 @@ RETURN
 				Ln.LoanSno NOT IN (SELECT TransSno FROM Transactions WHERE VouTypeSno=15 AND (Trans_Date <=@AsOn)	AND RefSno=Ln.LoanSno)
 				AND
 				Ln.Mature_Date < @AsOn
-GO   
+GO
+
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getPendingReport') BEGIN DROP FUNCTION Udf_getPendingReport END
 GO
-CREATE FUNCTION Udf_getPendingReport(@CompSno INT, @AsOn INT)
+CREATE FUNCTION Udf_getPendingReport(@CompSno INT, @AsOn INT, @DueDays SMALLINT)
   RETURNS TABLE
   WITH ENCRYPTION AS
 RETURN
-	  SELECT		Ln.*, Pending_Interest = (SELECT Interest_Balance FROM Udf_getBalanceSummary(Ln.LoanSno,@AsOn,0)),
+	  SELECT		Ln.*, Pending_Interest = CAST((SELECT Interest_Balance FROM Udf_getBalanceSummary(Ln.LoanSno,@AsOn,0)) AS DECIMAL(10,2)),
 
                     Pending_Dues = CASE 
 										WHEN Ln.Last_Receipt_Date = 0 
 											THEN DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
-																										ELSE [dbo].IntToDate(@AsOn) END) 
+																										ELSE [dbo].IntToDate(@AsOn) END) -1
 																										
 										  ELSE 
 											  DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
@@ -3467,7 +3474,9 @@ RETURN
 											  DATEDIFF(DAY, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
 																										ELSE [dbo].IntToDate(@AsOn) END) 
-																										END			  																						
+																										END,
+                    Due_Date = [dbo].DateToInt(DATEADD(DAY,@DueDays,(CASE WHEN Last_Receipt_Date=0 THEN [dbo].IntToDate(Loan_Date) ELSE [dbo].IntToDate(Last_Receipt_Date) END)))
+
                    
     FROM		Udf_getLoans(0,@CompSno,0,2,1,0) Ln
 
@@ -3475,7 +3484,7 @@ RETURN
 	
 GO
 
-
+select * from Udf_getPendingReport(1,20241129,28)
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_getRepledgeDetailed') BEGIN DROP PROCEDURE Sp_getRepledgeDetailed END
 GO

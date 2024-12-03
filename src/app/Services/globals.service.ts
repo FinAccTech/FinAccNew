@@ -25,14 +25,14 @@ export class GlobalsService
 {
   AppName: string = "FinAcc";
   AppLogoPath: string = "assets/images/finacclogo.png";
-  AppSetup!: TypeAppSetup;
-
-  constructor(private dialog: MatDialog){    
-    if (sessionStorage.getItem("sessionTransactionSetup")){
-      this.AppSetup =  JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
-    }     
+  
+  constructor(private dialog: MatDialog){      
   }
   
+  AppSetup(): TypeAppSetup {
+    return JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
+  }
+
     //Party Types
     PartyTypCustomers:   number = 1;
     PartyTypSuppliers:   number = 2;

@@ -34,15 +34,17 @@ export class AreaComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-    if (this.Area.AreaSno == 0){      
-      if (this.globals.AppSetup.AreaCode_AutoGen == 1){
+            
+      if (this.globals.AppSetup().AreaCode_AutoGen == 1){
         this.CodeAutoGen = true;
-        let it = new ClsAreas(this.dataService)
-        it.getAreaCode().subscribe(data => {
-          this.Area.Area_Code = data.apiData;
-        })
+        if (this.Area.AreaSno == 0){     
+          let it = new ClsAreas(this.dataService)
+          it.getAreaCode().subscribe(data => {
+            this.Area.Area_Code = data.apiData;
+          })
+        }
       }
-    }
+    
   }
 
   SaveArea(){    

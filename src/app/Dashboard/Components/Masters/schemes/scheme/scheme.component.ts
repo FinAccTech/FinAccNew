@@ -48,17 +48,17 @@ export class SchemeComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {        
+      if (this.globals.AppSetup().SchemeCode_AutoGen== 1){
+        this.CodeAutoGen = true;
+        if (this.Scheme.SchemeSno == 0){      
+          let it = new ClsSchemes(this.dataService)
+          it.getSchemeCode().subscribe(data => {
+            this.Scheme.Scheme_Code = data.apiData;
+          })
+        }
+      } 
     
-    // if (this.Scheme.SchemeSno == 0){      
-    //   if (this.globals.AppSetup.SchemeCode_AutoGen== 1){
-    //     this.CodeAutoGen = true;
-    //     let it = new ClsSchemes(this.dataService)
-    //     it.getSchemeCode().subscribe(data => {
-    //       this.Scheme.Scheme_Code = data.apiData;
-    //     })
-    //   } 
-    // }
     
     let ser = new ClsVoucherSeries(this.dataService);
     ser.getVoucherSeries(0, this.globals.VTypLoanPayment).subscribe(data =>{

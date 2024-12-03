@@ -27,7 +27,7 @@ export class WebcamComponent  implements AfterViewInit {
   @ViewChild("canvas")
   public canvas!: ElementRef;
 
-  captures: string[] = [];
+  capturedImages: string[] = [];
   error: any;
   isCaptured: boolean = false;
 
@@ -56,7 +56,7 @@ export class WebcamComponent  implements AfterViewInit {
 
   capture() {
     this.drawImageToCanvas(this.video.nativeElement);
-    this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
+    this.capturedImages.push(this.canvas.nativeElement.toDataURL("image/png"));
 
     const fileHandle: FileHandle ={ 
       Image_Name: "WebCam1",
@@ -67,7 +67,6 @@ export class WebcamComponent  implements AfterViewInit {
       //Favorite: false,
     };          
     this.TransImages.push (fileHandle);
-
   //  this.isCaptured = true;
   }
 
@@ -78,7 +77,7 @@ export class WebcamComponent  implements AfterViewInit {
   setPhoto(idx: number) {
     this.isCaptured = true;
     var image = new Image();
-    image.src = this.captures[idx];
+    image.src = this.capturedImages[idx];
     this.drawImageToCanvas(image);
   }
 

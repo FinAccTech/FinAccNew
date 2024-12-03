@@ -47,15 +47,16 @@ export class ItemgroupComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-    if (this.ItemGroup.GrpSno == 0){      
-      if (this.globals.AppSetup.GrpCode_AutoGen == 1){
+      if (this.globals.AppSetup().GrpCode_AutoGen == 1){
         this.CodeAutoGen = true;
-        let it = new ClsItemGroups(this.dataService)
-        it.getGrpCode().subscribe(data => {
-          this.ItemGroup.Grp_Code = data.apiData;
-        })
+        if (this.ItemGroup.GrpSno == 0){     
+          let it = new ClsItemGroups(this.dataService)
+          it.getGrpCode().subscribe(data => {
+            this.ItemGroup.Grp_Code = data.apiData;
+          })
+        }
       }
-    }
+    
   }
 
   SaveItemGroup(){    

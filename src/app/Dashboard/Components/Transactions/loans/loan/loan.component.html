@@ -297,7 +297,7 @@
                     </div>
                     <div class="col50">
                         <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0/>
+                            <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0 (change)="CalculateLoanValues()"/>
                             <label for="" class="formLabel"> Doc Charges Amt </label>
                             <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
                         </div>

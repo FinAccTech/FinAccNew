@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { LoanService } from '../loan.service';
 import { Location,} from '@angular/common';
 import { Router } from '@angular/router';
@@ -90,12 +90,10 @@ export class LoanComponent implements OnInit {
   ItemDetailsValid:   boolean = true;
 
   // For Calculating Market Value
-  SchemeMaxper: number = 0;
-  LoanPerGram: number = 0;
-  
+  SchemeMaxper: number = 0; 
+  LoanPerGram: number = 0;  
   IsOpen: number = 0;
 
-  
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
@@ -496,7 +494,9 @@ CalculateLoanValues(){
   if (this.Loan.Principal == 0) { return; }  
   this.IntAmtPerMonth = +((this.Loan.Principal * (this.Loan.Roi / 100 )) /12).toFixed(2);  
   this.Loan.AdvIntAmt = this.IntAmtPerMonth * this.Loan.AdvIntDur;  
-  this.Loan.DocChargesAmt =  Math.round(this.Loan.Principal * (this.Loan.DocChargesPer / 100));
+  if (this.Loan.DocChargesPer && this.Loan.DocChargesPer !== 0){
+    this.Loan.DocChargesAmt =  Math.round(this.Loan.Principal * (this.Loan.DocChargesPer / 100));  
+  }  
   this.Loan.Nett_Payable = +(this.Loan.Principal - this.Loan.AdvIntAmt - this.Loan.DocChargesAmt).toFixed(2);
 }
 
@@ -676,7 +676,7 @@ getGridTotals($event: TypeLoanGridTotals){
     this.Loan.TotNettWt = this.GridTotals.TotNettWt;
     this.Loan.Market_Value = this.GridTotals.TotValue;
   }
-}
+} 
 
 getTransImages($event: FileHandle[]){    
   this.TransImages = $event;  

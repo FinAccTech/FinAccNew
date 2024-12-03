@@ -46,6 +46,11 @@ export class ClsAlertSetup{
         return this.dataService.HttpPost(postdata, "/insertAlerts");                        
     }
 
+    clearAllAlerts(): Observable<TypeHttpResponse> {                
+        let postdata = {"CompSno":this.CompSno}
+        return this.dataService.HttpPost(postdata, "/clearAlerts");                        
+    }
+
     Initialize(){
         let AlertSetup: TypeAlertsSetup = {
             SetupSno: 0,

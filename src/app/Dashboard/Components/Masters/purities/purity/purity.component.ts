@@ -41,16 +41,16 @@ export class PurityComponent implements OnInit {
 
   ngOnInit(): void {    
     
-    if (this.Purity.PuritySno == 0){      
-      if (this.globals.AppSetup.PurityCode_AutoGen== 1){
+      if (this.globals.AppSetup().PurityCode_AutoGen== 1){
         this.CodeAutoGen = true;
+        if (this.Purity.PuritySno == 0){      
         let it = new ClsPurities(this.dataService)
         it.getPurityCode().subscribe(data => {
           this.Purity.Purity_Code = data.apiData;
         })
       }
-    }
-
+      }
+    
     let grp = new ClsItemGroups(this.dataService);
     grp.getItemGroups(0).subscribe(data => {      
       this.GroupsList = JSON.parse (data.apiData);   

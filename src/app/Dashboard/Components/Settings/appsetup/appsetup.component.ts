@@ -26,14 +26,14 @@ export class AppsetupComponent {
 
   SaveSettings(){
     let as = new ClsAppSetup(this.dataService);
-    as.AppSetup = this.AppSetup;
+    as.AppSetup = this.AppSetup; 
     
     as.saveAppSetup().subscribe(data =>{
       if (data.queryStatus == 0){
         this.globals.ShowAlert(3,data.apiData)
       }
       else{
-        sessionStorage.setItem("sessionTransactionSetup", JSON.stringify(this.AppSetup));
+        sessionStorage.setItem("sessionTransactionSetup", JSON.stringify(this.AppSetup));        
         this.globals.SnackBar("info","Settings updated Sucessfully")
       }
     })

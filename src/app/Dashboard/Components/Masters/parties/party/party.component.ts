@@ -67,19 +67,33 @@ export class PartyComponent implements OnInit {
           break;
     }    
     
-    
-    if (this.Party.PartySno == 0){         
-      if (!this.globals.AppSetup){
-        this.globals.AppSetup =  JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
+       let AutoGenType = 0;
+
+      switch ( +this.Party.Party_Cat!) {
+        case this.globals.PartyTypCustomers:          
+            AutoGenType = this.globals.AppSetup().PartyCode_AutoGen;
+          break;
+
+        case this.globals.PartyTypSuppliers:
+          AutoGenType = this.globals.AppSetup().SuppCode_AutoGen;
+        break;
+        
+        case this.globals.PartyTypBorrowers:
+          AutoGenType = this.globals.AppSetup().BwrCode_AutoGen;
+        break;        
       }
-      // if (this.globals.AppSetup.PartyCode_AutoGen == 1){
-        this.CodeAutoGen = true;
-        let it = new ClsParties(this.dataService)
-        it.getPartyCode(this.Party.Party_Cat!).subscribe(data => {
-          this.Party.Party_Code = data.apiData;
-        })
-      // }
-    }
+
+      if (AutoGenType == 1){
+        this.CodeAutoGen = true;        
+        if (this.Party.PartySno == 0){         
+          let it = new ClsParties(this.dataService)
+          it.getPartyCode(this.Party.Party_Cat!).subscribe(data => {
+            this.Party.Party_Code = data.apiData;
+          })
+        }
+      }
+       
+    
 
     let ar = new ClsAreas(this.dataService);
     ar.getAreas(0).subscribe(data => {      
@@ -200,8 +214,12 @@ export class PartyComponent implements OnInit {
   }
 
   ValidateInputs(): boolean{            
-    if (!this.Party.Party_Name!.length )  { this.PartyNameValid = false;  return false; }  else  {this.PartyNameValid = true; }        
-    if (this.Party.Mobile!.length < 10)  { this.MobNumberValid = false;  return false; }  else  {this.MobNumberValid = true; }     
+    if (!this.Party.Party_Name!.length )  { this.PartyNameValid = false;  return false; }  else  {this.PartyNameValid = true; }      
+
+    if (this.globals.AppSetup().MobileNumberMandatory == 1){
+      if (this.Party.Mobile!.length < 10)  { this.MobNumberValid = false;  return false; }  else  {this.MobNumberValid = true; }     
+    }    
+
     if (!this.Party.Area || this.Party.Area.AreaSno ==0 ) {
       this.AreaNameValid    = false; 
       return false;

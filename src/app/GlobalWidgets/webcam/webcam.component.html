@@ -15,10 +15,10 @@
         <video (click)="capture()" [class.show]="!isCaptured" [class.hide]="isCaptured" #video id="video" [width]="WIDTH" [height]="HEIGHT"
             autoplay></video>
         <canvas [class.show]="isCaptured" [class.hide]="!isCaptured" #canvas id="canvas" [width]="WIDTH"
-            [height]="HEIGHT" ></canvas>
+            [height]="HEIGHT" ></canvas>      
     </div>
 
-    <div class="snap-container">
+    <div class="snap-container"> 
         <div class="footer">
             <p>Click on the Live video to Capture</p>
             <button class="btn"  (click)="Save()"> <i class="fa-solid fa-floppy-disk"></i>  Save and Close</button>
@@ -35,7 +35,7 @@
 	</div>
 
 	<ul class="list-unstyled">
-		<li *ngFor="let src of captures; let idx = index" (click)="setPhoto(idx)">
+		<li *ngFor="let src of capturedImages; let idx = index" (click)="setPhoto(idx)">
 			<img [src]="src" height="50" />
         </li>
 	</ul>

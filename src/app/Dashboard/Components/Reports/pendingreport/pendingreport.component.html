@@ -51,9 +51,14 @@
             </div>
     
             <div class="filterRight">                
-                <div class="formGroup" style="width: 50%;">                    
+                <div class="formGroup">                    
                     <input type="text" class="formControl"  required [(ngModel)] = PendingDues   />
-                    <label for="" class="formLabel"> PendingDues </label>
+                    <label for="" class="formLabel"> Pending Dues </label>
+                </div>
+
+                <div class="formGroup">                    
+                    <input type="text" class="formControl"  required [(ngModel)] = DueDays   />
+                    <label for="" class="formLabel"> Due Days </label>
                 </div>
 
                 <button class="btn" (click)="LoadPendingReport()"><i class='bx bx-filter'></i> Filter</button>
@@ -85,7 +90,7 @@
                             : column == "#"
                                 ? i+1
     
-                            : (column == "Loan_Date" || column == "Mature_Date" || column == "Last_Receipt_Date" )
+                            : (column == "Loan_Date" || column == "Mature_Date" || column == "Last_Receipt_Date" || column == "Due_Date")
                             ? (element[column] !== 0 ? (element[column] | intToDate | date:"dd/MM/YYYY"): '')
     
                             : (column == "Principal" || column == "Pending_Interest")

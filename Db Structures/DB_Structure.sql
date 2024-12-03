@@ -150,7 +150,8 @@ CREATE TABLE Transaction_Setup
   Entries_LockedUpto    INT,
   Enable_Authentication BIT,
   Enable_OldEntries     BIT,
-  IntCalcinDays         BIT
+  IntCalcinDays         BIT,
+  MobileNumberMandatory         BIT
 )
 GO
 
@@ -249,7 +250,7 @@ CREATE TABLE AREA
 (
   AreaSno INT PRIMARY KEY IDENTITY(1,1),
   Area_Code VARCHAR(20),
-  Area_Name VARCHAR(50),
+  Area_Name VARCHAR(200),
   Remarks VARCHAR(100),
   Active_Status     BIT,
   Create_Date INT,
@@ -275,18 +276,18 @@ CREATE TABLE Party
 (
   PartySno        INT PRIMARY KEY IDENTITY(1,1),
   Party_Code      VARCHAR(20),
-  Party_Name      VARCHAR(50),
-  Print_Name      VARCHAR(50),
+  Party_Name      VARCHAR(100),
+  Print_Name      VARCHAR(100),
   Party_Cat       TINYINT,
   AreaSno         INT,
   Rel             TINYINT,
-  RelName         VARCHAR(50),
-  Address1        VARCHAR(50),
-  Address2        VARCHAR(50),
-  Address3        VARCHAR(50),
-  Address4        VARCHAR(50),
-  City            VARCHAR (50),
-  State           VARCHAR(20),
+  RelName         VARCHAR(100),
+  Address1        VARCHAR(200),
+  Address2        VARCHAR(200),
+  Address3        VARCHAR(200),
+  Address4        VARCHAR(200),
+  City            VARCHAR(200),
+  State           VARCHAR(100),
   Pincode         VARCHAR(10),
   Phone           VARCHAR(20),
   Mobile          VARCHAR(20),
@@ -312,6 +313,8 @@ CREATE TABLE Party
   CompSno           INT   
 )
 GO
+
+
 
 
 CREATE TABLE Schemes
@@ -418,7 +421,7 @@ CREATE TABLE Items
 (
   ItemSno INT PRIMARY KEY IDENTITY(1,1),
   Item_Code VARCHAR(10),
-  Item_Name VARCHAR(200),
+  Item_Name VARCHAR(100),
   GrpSno INT,
   Remarks VARCHAR(50),
   Active_Status     BIT,
@@ -690,7 +693,8 @@ CREATE TABLE Alerts_Setup
   Sms_Password      VARCHAR(20),
   Sms_Peid          VARCHAR(50),
   WhatsApp_Instance VARCHAR(100),
-  Add_91            BIT
+  Add_91            BIT,
+  Add_91Sms            BIT
 )
 GO
 

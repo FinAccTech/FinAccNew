@@ -44,7 +44,7 @@ export class ClsParties{
     Initialize(){
         let Party: TypeParties = {
             PartySno:0,
-            Party_Code: "AUTO",
+            Party_Code: "",
             Party_Name: "",            
             Print_Name: "",  
             Party_Cat: 0,          

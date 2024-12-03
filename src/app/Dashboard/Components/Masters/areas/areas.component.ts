@@ -43,6 +43,7 @@ export class AreasComponent {
       }
       else{              
         this.AreaList = JSON.parse(data.apiData);
+                
         if (!this.AreaList){
           this.AreaList = [];
         }  

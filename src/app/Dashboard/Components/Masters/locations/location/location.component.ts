@@ -34,15 +34,16 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-    if (this.Location.LocationSno == 0){      
-      if (this.globals.AppSetup.LocCode_AutoGen == 1){
+      if (this.globals.AppSetup().LocCode_AutoGen == 1){
         this.CodeAutoGen = true;
-        let it = new ClsLocations(this.dataService)
-        it.getLocationCode().subscribe(data => {
-          this.Location.Loc_Code = data.apiData;
-        })
+        if (this.Location.LocationSno == 0){      
+          let it = new ClsLocations(this.dataService)
+          it.getLocationCode().subscribe(data => {
+            this.Location.Loc_Code = data.apiData;
+          })
+        }
       }
-    }
+    
   }
 
   SaveLocation(){    

@@ -45,6 +45,8 @@ export class AlertconfirmationComponent {
           }
         }
         if (this.SelectedAlertMode == this.globals.AlertModeWhatsApp){
+          console.log(StpData.WhatsApp_Instance);
+          
           if (!StpData.WhatsApp_Instance || StpData.WhatsApp_Instance == ''){
             this.globals.SnackBar("error", "WhatsApp Api Setup is not complete or invalid in Alert Setup");
             return;

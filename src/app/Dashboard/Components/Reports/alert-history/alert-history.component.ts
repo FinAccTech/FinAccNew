@@ -89,5 +89,23 @@ export class AlertHistoryComponent {
     return this.globals.DateToInt( new Date ($event.target.value));
   }
 
+  ClearAll(){
+    this.globals.QuestionAlert("Are you sure you want to Clear all Pending Messages ?").subscribe(response=>{
+        if (response == 1){
+          let stp = new ClsAlertSetup(this.dataService);
+          stp.clearAllAlerts().subscribe(data=>{
+            if (data.queryStatus == 0){
+              this.globals.ShowAlert(3, data.apiData);
+            }
+            else{
+              this.globals.SnackBar("info","Messages cleared successfulle");
+              this.AlertList = [];      
+              this.FilteredList = this.AlertList;  
+              this.LoadDataIntoMatTable();  
+            }
+          })
+        }
+    })
+  }
   
 }

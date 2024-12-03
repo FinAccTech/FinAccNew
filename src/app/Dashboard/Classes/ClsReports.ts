@@ -60,8 +60,8 @@ export class ClsReports{
         return this.dataService.HttpGet(postdata, "/getAuctionHistory");                
     }
 
-    getPendingReport(AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+    getPendingReport(AsOn: number, DueDays: number): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn, "DueDays": DueDays }; 
         return this.dataService.HttpGet(postdata, "/getPendingReport");                
     }
 

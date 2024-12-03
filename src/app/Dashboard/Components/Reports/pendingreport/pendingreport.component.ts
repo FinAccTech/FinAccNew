@@ -32,7 +32,7 @@ export class PendingreportComponent {
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Last_Receipt_Date', 'Mature_Date','Pending_Interest','Pending_Days', 'Pending_Dues'];
+  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Last_Receipt_Date','Due_Date', 'Mature_Date','Pending_Interest','Pending_Days', 'Pending_Dues'];
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
   expandedElement!: TypeLoan | null;
 
@@ -44,6 +44,7 @@ export class PendingreportComponent {
   FilteredList:    TypePendingReport[] = [];    
 
   PendingDues: number = 0;
+  DueDays: number = 28;
 
   ShowFilterOptions: boolean = false;
   FilteMonthsParams: number = 0;
@@ -61,7 +62,7 @@ export class PendingreportComponent {
     
     if (this.PendingDues == 0){
       let ln = new ClsReports(this.dataService);    
-      ln.getPendingReport(this.AsOnDate).subscribe(data=> { 
+      ln.getPendingReport(this.AsOnDate,this.DueDays).subscribe(data=> { 
         if (data.queryStatus == 0){
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
           return;

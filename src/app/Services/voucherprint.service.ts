@@ -52,7 +52,7 @@ PrintVoucher(Trans: any, VouType: number, PrintStyle: string){
 
         
         if (Setup.PrintCopy == 1){            
-             StrHtml += this.GetHtmlFromFieldSet(FldList, FieldSet,Setup.CopyLeftMargin,Setup.CopyTopMargin, false);            
+             StrHtml += this.GetHtmlFromFieldSet(FldList, FieldSet,Setup.CopyLeftMargin,Setup.CopyTopMargin, true);            
         }
 
 
@@ -86,7 +86,7 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
     FldList.forEach((fld: any) => {    
 
         if ((IsCopy == true && (!fld.AvoidCopy || fld.AvoidCopy ==0))  || (IsCopy == false && (!fld.AvoidMain || fld.AvoidMain == 0) ))
-        {        
+        {                
             switch (fld.fldcat) {
             case "main":
                 switch (fld.fldtype) {
@@ -411,7 +411,7 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                         break;
                 }
             break;
-            }   
+            }           
         }
       });
     return StrHtml;

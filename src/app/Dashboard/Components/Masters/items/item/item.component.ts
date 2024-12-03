@@ -44,19 +44,15 @@ export class ItemComponent implements OnInit {
 
   ngOnInit(): void {        
 
-    if (this.Item.ItemSno == 0){      
-      if (!this.globals.AppSetup){
-        this.globals.AppSetup =  JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
-      }
-
-      if (this.globals.AppSetup.ItemCode_AutoGen == 1){ 
+      if (this.globals.AppSetup().ItemCode_AutoGen == 1){ 
         this.CodeAutoGen = true;
-        let it = new ClsItems(this.dataService)
-        it.getItemCode().subscribe(data => {
-          this.Item.Item_Code = data.apiData;
-        })
-      }
-    }
+        if (this.Item.ItemSno == 0){      
+          let it = new ClsItems(this.dataService)
+          it.getItemCode().subscribe(data => {
+            this.Item.Item_Code = data.apiData;
+          })
+        }
+      }    
 
     let grp = new ClsItemGroups(this.dataService);
     grp.getItemGroups(0).subscribe(data => {      

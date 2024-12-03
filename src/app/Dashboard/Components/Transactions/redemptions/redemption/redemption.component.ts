@@ -14,11 +14,11 @@ import { ClsReports, TypeInterestDetails, TypeInterestStructure } from 'src/app/
 import { MatDialog } from '@angular/material/dialog';
 import { LoanSelectionComponent } from 'src/app/Dashboard/widgets/loan-selection/loan-selection.component';
 import { RedemptionserviceService } from '../redemptionservice.service';
-import { TypePayMode } from 'src/app/Dashboard/Types/TypePayMode';
 import { ClsLedgers, TypeLedger } from 'src/app/Dashboard/Classes/ClsLedgers';
 import { PaymodesComponent } from 'src/app/Dashboard/widgets/paymodes/paymodes.component';
 import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 
 @Component({
   selector: 'app-redemption',
@@ -68,7 +68,8 @@ export class RedemptionComponent implements OnInit {
                 private router :      Router,
                 private location:     Location,
                 private dialog:       MatDialog,
-                private alertService: AlertsService
+                private alertService: AlertsService,
+                private vouPrint:     VoucherprintService
               )
               {           
                 this.Redemption = redService.getRedemption();     
@@ -230,7 +231,7 @@ SaveRedemption(){
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
           return;
         }
-        else{                           
+        else{                  
           if (this.Redemption.RedemptionSno == 0) {this.alertService.CreateRedemptionAlert(this.globals.AlertTypeNewRedemption, this.Redemption);}                    
           this.globals.SnackBar("info", this.Redemption.RedemptionSno == 0 ? "Redemption Created successfully" : "Redemption updated successfully");     
           this.router.navigate(['dashboard/redemptions']);
@@ -239,6 +240,12 @@ SaveRedemption(){
     error => {
       this.globals.ShowAlert(this.globals.DialogTypeError, error);
     })
+}
+
+PrintTransaction(trans: TypeRedemption){            
+  if (!this.globals.GetUserRight(this.auth.LoggedUserRights, this.globals.FormIdRedemptions, this.globals.UserRightPrint)) { this.globals.SnackBar("error", "You are not authorized for this operation."); return; }
+  if (trans.Series.Print_Style == ""){ this.globals.SnackBar("error","No Print Style applied. Apply Print Styles in Voucher Series "); return; }
+    else { this.vouPrint.PrintVoucher(trans, 14 ,trans.Series.Print_Style!);}
 }
 
 DeleteRedemption(){
