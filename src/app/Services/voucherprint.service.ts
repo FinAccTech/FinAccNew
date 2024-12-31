@@ -8,6 +8,8 @@ import { formatDate } from '@angular/common';
 import { ClsSchemes } from '../Dashboard/Classes/ClsSchemes';
 import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 import { AuthService } from './auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectprintstyleComponent } from '../Dashboard/widgets/selectprintstyle/selectprintstyle.component';
 
 
 @Injectable({
@@ -16,7 +18,7 @@ import { AuthService } from './auth.service';
 @AutoUnsubscribe
 export class VoucherprintService {
 
-  constructor(private globals: GlobalsService,private dataService: DataService, private auth: AuthService) {
+  constructor(private globals: GlobalsService,private dataService: DataService, private auth: AuthService, private dialog: MatDialog) {
     // const toWords = new ToWords({
     //     localeCode: 'en-IN',
     //     converterOptions: {
@@ -41,20 +43,41 @@ export class VoucherprintService {
 
 PrintVoucher(Trans: any, VouType: number, PrintStyle: string){    
  
+    let result: string[] = PrintStyle.split(";");
+
+    if (result.length > 1){
+     const dialogRef = this.dialog.open(SelectprintstyleComponent, 
+        { 
+          data: { result },
+        });        
+        dialogRef.disableClose = true;    
+        dialogRef.afterClosed().subscribe(result => {        
+          if (result){                        
+            if (result && result.length !==0){
+                this.StartPrinting(Trans, VouType, result);
+            }
+          }          
+        }); 
+    }
+    else
+    {
+        this.StartPrinting(Trans, VouType, PrintStyle);
+    }
+   }
+
+StartPrinting(Trans: any, VouType: number, PrintStyle: string){
     this.dataService.HttpGetPrintStyle(PrintStyle).subscribe(data=>{        
         let FieldSet = this.GetPrintFields(Trans,VouType);                
         let FldList = JSON.parse(data).FieldSet;        
         let Setup: TypePrintSetup = JSON.parse(data).Setup[0];        
         
-        let StrHtml = '<div style="position:relative; width:100%; height:100%"; padding:0; margin:0; box-sizing: border-box;>';
-    
+        let StrHtml = '<div style="position:relative; width:100%; height:100%"; padding:0; margin:0; box-sizing: border-box;>';    
         StrHtml += this.GetHtmlFromFieldSet(FldList, FieldSet,0,0, false);
 
-        
-        if (Setup.PrintCopy == 1){            
+        if (Setup.PrintCopy == 1){                                              
+            let FldList = JSON.parse(data).FieldSet;            
              StrHtml += this.GetHtmlFromFieldSet(FldList, FieldSet,Setup.CopyLeftMargin,Setup.CopyTopMargin, true);            
         }
-
 
         StrHtml += '</div>';    
 
@@ -77,14 +100,14 @@ PrintVoucher(Trans: any, VouType: number, PrintStyle: string){
           );
           popupWin!.document.close();        
     });
-
-   }
+  
+}
 
 GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, TopMargin: number, IsCopy: boolean): string{
 
     let StrHtml = ``;
     FldList.forEach((fld: any) => {    
-
+        
         if ((IsCopy == true && (!fld.AvoidCopy || fld.AvoidCopy ==0))  || (IsCopy == false && (!fld.AvoidMain || fld.AvoidMain == 0) ))
         {                
             switch (fld.fldcat) {
@@ -192,13 +215,11 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                         }
                     });                 
                 }
-
+                
                 fld.top = +fld.top + TopMargin;
-
                 
-                
-                FieldSet.ItemDetails.forEach(item=>{                
-                    fld.top = +fld.top + fld.fontsize;        
+                FieldSet.ItemDetails.forEach(item=>{                                                        
+                    fld.top = +fld.top + fld.fontsize;                                                
                     sno++;
                     
                     switch (fld.fldtype) {    
@@ -228,8 +249,6 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                                 for (let i=0; i<=Emptyspace*2; i++){
                                     StrEmptySpace += '&nbsp;';
                                 }
-                                
-                                
                             }                            
                             
                             //console.log( fld.fldvalue + StrEmptySpace);
@@ -419,8 +438,6 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
 
 GetPrintFields(Trans: any, VouType: number){
     let PrintFields = this.IntializePrintFields();
-    console.log(Trans);
-    
     switch (VouType) {
         case this.globals.VTypLoanPayment:
             PrintFields.LoanSno = Trans.LoanSno;
@@ -438,9 +455,9 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Nett_Payable = Trans.Nett_Payable;
             PrintFields.Mature_Date = this.globals.IntToDateString (Trans.Mature_Date);
             PrintFields.Tot_Qty = Trans.TotQty;
-            PrintFields.Tot_Gross_Wt = +parseFloat(Trans.TotGrossWt).toFixed(3);
-            PrintFields.Tot_Nett_Wt = +parseFloat(Trans.TotNettWt).toFixed(3);
-            PrintFields.Market_Value = +parseFloat(Trans.Market_Value).toFixed(2);
+            PrintFields.Tot_Gross_Wt = Trans.TotGrossWt;
+            PrintFields.Tot_Nett_Wt = Trans.TotNettWt;
+            PrintFields.Market_Value = Trans.Market_Value;
             PrintFields.Loan_Remarks = Trans.Remarks;
             PrintFields.Loan_PerGram = Trans.IGroup.Loan_PerGram;
             PrintFields.Loan_Image = Trans.Loan_Image;
@@ -480,7 +497,7 @@ GetPrintFields(Trans: any, VouType: number){
             if (Trans.SchemeSlab_Json && Trans.SchemeSlab_Json != ''){
                 let schemeList = JSON.parse(Trans.SchemeSlab_Json);
                 schemeList.forEach((sch: any)=>{
-                    PrintFields.SchemeDetails.push({"SchemeSno":sch.SchemeSno, "FromPeriod": sch.FromPeriod, "ToPeriod": sch.ToPeriod, "Roi": sch.Roi});
+                    PrintFields.SchemeDetails.push({"SchemeSno":sch.SchemeSno, "FromPeriod": sch.FromPeriod, "ToPeriod": sch.ToPeriod == 0 ? 'above' :sch.ToPeriod , "Roi": sch.Roi});
                 })
             }
             

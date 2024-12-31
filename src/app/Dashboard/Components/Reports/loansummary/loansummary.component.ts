@@ -20,9 +20,10 @@ export class LoansummaryComponent {
   LoansList!:       TypeLoan[];
   SelectedLoan!:    TypeLoan;
   
-  InterestDetails!: TypeInterestDetails;
+  InterestDetails!: TypeInterestDetails; 
   InterestStructure: TypeInterestStructure[] = [];
   Statement: TypeLoanStatement[] = [];
+
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
     let ln = new ClsLoans(this.dataService);
@@ -52,7 +53,6 @@ export class LoansummaryComponent {
   LoadDetails(){
     let rep = new ClsReports(this.dataService);    
     rep.getLoanDetailed(this.SelectedLoan.LoanSno, this.AsOnDate).subscribe(data => {
-      console.log(data);
       
       this.InterestDetails    = JSON.parse (data.apiData)[0];        
       this.InterestStructure  = JSON.parse (this.InterestDetails.Struc_Json);    

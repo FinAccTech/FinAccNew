@@ -97,7 +97,13 @@ export class UserComponent implements OnInit {
     um.User = this.User;    
     um.User.UserRightsXml = this.GetRightsXml();
     um.User.CompRightsXml = this.GetCompRightsXml();
-    um.User.Profile_Image = this.auth.getUserImagesServerPath() + um.User.UserName + '/' + this.TransImages.Image_Name;
+    if (this.TransImages.Image_Name.length !==0){
+      um.User.Profile_Image = this.auth.getUserImagesServerPath() + um.User.UserName + '/' + this.TransImages.Image_Name;
+    }
+    else{
+      um.User.Profile_Image = "";
+    }
+    
     um.User.Image_Name = this.TransImages.Image_Name;
     um.User.fileSource = this.TransImages;
 

@@ -23,9 +23,10 @@ export class CustomerhistoryComponent {
   
   CustomerDetails!: TypeCustomerDetailed;
   LoanData: any[] = [];
-  PrincipalTotal: number = 0;
+  PrincipalTotal: number = 0; 
   MarketValueTotal: number = 0;
-  
+  NettPayableTotal: number = 0;
+
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
     let pty = new ClsParties(this.dataService);
@@ -53,10 +54,12 @@ export class CustomerhistoryComponent {
 
       this.PrincipalTotal  = 0;
       this.MarketValueTotal = 0;
+      this.NettPayableTotal = 0;
 
       this.LoanData.forEach(ln => {
         this.PrincipalTotal += +ln.Principal,
         this.MarketValueTotal += +ln.Market_Value;
+        this.NettPayableTotal += (+ln.Interest_Balance + +ln.Principal_Balance)
         
       });
     })

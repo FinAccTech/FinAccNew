@@ -44,9 +44,12 @@ export class ClsLoans{
         newTrans.Party                 = this.Loan.Customer;
         newTrans.SchemeSno             = this.Loan.Scheme.SchemeSno;
         newTrans.GrpSno                = this.Loan.IGroup.GrpSno;
+        newTrans.Market_Rate           = this.Loan.IGroup.Market_Rate!;
+        newTrans.Loan_PerGram          = this.Loan.IGroup.Loan_PerGram!;
         newTrans.TotQty                = this.Loan.TotQty;
         newTrans.TotGrossWt            = this.Loan.TotGrossWt;
         newTrans.TotNettWt             = this.Loan.TotNettWt;
+        newTrans.TotPureWt             = this.Loan.TotPureWt;
         newTrans.Market_Value          = this.Loan.Market_Value;
         newTrans.Principal             = this.Loan.Principal;
         newTrans.Roi                   = this.Loan.Roi;
@@ -136,6 +139,7 @@ export class ClsLoans{
             TotQty: 0,
             TotGrossWt: 0,
             TotNettWt: 0,
+            TotPureWt:0,
             Market_Value: 0,
             Principal: 0,
             Roi: 0,
@@ -195,6 +199,7 @@ export class ClsLoans{
         TotQty: number;
         TotGrossWt: number;
         TotNettWt: number;
+        TotPureWt: number;
         Market_Value: number;
         Principal: number;
         Roi: number;

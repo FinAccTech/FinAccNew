@@ -48,14 +48,15 @@ export class LoginComponent {
        
       if (data.queryStatus == 0){
         this.InvalidUser = true;
-        this.errText = "***" + data.apiData; 
+        this.errText = "*** " + data.apiData; 
       }      
       else{                
         sessionStorage.clear();
         sessionStorage.setItem("sessionClientDbName",this.ClientCode);  
         this.auth.Authenticated = 1;                
         sessionStorage.setItem("sessionAuthenticated","1")!;      
-        this.auth.LoggedClient = data.apiData.ClientInfo[0];                
+        this.auth.LoggedClient = data.apiData.ClientInfo[0];    
+                            
         sessionStorage.setItem("sessionLoggedClient", JSON.stringify (data.apiData.ClientInfo[0]))!;        
         this.auth.LoggedUser = data.apiData.UserInfo[0];     
         if (data.apiData.UserInfo[0].Rights_Json && data.apiData.UserInfo[0].Rights_Json.length > 0)
@@ -67,7 +68,7 @@ export class LoginComponent {
         }
         
         sessionStorage.setItem("sessionLoggedUser", JSON.stringify (data.apiData.UserInfo[0]))!;        
-
+                
         if (data.apiData.CompInfo.length > 0)
           {
             this.auth.CompSelected = 1;

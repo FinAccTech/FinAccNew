@@ -6,7 +6,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 
 @Component({
-  selector: 'app-loandetails',
+  selector: 'app-loandetails',  
   templateUrl: './loandetails.component.html',
   styleUrls: ['./loandetails.component.scss']
 })

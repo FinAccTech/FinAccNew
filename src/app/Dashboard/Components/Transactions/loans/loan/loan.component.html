@@ -278,10 +278,9 @@
                         </div>
                     </div>
                     <div class="col50">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                        <div class="formGroup">
                             <input type="number" class="formControlreadonly" required [(ngModel)]= "Loan.AdvIntAmt" NumberInput MaxValue=0 readonly />
-                            <label for="" class="formLabelreadonly"> Advance Int Amt </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            <label for="" class="formLabelreadonly"> Advance Int Amt </label>                            
                         </div>
                     </div>
                 </div>

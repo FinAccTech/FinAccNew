@@ -9,9 +9,6 @@ import { AutoUnsubscribe } from "src/app/auto-unsubscribe.decorator";
 export class ClsUser{
     public User!: TypeUser;
     private ClientSno: number = JSON.parse (sessionStorage.getItem("sessionLoggedClient")!).ClientSno; 
-    private CompSno: number = +sessionStorage.getItem("sessionSelectedCompSno")!;     
-    private BranchSno: number = +sessionStorage.getItem("sessionSelectedBranchSno")!; 
-    
     constructor(private dataService: DataService){}
 
     getUsers(UserSno: number): Observable<TypeHttpResponse> {

@@ -146,8 +146,10 @@ GO
                         
                          SET @IntAccured = CASE @Calc_Basis WHEN 0 THEN
                                                                  CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays*30)AS DECIMAL(18,2))
+                                                                 
                                                              Else
-                                                                 CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays)AS DECIMAL(18,2))
+                                                                CAST((@Roi/100)*@NewPrincipal/12 AS decimal(18,2))
+                                                                 --CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays)AS DECIMAL(18,2))
                                                              End
      
         
@@ -195,20 +197,20 @@ GO
                                  SET @AddedPrincipal = 0
                                  -----------------------------------------------------------------------------A1
                          
-                     IF @Calc_Basis = 1
+/*                     IF @Calc_Basis = 1
                          BEGIN
                              SET @IntAccured = @Duration * CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays) AS DECIMAL(18,2))
                              IF @IntPaid < @IntAccured SET @IntDurDays = @Duration
                          End
                      Else
-                         BEGIN
+                         BEGIN */
                             SET @IntAccured =
                             CASE
                                     WHEN @MinCalcDays = 0 THEN
-                                        @Duration * CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays) AS DECIMAL(18,2))
-                                    WHEN @Duration >= @MinCalcDays THEN
+                                        @Duration * CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays) AS DECIMAL(18,2))                                        
+                                    WHEN @Duration >= @MinCalcDays THEN                                    
                                         CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays*30) AS DECIMAL(18,2))
-                                    Else
+                                    Else                                    
                                         @MinCalcDays * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays) 
                                     End
                              IF @IntPaid < @IntAccured
@@ -216,8 +218,10 @@ GO
                                  SET @IntDurDays = CASE WHEN @MinCalcDays = 0 THEN @Duration WHEN @Duration >= @MinCalcDays THEN 0 ELSE @MinCalcDays End
                                  SET @IntDurMonths = CASE WHEN @MinCalcDays = 0 THEN 0 WHEN @Duration >= @MinCalcDays THEN 1 Else 0 END
                                 End
-                         End
-						 SET @TotIntAccured = @TotIntAccured + @IntAccured
+                                SET @IntAccured = CAST(@IntAccured as decimal(18,2))
+/*                         End  */
+
+						        SET @TotIntAccured = @TotIntAccured + @IntAccured
                      INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,1,@Roi,@IntAccured,@TotIntAccured,@IntPaid,@PrinPaid,ISNULL(@AddedPrincipal,0),0,@NewPrincipal-@PrinPaid)
         ENDS_HERE:
                    Return 

@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'intToDate'
+  name: 'intToDate',  
 })
 export class IntToDatePipe implements PipeTransform {
-
+  
   transform(value: number): string {
     let argDate = value.toString();
     let year = argDate.substring(0,4);

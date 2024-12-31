@@ -5,7 +5,7 @@ import { DataService } from 'src/app/Services/data.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 
 @Component({
-  selector: 'app-partycard',
+  selector: 'app-partycard',  
   templateUrl: './partycard.component.html',
   styleUrls: ['./partycard.component.scss']
 })

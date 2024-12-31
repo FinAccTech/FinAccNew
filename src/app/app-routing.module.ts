@@ -57,6 +57,7 @@ import { SupplierhistoryComponent } from './Dashboard/Components/Reports/supplie
 import { HomeComponent } from './Home/home/home.component';
 import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
 import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
+import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/marketvalueanalysis/marketvalueanalysis.component';
 
 
 const routes: Routes = [
@@ -114,8 +115,8 @@ const routes: Routes = [
       { path:'auctionhistory', component: AuctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":22} }, 
       { path:'pendingreport', component: PendingreportComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 23} }, 
       { path:'ageanalysis', component: AgeAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 34 }}, 
+      { path:'marketvalueanalysis', component: MarketValueAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 35 }}, 
       
-
       { path:'appsetup', component: AppsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },     
       { path:'voucherseries', component: VoucherserieslistComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },        
       { path:'users', component: UsersComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    

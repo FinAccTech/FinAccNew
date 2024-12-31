@@ -86,17 +86,20 @@
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.2rem;" >
-                    <div class="col50">
+                    <div class="col30">
                         <div class="formGroup">
                             <input type="time" class="formControl" required [(ngModel)] = User.FromTime  />
                             <label for="" class="formLabel"> FromTime </label>                            
                         </div>
                     </div>
-                    <div class="col50">
+                    <div class="col30">
                         <div class="formGroup">
                             <input type="time" class="formControl" required [(ngModel)] = User.ToTime  />
                             <label for="" class="formLabel"> ToTime </label>                            
                         </div>
+                    </div>
+                    <div class="col40">
+                        <p style="color: red; font-size: .9rem; "> *** Enter time in 24 Hour Format</p>
                     </div>
                 </div>
             </div>

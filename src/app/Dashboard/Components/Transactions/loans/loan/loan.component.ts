@@ -135,7 +135,7 @@ export class LoanComponent implements OnInit {
       this.Loan = Trans.Initialize();      
       this.Loan.IsOpen = this.IsOpen;
       this.GridList = [{ "Item": {"ItemSno":0, "Item_Code": '', "Item_Name": '',"Name": ''} , "Qty":0, "Stone_Wt": 0, "Gross_Wt": 0, "Nett_Wt": 0, "Purity": { "PuritySno":0, "Purity_Code":"", "Purity_Name":"" }, "Item_Value": 0, "Remarks": "" }] ;    
-      this.GridTotals = { TotQty:0, TotGrossWt: 0, TotNettWt: 0, TotValue: 0};
+      this.GridTotals = { TotQty:0, TotGrossWt: 0, TotNettWt: 0, TotPureWt:0, TotValue: 0};
   
       //Voucher Series
       this.DefaultSeries = this.VoucherSeriesList;
@@ -182,10 +182,13 @@ export class LoanComponent implements OnInit {
       if (this.Loan.Images_Json.trim() !== '' && JSON.parse (this.Loan.Images_Json).length > 0){
         this.TransImages =       JSON.parse (this.Loan.Images_Json);    
       }    
-      this.GridTotals = { TotQty: this.Loan.TotQty , TotGrossWt: this.Loan.TotGrossWt, TotNettWt: this.Loan.TotNettWt, TotValue: this.Loan.Market_Value};
+      this.GridTotals = { TotQty: this.Loan.TotQty , TotGrossWt: this.Loan.TotGrossWt, TotNettWt: this.Loan.TotNettWt, TotPureWt: this.Loan.TotPureWt, TotValue: this.Loan.Market_Value};
+      this.IntAmtPerMonth = +((this.Loan.Principal * (this.Loan.Roi / 100 )) /12).toFixed(2);  
     }
   })
 
+  //console.log(this.Loan);
+  
   
   // let ser = new ClsVoucherSeries(this.dataService);
   // ser.getVoucherSeries(0,this.globals.VTypLoanPayment).subscribe(data=> {
@@ -320,7 +323,6 @@ SaveLoan(){
     if (!this.globals.GetUserRight(this.auth.LoggedUserRights, this.globals.FormIdLoans, this.globals.UserRightEdit)) { this.globals.SnackBar("error", "You are not authorized for this operation."); return; }
   }
   
-
   if (this.ValidateInputs() == false) {return};    
 
   if (this.Loan.PaymentMode.length == 0){
@@ -456,7 +458,7 @@ ValidateInputs(): boolean{
     return false;
   }
 
-  if (this.Loan.TotQty == 0 || this.Loan.TotGrossWt == 0 || this.Loan.TotNettWt == 0 || this.Loan.Market_Value == 0)
+  if (this.Loan.TotQty == 0 || this.Loan.TotGrossWt == 0 || this.Loan.TotNettWt == 0 || this.Loan.TotPureWt == 0 || this.Loan.Market_Value == 0)
   {
     this.globals.SnackBar("error", "Invalid Item Details");
     return false;
@@ -674,6 +676,7 @@ getGridTotals($event: TypeLoanGridTotals){
     this.Loan.TotQty = this.GridTotals.TotQty;
     this.Loan.TotGrossWt = this.GridTotals.TotGrossWt;
     this.Loan.TotNettWt = this.GridTotals.TotNettWt;
+    this.Loan.TotPureWt = this.GridTotals.TotPureWt;
     this.Loan.Market_Value = this.GridTotals.TotValue;
   }
 } 

@@ -1,10 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-
+import { MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
-import { ClsCompanies, TypeCompanies } from 'src/app/Dashboard/Classes/ClsCompanies';
-import { ClsUser, TypeUser, TypeUserRights } from 'src/app/Dashboard/Classes/ClsUsers';
-import { AuthService } from 'src/app/Services/auth.service';
+import { ClsUser, TypeUserRights } from 'src/app/Dashboard/Classes/ClsUsers';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
@@ -40,7 +37,6 @@ export class UserrightsComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-    console.log(this.UserRights);
     
     if (this.UserRights.length < 30){
       let usr = new ClsUser(this.dataService);
@@ -50,15 +46,12 @@ export class UserrightsComponent implements OnInit {
       this.UserRights.map(right=>{
         right.Form_Name = this.GetFormName(right.FormSno);
       })
-    }
-    
+    }    
   }
 
   SaveUserRights(){        
     this.CloseDialog()    
   }
-
-    
  
   CloseDialog()  {
     this.dialogRef.close(this.UserRights);
@@ -169,6 +162,9 @@ export class UserrightsComponent implements OnInit {
       break;                   
       case 34:
         FormName = "AgeAnalysis";
+      break;                   
+      case 35:
+        FormName = "MarketValueAnalysis";
       break;                   
     }
     return FormName;

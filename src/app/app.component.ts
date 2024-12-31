@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, SimpleChanges } from '@angular/core';
+import { IdleService } from './idle.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,7 @@ import { Component, HostListener } from '@angular/core';
 export class AppComponent {
   title = 'FinAcc';
 
+  constructor(){}
   @HostListener('window:beforeunload', ['$event'])
   beforeunloadHandler(event:any) {
     event.preventDefault();
@@ -17,6 +19,8 @@ export class AppComponent {
   }
 
 
+
+  
   // @HostListener('window:unload', [ '$event' ])
   // unloadHandler(event: any) {
   //   // ...

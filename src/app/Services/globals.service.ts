@@ -9,7 +9,6 @@ import { TypeLoan } from '../Dashboard/Classes/ClsLoan';
 import { TypeReceipt } from '../Dashboard/Classes/ClsReceipts';
 import { TypeRedemption } from '../Dashboard/Classes/ClsRedemptions';
 import { TypeVoucherLedger } from '../Dashboard/Classes/ClsVouchers';
-import { AuthService } from './auth.service';
 import { TypeUserRights } from '../Dashboard/Classes/ClsUsers';
 import { TypePayMode } from '../Dashboard/Types/TypePayMode';
 import { TypeAlert } from '../Dashboard/Classes/ClsAlertsSetup';
@@ -150,8 +149,20 @@ export class GlobalsService
      FormIdDayHistory = 32;
      FormIdSupplierHistory = 33;
      FormIdAgeAnalysis = 34;
+     FormIdMarketValueAnalysis = 35;
 
-     
+     //Report Component Ids
+     RepDayHistory = 1;
+     RepLoanSummary = 2;
+     RepCustomerHistory = 3;
+     RepLoanHistory = 4;
+     RepAuctionHistory = 5;
+     RepPendingReport = 6;
+     RepAgeAnalysis = 7;
+     RepMarketValueAnalysis = 8;
+
+
+
     //UserRight Types
       UserRightView       = 1;
       UserRightCreate     = 2;

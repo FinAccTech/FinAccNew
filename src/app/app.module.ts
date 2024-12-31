@@ -129,6 +129,7 @@ import { SitemobileappComponent } from './Home/sitemobileapp/sitemobileapp.compo
 import { AlertconfirmationComponent } from './Dashboard/widgets/alertconfirmation/alertconfirmation.component';
 import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
 import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
+import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/marketvalueanalysis/marketvalueanalysis.component';
 
 @NgModule({ declarations: [
         NumberInputDirective,
@@ -182,7 +183,12 @@ import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-hist
         VoucherseriesComponent,
         RedemptionsComponent,
         RedemptionComponent, LoanhistoryComponent, AuctionhistoryComponent, PendingreportComponent, AuctionentriesComponent, AuctionentryComponent, StatusupdateComponent,
-        ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, AgeAnalysisComponent, AlertHistoryComponent,
+        ReloansComponent, ReloanComponent, UsersComponent, UserComponent, LedgergroupsComponent, LedgergroupComponent, LedgersComponent, LedgerComponent, PaymodesComponent, 
+        DaybookComponent, VouchersComponent, VoucherComponent, PrintsetupComponent, TrialbalanceComponent, BalancesheetComponent, GroupsummaryComponent, ProfitandlossComponent, 
+        UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, 
+        RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, 
+        SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
+        AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,

@@ -100,9 +100,9 @@ InitLoansList(){
         
         let arrayKeys = this.LoansList.keys();
 
-        for (let key of arrayKeys) {
-          console.log(`Index: ${key}, Name: ${this.LoansList[key]}.name` );
-        }
+        // for (let key of arrayKeys) {
+        //   console.log(`Index: ${key}, Name: ${this.LoansList[key]}.name` );
+        // }
 
         this.LoadDataIntoMatTable();
         if (FromDate === 999 || ToDate === 999){ this.FromDate = data.ExtraData; this.ToDate = data.ExtraData;}

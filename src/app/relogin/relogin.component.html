@@ -1,0 +1,24 @@
+<div class="modalForm">
+  <div class="header">
+      <div class="headerLeft">
+          <span class="bar"></span>
+          <p> &nbsp; Session Expiration Warning </p>
+      </div>
+      <div class="headerRight">
+          <p matDialogClose="" >&times;</p>
+      </div>
+  </div>
+
+  <div class="body">
+      <div class="reloginContainer">
+        <p> You are idle for more than 10 Minutes and been Logged out</p>
+        <p> ReEnter Password to Login</p>
+        <input type="password" placeholder="Login Password" [(ngModel)]="Password" (keydown.enter)="ReLogin()" />
+
+        <div class="buttonSection">
+          <button (click)="ReLogin()" > <i class='bx bx-log-in-circle'></i> Stay Logged in </button>
+          <button (click)="logout()" > <i class='bx bx-log-out-circle'></i> Logout Now </button>
+        </div>
+      </div>
+  </div>
+</div>

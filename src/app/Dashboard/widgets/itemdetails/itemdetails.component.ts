@@ -276,6 +276,7 @@ export class ItemdetailsComponent implements OnInit  {
       this.GridTotals.TotQty = 0;
       this.GridTotals.TotGrossWt = 0;
       this.GridTotals.TotNettWt = 0;
+      this.GridTotals.TotPureWt = 0
       this.GridTotals.TotValue = 0;
     }
 
@@ -285,6 +286,7 @@ export class ItemdetailsComponent implements OnInit  {
         this.GridTotals.TotQty +=  (+this.GridList[i].Qty);
         this.GridTotals.TotGrossWt +=  (+this.GridList[i].Gross_Wt);
         this.GridTotals.TotNettWt += (+this.GridList[i].Nett_Wt);
+        this.GridTotals.TotPureWt += this.GridTotals.TotNettWt * (this.GridList[i].Purity.Purity! / 100);
         this.GridTotals.TotValue += (+this.GridList[i].Item_Value);
       }
     }

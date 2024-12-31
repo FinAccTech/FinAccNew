@@ -25,10 +25,10 @@ RETURNS INT
 AS
 BEGIN	
 	RETURN  CAST(
-            CAST(YEAR(@DateInt) AS VARCHAR) +
-            CASE WHEN LEN(CAST(MONTH(@DateInt) AS VARCHAR)) = 1 THEN '0' + CAST(MONTH(@DateInt) AS VARCHAR) ELSE CAST(MONTH(@DateInt) AS VARCHAR) END  +
-            CASE WHEN LEN(CAST(DAY(@DateInt) AS VARCHAR)) = 1 THEN '0' + CAST(DAY(@DateInt) AS VARCHAR) ELSE CAST(DAY(@DateInt) AS VARCHAR) END
-          AS INT)
+          CAST(YEAR(@DateInt) AS VARCHAR) +
+          CASE WHEN LEN(CAST(MONTH(@DateInt) AS VARCHAR)) = 1 THEN '0' + CAST(MONTH(@DateInt) AS VARCHAR) ELSE CAST(MONTH(@DateInt) AS VARCHAR) END  +
+          CASE WHEN LEN(CAST(DAY(@DateInt) AS VARCHAR)) = 1 THEN '0' + CAST(DAY(@DateInt) AS VARCHAR) ELSE CAST(DAY(@DateInt) AS VARCHAR) END
+        AS INT)
 END
 GO
 
@@ -463,9 +463,14 @@ CREATE TABLE Transactions
 	SchemeSno				INT,
 	GrpSno					INT,
   TotQty          TINYINT,
-	TotGrossWt			DECIMAL(7,3),
-	TotNettWt				DECIMAL(7,3),
+	TotGrossWt			DECIMAL(8,3),
+	TotNettWt				DECIMAL(8,3),
+  TotPureWt       DECIMAL(8,3),
 	Market_Value		MONEY,
+
+  Market_Rate     MONEY,
+  Loan_PerGram    MONEY,
+
 	Principal				MONEY,
 	Roi						  DECIMAL(4,2),
 	AdvIntDur				TINYINT,
@@ -740,9 +745,15 @@ CREATE TABLE Alerts
 GO
 
 
+CREATE TABLE Report_Properties
+(
+  ReportSno     INT PRIMARY KEY IDENTITY(1,1),
+  Report_Name   VARCHAR(20),  
+  Report_Style  VARCHAR(100),
+  CompSno       INT
+)
 
-
-
+GO
 
 
 

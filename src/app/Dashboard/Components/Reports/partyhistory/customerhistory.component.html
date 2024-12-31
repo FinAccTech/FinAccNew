@@ -107,6 +107,9 @@
                         <th>Principal</th>                                
                         <th>Market Value</th>                  
                         <th>TotNettWt</th>                     
+                        <!-- <th>Interest</th>                     
+                        <th>Principal</th>                      -->
+                        <th>Nett Payable</th>                     
                     </thead>
                     <tr *ngFor="let ln of LoanData; let i = index" (click)="SelectedLoan = ln"  >
                         <td [style.color]="GetStatusColor(ln)" > {{ln.Loan_No}} </td>
@@ -119,13 +122,19 @@
                         <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Principal | number}} </td>
                         <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Market_Value | number}} </td>
                         <td [style.color]="GetStatusColor(ln)"> {{ln.TotNettWt | number}} </td>
+                        <!-- <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance | number}} </td>
+                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Principal_Balance | number}} </td> -->
+                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance + ln.Principal_Balance | number}} </td>
                         
                     </tr>
                     <tfoot>
                         <td colspan="7"> Total </td>
                         <td> {{PrincipalTotal}} </td>
-                        <td>{{MarketValueTotal}} </td>
+                        <td> {{MarketValueTotal}} </td>
                         <td></td>
+                        <!-- <td></td>
+                        <td></td> -->
+                        <td> {{NettPayableTotal}} </td>
                     </tfoot>
                 </table>
             </div>

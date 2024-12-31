@@ -168,7 +168,12 @@ export class ClsTransactions{
 			TotQty: 0,
 			TotGrossWt: 0,
 			TotNettWt: 0,
+			TotPureWt: 0,
 			Market_Value: 0,
+
+			Market_Rate: 0,
+			Loan_PerGram: 0,
+
 			Principal: 0,
 			Roi: 0,
 			AdvIntDur: 0,
@@ -226,7 +231,12 @@ export class ClsTransactions{
 		TotQty: number;
 		TotGrossWt: number;
 		TotNettWt: number;
+		TotPureWt: number;
 		Market_Value: number;
+
+		Market_Rate: number;
+		Loan_PerGram: number;
+
 		Principal: number;
 		Roi: number;
 		AdvIntDur: number;

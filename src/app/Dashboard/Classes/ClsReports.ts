@@ -79,6 +79,11 @@ export class ClsReports{
         let postdata ={"CompSno": this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getAlertHistory");                
     }
+
+    getMarketvalueAnalysis(): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getMarketvalueAnalysis");                
+    }
 }
 
 export interface TypeCustomerDetailed extends TypeParties{
@@ -134,6 +139,17 @@ export interface TypeLoanStatement{
 
 export interface TypeLoanHistory extends TypeLoan{
     StatusCount_Json: string;
+}
+
+export interface TypeMarketValueAnalysis extends TypeLoan{
+    Then_Market_Rate: number;
+    Then_Loan_PerGram: number;
+    Then_Market_Value: number;
+    Current_Market_Rate: number;
+    Current_Loan_PerGram: number;
+    Current_Market_Value: number;
+    Nett_Payable_AsOn: number;
+    Diff_Amount: number;
 }
 
 export interface TypePendingReport extends TypeLoan{

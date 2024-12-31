@@ -5,16 +5,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
-import { ClsLoans, TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
-import { ClsReports, TypeInterestDetails, TypeInterestStructure, TypeLoanHistory, TypeLoanStatement } from 'src/app/Dashboard/Classes/ClsReports';
+import { TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
+import { ClsReports,  TypeMarketValueAnalysis,} from 'src/app/Dashboard/Classes/ClsReports';
 import { ReportpropertiesComponent } from 'src/app/Dashboard/widgets/reportproperties/reportproperties.component';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
 @Component({
-  selector: 'app-auctionhistory',
-  templateUrl: './auctionhistory.component.html',
-  styleUrls: ['./auctionhistory.component.scss'],
+  selector: 'app-marketvalueanalysis',
+  templateUrl: './marketvalueanalysis.component.html',
+  styleUrls: ['./marketvalueanalysis.component.scss'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -25,13 +25,15 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 }) 
 
 @AutoUnsubscribe
-export class AuctionhistoryComponent {
+export class MarketValueAnalysisComponent {
 
   constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog){}
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date'];
+  columnsToDisplay: string[] = [ '#', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name', 'Then_Market_Rate', 'Then_Loan_PerGram', 'Then_Market_Value', 
+    'Current_Market_Rate', 'Current_Loan_PerGram', 'Current_Market_Value', 'Nett_Payable_AsOn','Diff_Amount'
+  ];
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
   expandedElement!: TypeLoan | null;
 
@@ -39,19 +41,19 @@ export class AuctionhistoryComponent {
   @ViewChild(MatSort) sort!: MatSort;  
   
   AsOnDate: number = 0;
-  LoansList:       TypeLoanHistory[] = [];
-  SelectedLoan!:    TypeLoanHistory;
+  LoansList:       TypeMarketValueAnalysis[] = [];
+  SelectedLoan!:    TypeMarketValueAnalysis;
   StatusCount!: any[];
   SelectedLoanStatus: number = 0;
   
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
-    this.LoadAuctionHistory();
+    this.LoadMarketValueAnalysis();
   }
 
-  LoadAuctionHistory(){
+  LoadMarketValueAnalysis(){
     let ln = new ClsReports(this.dataService);    
-    ln.getAuctionHistory(this.AsOnDate).subscribe(data=> { 
+    ln.getMarketvalueAnalysis().subscribe(data=> { 
       if (data.queryStatus == 0){
         this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
         return;
@@ -96,20 +98,5 @@ export class AuctionhistoryComponent {
     return this.globals.DateToInt( new Date ($event.target.value));
   }
 
-  PrintReport(){
-    const dialogRef = this.dialog.open(ReportpropertiesComponent, 
-      { 
-        data:  this.globals.RepAuctionHistory,
-      });        
-      dialogRef.disableClose = true;    
-      dialogRef.afterClosed().subscribe(result => {        
-        if (result){                        
-          if (result && result.length !==0){
-              console.log(result);
-              
-              //this.StartPrinting(Trans, VouType, result);
-          }
-        }          
-      }); 
-  }
+  
 }
