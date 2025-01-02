@@ -88,7 +88,9 @@ export class ClsAppSetup{
             Enable_Authentication: 0,
             Enable_OldEntries:     0,
             IntCalcinDays:         0,
-            MobileNumberMandatory: 0,                    
+            MobileNumberMandatory: 0,        
+            Enable_AutoApproval: 0,            
+            
         }
         return AppSetup
     }
@@ -157,6 +159,7 @@ export interface TypeAppSetup{
     Enable_OldEntries:     number;
     IntCalcinDays:         number;    
     MobileNumberMandatory: number;    
+    Enable_AutoApproval: number;
 }
 
 

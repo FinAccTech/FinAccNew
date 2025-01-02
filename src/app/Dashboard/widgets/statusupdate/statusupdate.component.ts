@@ -28,7 +28,7 @@ export class StatusupdateComponent {
     public dialogRef: MatDialogRef<StatusupdateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,        
     public dialog: MatDialog
-  ) {}
+  ) {} 
 
   ngOnInit(){
     this.Approval_Date = this.globals.DateToInt(new Date());

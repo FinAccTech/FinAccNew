@@ -27,7 +27,6 @@ export class AppsetupComponent {
   SaveSettings(){
     let as = new ClsAppSetup(this.dataService);
     as.AppSetup = this.AppSetup; 
-    
     as.saveAppSetup().subscribe(data =>{
       if (data.queryStatus == 0){
         this.globals.ShowAlert(3,data.apiData)

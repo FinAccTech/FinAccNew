@@ -122,16 +122,17 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                         `;    
                     break;
         
-                case "field":
-                    // StrHtml += `
-                    //     <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
-                    //         ` + Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1] + `
-                    //     </div>
-                    //     `;    
-
+                case "field":                    
+                console.log(Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]);
+                
+                    let FormattedValue = (fld.decimal && fld.decimal !==0) ? (+Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]).toFixed(fld.decimal) : Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]; 
+                    console.log(FormattedValue);
+                    
                     StrHtml += `
                     <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin+ +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `;" >
-                        ` + (fld.prefix ? fld.prefix + `&nbsp;` : ``) + Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]  + (fld.suffix ? `&nbsp;` + fld.suffix   : ``) + `
+                        ` + (fld.prefix ? fld.prefix + `&nbsp;` : ``) + 
+                        FormattedValue
+                        + (fld.suffix ? `&nbsp;` + fld.suffix   : ``) + `
                     </div>
                     `;    
 
@@ -252,10 +253,13 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                             }                            
                             
                             //console.log( fld.fldvalue + StrEmptySpace);
-
+                            console.log(Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1]);
+                            
+                            let FormattedValue = (fld.decimal && fld.decimal!==0) ? (+Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1]).toFixed(fld.decimal) : Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1];
                             StrHtml += `
                             <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ +fld.top + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; text-align:right " >
-                                ` + StrEmptySpace + Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1]  + `
+                                ` + StrEmptySpace + 
+                                FormattedValue  + `
                             </div>
                             `;    
                         break;

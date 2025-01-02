@@ -151,7 +151,8 @@ CREATE TABLE Transaction_Setup
   Enable_Authentication BIT,
   Enable_OldEntries     BIT,
   IntCalcinDays         BIT,
-  MobileNumberMandatory         BIT
+  MobileNumberMandatory         BIT,
+  Enable_AutoApproval   BIT
 )
 GO
 

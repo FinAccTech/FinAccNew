@@ -443,6 +443,19 @@
                         &nbsp;&nbsp; Mobile Number Mandatory
                     </div>
                 </div>                
+
+                <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Enable_AutoApproval"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Enable Auto Approval
+                    </div>
+                </div>                
+
             </div>
         </div>     
     </div>

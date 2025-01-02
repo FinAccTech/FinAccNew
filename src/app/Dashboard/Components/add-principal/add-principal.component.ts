@@ -41,13 +41,11 @@ export class AddPrincipalComponent {
     if (this.Amount == 0) {this.globals.SnackBar("error","Amount is empty"); return;}    
     if ((this.PaymentDate > this.globals.DateToInt(new Date())) || (this.PaymentDate <= this.data.Loan_Date)  ) { this.globals.SnackBar("error","Invalid date !!!"); return; }
 
-
-
     if (this.CurrentPayment){
       this.CurrentPayment.Pmt_Date = this.PaymentDate;
       this.CurrentPayment.Amount = this.Amount;
       this.CurrentPayment.Remarks = this.Remarks;
-      this.CurrentPayment = null!;
+      this.CurrentPayment = null!; 
     }
 
     else{
@@ -75,10 +73,10 @@ export class AddPrincipalComponent {
 
   SaveandClose(){
     let trans = new ClsTransactions(this.dataService);
-    if (this.PaymentsList.length < 1){
-      this.globals.SnackBar("error", "No Payments to update.!!");
-      return;
-    }
+    // if (this.PaymentsList.length < 1){
+    //   this.globals.SnackBar("error", "No Payments to update.!!");
+    //   return;
+    // }
 
     var StrPaymentXml = "";
     StrPaymentXml = "<ROOT>"

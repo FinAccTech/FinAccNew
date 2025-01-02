@@ -550,7 +550,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Enable_Authentication BIT,
   @Enable_OldEntries     BIT,
   @IntCalcinDays          BIT,
-  @MobileNumberMandatory BIT
+  @MobileNumberMandatory BIT,
+  @Enable_AutoApproval BIT
 
   
 WITH ENCRYPTION AS
@@ -571,7 +572,7 @@ BEGIN
                                       Enable_Opening = @Enable_Opening, Enable_RegLang = @Enable_RegLang, Reg_FontName = @Reg_FontName, Reg_FontSize = @Reg_FontSize, Enable_FingerPrint = @Enable_FingerPrint,
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
-                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory
+                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,Enable_AutoApproval=@Enable_AutoApproval
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -584,6 +585,8 @@ CloseNow:
 END
 
 GO
+
+
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getTransaction_Setup') BEGIN DROP FUNCTION Udf_getTransaction_Setup END
 GO
@@ -598,7 +601,6 @@ RETURN
 
 GO
 
-GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getVoucherTypes') BEGIN DROP FUNCTION Udf_getVoucherTypes END
 GO
@@ -2255,6 +2257,16 @@ BEGIN
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @TransSno = @@IDENTITY
 
+        DECLARE @Enable_AutoApproval BIT
+        SELECT @Enable_AutoApproval= Enable_AutoApproval FROM Transaction_Setup WHERE CompSno=@CompSno
+
+        IF @Enable_AutoApproval = 1
+          BEGIN
+            INSERT INTO Status_Updation(Updation_Date, Updation_Type, Document_Type, TransSno, UserSno, Remarks) VALUES ( [dbo].DateToInt(GETDATE()), 1, 1, @TransSno, @UserSno, '')
+            IF @@ERROR <> 0 GOTO CloseNow								
+          END
+
+
         IF (@Num_Method <> 0)
         BEGIN
           UPDATE Voucher_Series SET Current_No = Current_No + 1 WHERE SeriesSno=@SeriesSno
@@ -3204,6 +3216,112 @@ WHERE       (Auc.AuctionSno=@AuctionSno OR @AuctionSno=0) AND (Auc.CompSno=@Comp
 GO
 
 
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoanDetailed') BEGIN DROP FUNCTION Udf_getLoanDetailed END
+GO
+CREATE FUNCTION Udf_getLoanDetailed(
+  @LoanSno    INT,
+  @AsOn       INT,
+  @IsCompound BIT)
+  RETURNS @Result TABLE (Interest_Balance MONEY, Principal_Balance MONEY, Last_Receipt_Date INT, Ason_Duration_Months INT, Ason_Duration_Days INT, Struc_Json VARCHAR(MAX), Statement_Json VARCHAR(MAX))
+WITH ENCRYPTION AS
+BEGIN
+    DECLARE @Calc_Method TINYINT
+	  DECLARE @Custom_Style TINYINT
+    SELECT @Calc_Method=Calc_Method, @Custom_Style=Custom_Style FROM Schemes WHERE SchemeSno=(SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
+
+    IF @Calc_Method = 0  -- Simple Calculation Method
+		BEGIN
+          INSERT INTO @Result
+            SELECT   CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0)))  AS DECIMAL(10,2)) as Interest_Balance,
+                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        --(SELECT ISNULL(MAX(Receipt_Date),0) FROM VW_RECEIPTS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						            (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						            (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+	ELSE IF @Calc_Method = 1 -- Multiple Calculation Method
+		BEGIN
+          INSERT INTO @Result
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+                       CAST( ((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn)
+		END
+	ELSE IF @Calc_Method = 2 -- COMPOUND Calculation Method
+		BEGIN  -----------------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
+            INSERT INTO @Result
+			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+
+	ELSE IF @Calc_Method = 3 -- EMI Calculation Method
+		BEGIN  ---------CAST(--------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
+            INSERT INTO @Result
+			      SELECT      CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+		END
+
+	ELSE IF @Calc_Method = 4 -- CUSTOMIZED CALCULATION METHODS
+		BEGIN
+			IF @Custom_Style = 0
+				BEGIN -- IF CUSTOM STYLE IS ZERO (0) THEN SIMPLY CALL SIMPLE INTEREST CALCULATION STRUCTURE ELSE CALL CUSTOM STRUCTURES
+         INSERT INTO @Result
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+								CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+								(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+								(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+								(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+								(SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+					FROM		Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
+				END
+			ELSE IF @Custom_Style = 1
+				BEGIN		-- THIS IS THE CUSTOM STYLE FOR VELUSAMY BANKERS, THENI
+          INSERT INTO @Result
+					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
+								    CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
+								    (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
+								    (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
+								    (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
+								    (SELECT * FROM Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
+                    (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
+
+					FROM		Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound)
+
+				END
+		END
+    RETURN
+END
+
+GO
+
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getCustomerDetailed') BEGIN DROP FUNCTION Udf_getCustomerDetailed END
 GO
 CREATE FUNCTION Udf_getCustomerDetailed(@PartySno INT)
@@ -3353,108 +3471,6 @@ END
 GO
 
 
-IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoanDetailed') BEGIN DROP FUNCTION Udf_getLoanDetailed END
-GO
-CREATE FUNCTION Udf_getLoanDetailed(
-  @LoanSno    INT,
-  @AsOn       INT,
-  @IsCompound BIT)
-  RETURNS @Result TABLE (Interest_Balance MONEY, Principal_Balance MONEY, Last_Receipt_Date INT, Ason_Duration_Months INT, Ason_Duration_Days INT, Struc_Json VARCHAR(MAX), Statement_Json VARCHAR(MAX))
-WITH ENCRYPTION AS
-BEGIN
-    DECLARE @Calc_Method TINYINT
-	  DECLARE @Custom_Style TINYINT
-    SELECT @Calc_Method=Calc_Method, @Custom_Style=Custom_Style FROM Schemes WHERE SchemeSno=(SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
-
-    IF @Calc_Method = 0  -- Simple Calculation Method
-		BEGIN
-          INSERT INTO @Result
-            SELECT   CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0)))  AS DECIMAL(10,2)) as Interest_Balance,
-                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-                        --(SELECT ISNULL(MAX(Receipt_Date),0) FROM VW_RECEIPTS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-						(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-						            (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-						            (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
-                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
-		END
-	ELSE IF @Calc_Method = 1 -- Multiple Calculation Method
-		BEGIN
-          INSERT INTO @Result
-			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
-                       CAST( ((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-                        (SELECT * FROM Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn) FOR JSON PATH) Struc_Json,
-                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-            FROM    Udf_GetInterestStruc_Multiple(@LoanSno, @AsOn)
-		END
-	ELSE IF @Calc_Method = 2 -- COMPOUND Calculation Method
-		BEGIN  -----------------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
-            INSERT INTO @Result
-			      SELECT  CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
-                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
-                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
-		END
-
-	ELSE IF @Calc_Method = 3 -- EMI Calculation Method
-		BEGIN  ---------CAST(--------------------------------------------TO BE ALTERED LATER AS PER CALCULATION METHOD
-            INSERT INTO @Result
-			      SELECT      CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
-                        CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-                        (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-						(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-						(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-                        (SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
-                        (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-            FROM    Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
-		END
-
-	ELSE IF @Calc_Method = 4 -- CUSTOMIZED CALCULATION METHODS
-		BEGIN
-			IF @Custom_Style = 0
-				BEGIN -- IF CUSTOM STYLE IS ZERO (0) THEN SIMPLY CALL SIMPLE INTEREST CALCULATION STRUCTURE ELSE CALL CUSTOM STRUCTURES
-         INSERT INTO @Result
-					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
-								CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-								(SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-								(SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-								(SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-								(SELECT * FROM Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
-                (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-					FROM		Udf_GetInterestStruc_Simple(@LoanSno, @AsOn, @IsCompound)
-				END
-			ELSE IF @Custom_Style = 1
-				BEGIN		-- THIS IS THE CUSTOM STYLE FOR VELUSAMY BANKERS, THENI
-          INSERT INTO @Result
-					SELECT		CAST((SUM(IntAccured)-(SUM(IntPaid)-ISNULL(SUM(AdjPrincipal),0))) AS DECIMAL(10,2)) as Interest_Balance,
-								    CAST(((SELECT Principal+SUM(AddedPrincipal) FROM VW_LOANS WHERE LoanSno=@LoanSno) - (SUM(PrinPaid)+SUM(AdjPrincipal))) AS DECIMAL(10,2)) as Principal_Balance,
-								    (SELECT Last_Receipt_Date FROM VW_LOANS WHERE LoanSno=@LoanSno) as Last_Receipt_Date,
-								    (SELECT Ason_Duration_Months FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Months,
-								    (SELECT Ason_Duration_Days FROM VW_LOANS WHERE LoanSno=@LoanSno) as Ason_Duration_Days,
-								    (SELECT * FROM Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound) FOR JSON PATH) Struc_Json,
-                    (SELECT * FROM Udf_getLoanStatement(@LoanSno,@AsOn) FOR JSON PATH) Statement_Json
-
-					FROM		Udf_GetInterestStruc_Velsamy(@LoanSno, @AsOn, @IsCompound)
-
-				END
-		END
-    RETURN
-END
-
-GO
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getBalanceSummary') BEGIN DROP FUNCTION Udf_getBalanceSummary END

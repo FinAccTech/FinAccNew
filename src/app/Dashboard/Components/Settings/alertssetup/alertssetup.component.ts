@@ -42,8 +42,6 @@ export class AlertssetupComponent {
   }
 
   getSelectedSmsTemplate($event: TypeTemplate, alertType: number){    
-    console.log($event);
-    
     this.AlertSetup.Alerts[alertType-1].Sms_Alert_Template = $event;
   }
 
