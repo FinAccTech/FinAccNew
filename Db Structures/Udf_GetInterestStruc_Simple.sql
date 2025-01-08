@@ -92,7 +92,15 @@ GO
         
                          IF @Duration=0 SET @Duration=DATEDIFF(DAY,@FromDate,@ToDate)
                          IF @Duration=0 SET @Duration=1
-                         SET @IntAccured = CAST((@Duration * @Roi/100*@NewPrincipal/@IntCalcinDays) AS DECIMAL(18,2))
+                         SET @IntAccured = CASE WHEN @Calc_Basis =0 THEN
+                                                  CAST((@Duration * @Roi/100*@NewPrincipal/@IntCalcinDays) AS DECIMAL(18,2))
+                                            ELSE
+                                              CASE WHEN @Duration >= 30 THEN
+                                                CAST((@Roi/100)*@NewPrincipal/12 AS decimal(18,2))
+                                              ELSE
+                                                CAST((@Duration * @Roi/100*@NewPrincipal/@IntCalcinDays) AS DECIMAL(18,2))
+                                              END
+                                            END
                          --CHECKING FOR ANY PRINCIPAL OR INTEREST PAID DURING THIS PERIOD------
                          SELECT  @IntPaid=ISNULL(SUM(Rec_Interest),0),@PrinPaid=SUM(Rec_Principal) FROM VW_RECEIPTS
                          WHERE   LoanSno=@LoanSno AND Receipt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
