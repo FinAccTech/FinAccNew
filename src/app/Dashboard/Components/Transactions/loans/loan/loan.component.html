@@ -158,7 +158,7 @@
                     <div class="row">                    
                         <div class="col20" >
                             <div class="formGroup" >
-                                <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  readonly [(ngModel)]= "IntAmtPerMonth" />
+                                <input type="number" (input)="onSearchByBarCode($event)"  class="formControlreadonly" required NumberInput [(ngModel)]= "IntAmtPerMonth" />
                                 <label for="" class="formLabelreadonly"> Bar Code </label>                                
                             </div>
                         </div>                                      
@@ -170,9 +170,9 @@
                     <div class="row">                    
                         <div class="col100" [ngClass]="!CustomerValid ? 'invalidSel' : ''">
                             <ng-container *ngIf="SelectedCustomer">
-                                <app-partycard [Party]="CustomerDetails" ></app-partycard>
-                                <!-- <app-customerdetails [Customer]="CustomerDetails" /> -->
-
+                                @if (CustomerDetails) {
+                                    <app-partycard [Party]="CustomerDetails" ></app-partycard>
+                                }
                             </ng-container>
                         </div>
                     </div>

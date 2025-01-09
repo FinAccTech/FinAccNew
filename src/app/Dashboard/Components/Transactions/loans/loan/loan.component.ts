@@ -2,7 +2,7 @@ import { Component, input, OnInit } from '@angular/core';
 import { LoanService } from '../loan.service';
 import { Location,} from '@angular/common';
 import { Router } from '@angular/router';
-import { TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
+import { ClsParties, TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
 import { TypeVoucherSeries } from 'src/app/Dashboard/Classes/ClsVoucherSeries';
 import { ClsSchemes, TypeScheme } from 'src/app/Dashboard/Classes/ClsSchemes';
 import { TypeItemGroup } from 'src/app/Dashboard/Classes/ClsItemGroups';
@@ -23,7 +23,8 @@ import { TypeLedger } from 'src/app/Dashboard/Classes/ClsLedgers';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
-import { ClsAlertSetup } from 'src/app/Dashboard/Classes/ClsAlertsSetup';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 
 @Component({
@@ -34,6 +35,8 @@ import { ClsAlertSetup } from 'src/app/Dashboard/Classes/ClsAlertsSetup';
 
 @AutoUnsubscribe
 export class LoanComponent implements OnInit {
+
+  private searchSubject = new Subject<number>();
 
   CustomersList!:       TypeParties[];
   SelectedCustomer!:    TypeParties;
@@ -72,7 +75,7 @@ export class LoanComponent implements OnInit {
   FirstTimeLoaded: boolean = true;
 
   // For Validations  
-  SeriesValid:        boolean = true;
+  SeriesValid:        boolean = true; 
   LoanNumberValid:    boolean = true;
   LoadnDateValid:     boolean = true;
   CustomerValid:      boolean = true;
@@ -114,6 +117,27 @@ export class LoanComponent implements OnInit {
                 else{
                   this.IsOpen = this.Loan.IsOpen;
                 }
+
+                this.searchSubject
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (searchText < 1) {return;}
+                  let pty = new ClsParties(this.dataService);  
+                  pty.getParties(searchText,0,0,0,0).subscribe(data=>{
+                    if (data.apiData){
+                      this.getCustomer(JSON.parse(data.apiData)[0]);
+                    }
+                    else{
+                      this.SelectedCustomer = pty.Initialize();
+                      this.CustomerDetails = null!; 
+                    }
+                  })
+                  // Add your search logic here
+                });
+
               }
 
  ngOnInit(): void {  
@@ -509,6 +533,12 @@ getAutoLoanNumber(){
   });
 } 
 
+
+onSearchByBarCode(event: Event): void { 
+  const input = event.target as HTMLInputElement;
+  this.searchSubject.next(+input.value);
+}
+
 // getNewCustomer($event: TypeParties){
 //   let pty = new ClsParties(this.dataService);
 //   pty.getParties(0,this.globals.PartyTypCustomers, 0, 0, 0 ).subscribe(data =>{
@@ -518,8 +548,7 @@ getAutoLoanNumber(){
 
 // }
 
-getCustomer($event: TypeParties){     
-  
+getCustomer($event: TypeParties){   
   this.SelectedCustomer = $event;
   this.CustomerDetails = null!; 
   this.LoanData = [];
@@ -618,6 +647,7 @@ getNewGroup($event: TypeItemGroup){
     this.getGroup($event);
   }
 }
+
 getGroup($event: TypeItemGroup){    
   this.SelectedGrp = $event;
   this.LoanPerGram = this.SelectedGrp.Loan_PerGram!;

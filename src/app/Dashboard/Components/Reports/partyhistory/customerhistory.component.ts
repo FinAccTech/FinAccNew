@@ -5,6 +5,8 @@ import { ClsParties, TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
 import { ClsReports, TypeCustomerDetailed } from 'src/app/Dashboard/Classes/ClsReports';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customerhistory',
@@ -14,11 +16,36 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class CustomerhistoryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService){}
+  private searchSubject = new Subject<number>();
+
+  constructor(private globals: GlobalsService, private dataService: DataService){
+    this.searchSubject
+    .pipe(
+      debounceTime(300), // Wait 300ms after user stops typing
+      distinctUntilChanged() // Only emit if the value is different from the last
+    )
+    .subscribe((searchText) => {                  
+      if (searchText < 1) {return;}
+      let pty = new ClsParties(this.dataService);  
+      pty.getParties(searchText,0,0,0,0).subscribe(data=>{
+        if (data.apiData){
+          this.getCustomer(JSON.parse(data.apiData)[0]);
+          this.BarCode =0;
+        }
+        else{
+          this.SelectedCustomer = pty.Initialize();
+          this.CustomerDetails = null!; 
+          this.BarCode =0;
+        }
+      })
+      this.BarCode =0;
+      // Add your search logic here
+    });
+  }
  
   AsOnDate: number = 0;
   CustomersList!:       TypeParties[];
-  SelectedCustomer!:    TypeParties;
+  SelectedCustomer!:    TypeParties; 
   SelectedLoan!: TypeLoan;
   
   CustomerDetails!: TypeCustomerDetailed;
@@ -26,6 +53,7 @@ export class CustomerhistoryComponent {
   PrincipalTotal: number = 0; 
   MarketValueTotal: number = 0;
   NettPayableTotal: number = 0;
+  BarCode: number = 0;
 
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
@@ -65,7 +93,12 @@ export class CustomerhistoryComponent {
     })
   }
 
-  getCsutomer($event: TypeParties){      
+  onSearchByBarCode(event: Event): void { 
+    const input = event.target as HTMLInputElement;
+    this.searchSubject.next(+input.value);
+  }
+
+  getCustomer($event: TypeParties){      
     this.SelectedCustomer = $event;   
     this.SelectedLoan = null!;
     this.LoadDetails();  

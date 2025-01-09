@@ -13,11 +13,12 @@ import { ReceiptService } from '../receipts.service';
 import { ClsReports, TypeInterestDetails, TypeInterestStructure } from 'src/app/Dashboard/Classes/ClsReports';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanSelectionComponent } from 'src/app/Dashboard/widgets/loan-selection/loan-selection.component';
-import { TypePayMode } from 'src/app/Dashboard/Types/TypePayMode';
 import { ClsLedgers, TypeLedger } from 'src/app/Dashboard/Classes/ClsLedgers';
 import { PaymodesComponent } from 'src/app/Dashboard/widgets/paymodes/paymodes.component';
 import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-receipt',
@@ -27,6 +28,8 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 
 @AutoUnsubscribe
 export class ReceiptComponent implements OnInit {
+
+  private searchSubject = new Subject<number>();
 
   LoansList!:       TypeLoan[];
   SelectedLoan!:    TypeLoan;
@@ -80,6 +83,33 @@ export class ReceiptComponent implements OnInit {
                 else{
                   this.IsOpen = this.Receipt.IsOpen;
                 }
+
+                this.searchSubject
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (searchText < 1) {return;}
+                  let ln = new ClsLoans(this.dataService);  
+                  ln.getLoans(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                    if (data.apiData){
+                      let fLn = JSON.parse(data.apiData)[0];
+                      fLn.Customer = JSON.parse(fLn.Party_Json)[0];
+                      if (fLn.Images_Json) {fLn.fileSource =  JSON.parse(fLn.Images_Json);}
+                      fLn.IGroup = JSON.parse(fLn.Group_Json)[0];
+                      fLn.Location  = JSON.parse(fLn.Location_Json)[0];          
+                      fLn.Scheme = JSON.parse(fLn.Scheme_Json)[0];                    
+                      this.getLoan(fLn);
+                    }
+                    else{
+                      this.SelectedLoan = ln.Initialize();
+                      //this.CustomerDetails = null!; 
+                    }
+                  })
+                  // Add your search logic here
+                });
+
               }
 
  ngOnInit(): void {     
@@ -295,9 +325,12 @@ callGetLoan(){
   this.getLoan(this.SelectedLoan);
 }
 
+onSearchByBarCode(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  this.searchSubject.next(+input.value);
+}
+
 getLoan($event: TypeLoan){      
-  console.log($event.Customer);
-  
   this.SelectedLoan = $event;  
   this.InterestDetails = null!;
   this.InterestStructure = [];

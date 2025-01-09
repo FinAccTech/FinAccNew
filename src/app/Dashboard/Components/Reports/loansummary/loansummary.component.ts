@@ -4,6 +4,8 @@ import { ClsLoans, TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
 import { ClsReports, TypeInterestDetails, TypeInterestStructure, TypeLoanStatement } from 'src/app/Dashboard/Classes/ClsReports';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-loansummary',
@@ -14,7 +16,37 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class LoansummaryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService){}
+  private searchSubject = new Subject<number>();
+
+  constructor(private globals: GlobalsService, private dataService: DataService){
+    this.searchSubject
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (searchText < 1) { this.BarCode= 0; return;}
+                  let ln = new ClsLoans(this.dataService);  
+                  ln.getLoans(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                    if (data.apiData){
+                      let fLn = JSON.parse(data.apiData)[0];
+                      fLn.Customer = JSON.parse(fLn.Party_Json)[0];
+                      if (fLn.Images_Json) {fLn.fileSource =  JSON.parse(fLn.Images_Json);}
+                      fLn.IGroup = JSON.parse(fLn.Group_Json)[0];
+                      fLn.Location  = JSON.parse(fLn.Location_Json)[0];          
+                      fLn.Scheme = JSON.parse(fLn.Scheme_Json)[0];                    
+                      this.getLoan(fLn);
+                    }
+                    else{
+                      this.getLoan( null!);
+                      this.BarCode = 0;
+                      //this.CustomerDetails = null!; 
+                    }                    
+                  })
+                  // Add your search logic here
+                  this.BarCode = 0;
+                });
+  }
 
   AsOnDate: number = 0;
   LoansList!:       TypeLoan[];
@@ -23,6 +55,8 @@ export class LoansummaryComponent {
   InterestDetails!: TypeInterestDetails; 
   InterestStructure: TypeInterestStructure[] = [];
   Statement: TypeLoanStatement[] = [];
+
+  BarCode: number = 0;
 
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
@@ -58,6 +92,11 @@ export class LoansummaryComponent {
       this.InterestStructure  = JSON.parse (this.InterestDetails.Struc_Json);    
       this.Statement          = JSON.parse (this.InterestDetails.Statement_Json);     
     })
+  }
+
+  onSearchByBarCode(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchSubject.next(+input.value);    
   }
 
   getLoan($event: TypeLoan){      

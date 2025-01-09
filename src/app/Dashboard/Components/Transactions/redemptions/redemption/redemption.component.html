@@ -87,7 +87,7 @@
                     <div class="row" style="margin-top: 1rem;">
                         <div class="col20">
                             <div class="formGroup">                                
-                                <input type="text" class="formControl" required #remarks [(ngModel)]= "Redemption.Remarks"/>
+                                <input type="number"  style="text-align: center;" class="formControl" (input)="onSearchByBarCode($event)" required #remarks [(ngModel)]= "Redemption.Remarks"/>
                                 <label for="" class="formLabel"> Bar Code </label>                                                      
                             </div>
                         </div>

@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col20" >
                     <div class="formGroup" >
-                        <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  />
+                        <input type="number" class="formControlreadonly" (input)="onSearchByBarCode($event)" NumberInput [(ngModel)]="BarCode" required NumberInput MaxValue=0  />
                         <label for="" class="formLabelreadonly"> Bar Code </label>                                
                     </div>
                 </div>  
