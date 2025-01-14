@@ -3,6 +3,7 @@ import { Component, HostListener, Inject, Input, SimpleChanges } from '@angular/
 import { menuTree } from './MenuTree';
 import { Router } from '@angular/router';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,7 +14,9 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 @AutoUnsubscribe 
 export class SidenavComponent {  
 
-  constructor(@Inject(DOCUMENT) private document: any, private router: Router){
+  ClientCode: string = "";
+
+  constructor(@Inject(DOCUMENT) private document: any, private router: Router, private auth: AuthService){
     
   } 
   
@@ -57,6 +60,7 @@ export class SidenavComponent {
       {
         this.Expanded[i] = false;
       }   
+      this.ClientCode = this.auth.LoggedClient.Client_Code;
   }
 
   Expandme(i: number){

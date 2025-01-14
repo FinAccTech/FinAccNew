@@ -71,6 +71,7 @@ export const menuTree =[
             {   Caption: "Pending Report", Iconn: "", RouterLink:"pendingreport"   },
             {   Caption: "Age Analysis", Iconn: "", RouterLink:"ageanalysis"   },
             {   Caption: "Market Value Analysis", Iconn: "", RouterLink:"marketvalueanalysis"   },
+            {   Caption: "Int Statement Custom", Iconn: "", RouterLink:"intstatementcustom"   },
             
         ]
     },

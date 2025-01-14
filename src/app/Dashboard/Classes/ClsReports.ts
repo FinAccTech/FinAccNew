@@ -84,6 +84,11 @@ export class ClsReports{
         let postdata ={"CompSno": this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getMarketvalueAnalysis");                
     }
+
+    getIntStatementCustom(FromDate: number, ToDate: number, SubmitInt: number): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "SubmitInt": SubmitInt }; 
+        return this.dataService.HttpGet(postdata, "/get1percentIntStatement");                
+    }
 }
 
 export interface TypeCustomerDetailed extends TypeParties{
@@ -162,6 +167,12 @@ export interface TypeAgeAnalysis extends TypeLoan{
     Ason_Duration_Days: number;
     Last_Receipt_Date: number;
 }
+
+export interface TypeIntStatementCustom extends TypeLoan{
+    Redemption_Date: number;
+    IntAmount: number;    
+}
+
 
 export interface TypeDayHistyory {
     TransSno: number;

@@ -165,6 +165,9 @@ export class UserrightsComponent implements OnInit {
       break;                   
       case 35:
         FormName = "MarketValueAnalysis";
+      break;  
+      case 36:
+        FormName = "InterestStatementCustom";
       break;                   
     }
     return FormName;

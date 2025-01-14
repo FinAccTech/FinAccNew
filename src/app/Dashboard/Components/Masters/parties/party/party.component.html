@@ -331,7 +331,7 @@
                             <div class="row" style="margin-top: 30px;" >
                                 <div class="col100"> 
                                     <div class="formGroup">
-                                        <input type="date" class="formControl" [ngModel]="Party.Dob! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Party.Dob = DateToInt($event) " />                    
+                                        <input type="date" class="formControl" required [ngModel]="Party.Dob! | intToDate | date:'yyyy-MM-dd'" (blur)="Party.Dob= DateToInt($event);" />                                                                                                       
                                         <label for="" class="formLabel date"> Date of Birth </label>
                                     </div>
                                 </div>

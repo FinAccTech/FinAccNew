@@ -209,9 +209,10 @@ export class PartyComponent implements OnInit {
     this.dialogRef.close(pty);
   }
 
-  DateToInt($event: any): number{    
-    return this.globals.DateToInt( new Date ($event));
+  DateToInt($event: any): number{        
+    return this.globals.DateToInt( new Date ($event.target.value));
   }
+  
 
   ValidateInputs(): boolean{            
     if (!this.Party.Party_Name!.length )  { this.PartyNameValid = false;  return false; }  else  {this.PartyNameValid = true; }      

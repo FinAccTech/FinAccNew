@@ -2776,8 +2776,20 @@ AS
 			Cancel_Status	= CASE WHEN EXISTS (SELECT StatusSno FROM Status_Updation WHERE TransSno=Trans.TransSno AND Document_Type = 1 AND Updation_Type = 2) THEN 2 ELSE 1 END,
       IsOpen = CASE WHEN Trans.Trans_Date < (SELECT Fin_From FROM Companies WHERE CompSno=Trans.CompSno) THEN 1 ELSE 2 END,
 			Last_Receipt_Date		= (SELECT ISNULL(MAX(Trans_Date),0) FROM Transactions WHERE VouTypeSno=13 AND RefSno=Trans.TransSno),
-            Ason_Duration_Months	= (SELECT Months FROM [dbo].SDateDiff([dbo].IntToDate(Trans.Trans_Date),GETDATE())),
-            Ason_Duration_Days		= (SELECT Days FROM [dbo].SDateDiff([dbo].IntToDate(Trans.Trans_Date),GETDATE())),
+            Ason_Duration_Months	= (SELECT Months FROM [dbo].SDateDiff([dbo].IntToDate(Trans.Trans_Date),
+                                        CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14) THEN
+                                          (SELECT [dbo].IntToDate(Trans_Date) FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14)
+                                        ELSE
+                                          GETDATE()
+                                        END )),
+
+            Ason_Duration_Days		= (SELECT Days FROM [dbo].SDateDiff([dbo].IntToDate(Trans.Trans_Date),
+                                        CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14) THEN
+                                          (SELECT [dbo].IntToDate(Trans_Date) FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14)
+                                        ELSE
+                                          GETDATE()
+                                        END )),
+
       ReLoan_Type = CASE WHEN EXISTS (Select TransSno FROM Transactions WHERE VouTypeSno=20 AND RefSno=Trans.TransSno) THEN 'Re Loan' ELSE 'New Loan' END,
 
       --1 REPLEDGED --0 NOT REPLEDGED
@@ -5403,3 +5415,29 @@ RETURN
 
   WHERE			  Ln.Loan_Status IN (1,3)
   GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_get1percentIntStatement') BEGIN DROP FUNCTION Udf_get1percentIntStatement END
+GO
+CREATE FUNCTION Udf_get1percentIntStatement(@CompSno INT, @FromDate INT, @ToDate INT, @SubmitInt DECIMAL(5,2))
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+  SELECT	Ln.*, Red.Redemption_Date, Duration = CAST(Ln.Ason_Duration_Months AS VARCHAR) + ' M / ' + CAST(Ln.AsOn_Duration_Days AS VARCHAR) + ' D', 
+		      IntAmount = CAST (	ISNULL( Ln.Ason_Duration_Months* (Ln.Principal *(@SubmitInt/100) / 12),0)
+							  + 
+							  ISNULL( Ln.Ason_Duration_Days* (Ln.Principal *(@SubmitInt/100) / 12 / 30),0)
+							  AS DECIMAL(12,2))
+
+  FROM	  VW_REDEMPTIONS Red 			
+		      INNER JOIN Udf_GetLoans(0,@CompSno,2,0,0,0) Ln  ON Ln.LoanSno = Red.LoanSno 
+  WHERE	  Red.Redemption_Date BETWEEN @FromDate AND @ToDate
+
+GO
+
+
+
+
+
+

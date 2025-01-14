@@ -122,12 +122,10 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                         `;    
                     break;
         
-                case "field":                    
-                console.log(Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]);
+                case "field":                                    
                 
                     let FormattedValue = (fld.decimal && fld.decimal !==0) ? (+Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]).toFixed(fld.decimal) : Object.entries(FieldSet).find(([key, val]) => key === fld.fldvalue)?.[1]; 
-                    console.log(FormattedValue);
-                    
+                                        
                     StrHtml += `
                     <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin+ +fld.top) + `px; font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `;" >
                         ` + (fld.prefix ? fld.prefix + `&nbsp;` : ``) + 
@@ -251,9 +249,6 @@ GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, 
                                     StrEmptySpace += '&nbsp;';
                                 }
                             }                            
-                            
-                            //console.log( fld.fldvalue + StrEmptySpace);
-                            console.log(Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1]);
                             
                             let FormattedValue = (fld.decimal && fld.decimal!==0) ? (+Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1]).toFixed(fld.decimal) : Object.entries(item).find(([key, val]) => key === fld.fldvalue)?.[1];
                             StrHtml += `
@@ -483,6 +478,11 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Party_Area_Name = Trans.Customer.Area?.Area_Name!;
             PrintFields.Party_Phone =  Trans.Customer.Phone!;
             PrintFields.Party_Email = Trans.Customer.Email!;
+
+            if (Trans.Customer.Dob && Trans.Customer.Dob > 0){            
+                PrintFields.Party_Dob = this.globals.IntToDateString (Trans.Customer.Dob!);
+            }
+            
             PrintFields.Party_Aadhar_No = Trans.Customer.Aadhar_No!;
             PrintFields.Party_Occupation = Trans.Customer.Occupation!;
             PrintFields.Party_Nominee = Trans.Customer.Nominee!;
@@ -641,6 +641,7 @@ GetPrintFields(Trans: any, VouType: number){
         Party_Area_Name:"",
         Party_Phone: "",
         Party_Email:"",
+        Party_Dob:"",
         Party_Aadhar_No:"",
         Party_Occupation:"",
         Party_Nominee:"",
@@ -736,6 +737,7 @@ interface TypePrintFields {
     Party_Area_Name:string;
     Party_Phone: string;
     Party_Email:string;
+    Party_Dob: string;
     Party_Aadhar_No:string;
     Party_Occupation:string;
     Party_Nominee:string;

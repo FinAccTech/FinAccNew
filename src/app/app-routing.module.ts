@@ -54,15 +54,18 @@ import { RpclosuresComponent } from './Dashboard/Components/Transactions/rpclosu
 import { RpclosureComponent } from './Dashboard/Components/Transactions/rpclosures/rpclosure/rpclosure.component';
 import { CustomerhistoryComponent } from './Dashboard/Components/Reports/partyhistory/customerhistory.component';
 import { SupplierhistoryComponent } from './Dashboard/Components/Reports/supplierhistory/supplierhistory.component';
-import { HomeComponent } from './Home/home/home.component';
+
 import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
 import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
 import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/marketvalueanalysis/marketvalueanalysis.component';
+import { IntStatement1percentComponent } from './Dashboard/Components/Reports/int-statement1percent/int-statement1percent.component';
+import { HomeComponent } from './Home/home/home.component';
+
 
 
 const routes: Routes = [
-  { path:'', component: LoginComponent}, 
-  // { path:'', component: HomeComponent},
+  // { path:'', component: LoginComponent}, 
+  { path:'', component: HomeComponent},
   { path:'dashboard', component: DashboardComponent,canActivate: [AuthGuard], canDeactivate: [DeactivateGuard],
 
     children:[
@@ -115,7 +118,8 @@ const routes: Routes = [
       { path:'auctionhistory', component: AuctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":22} }, 
       { path:'pendingreport', component: PendingreportComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 23} }, 
       { path:'ageanalysis', component: AgeAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 34 }}, 
-      { path:'marketvalueanalysis', component: MarketValueAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 35 }}, 
+      { path:'marketvalueanalysis', component: MarketValueAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 35 }},       
+      { path:'intstatementcustom', component: IntStatement1percentComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 36 }}, 
       
       { path:'appsetup', component: AppsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },     
       { path:'voucherseries', component: VoucherserieslistComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },        

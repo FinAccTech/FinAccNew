@@ -130,6 +130,12 @@ import { AlertconfirmationComponent } from './Dashboard/widgets/alertconfirmatio
 import { AgeAnalysisComponent } from './Dashboard/Components/Reports/age-analysis/age-analysis.component';
 import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-history/alert-history.component';
 import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/marketvalueanalysis/marketvalueanalysis.component';
+import { IntStatement1percentComponent } from './Dashboard/Components/Reports/int-statement1percent/int-statement1percent.component';
+import { EverysizeComponent } from "./Home/everysize/everysize.component";
+import { AutomationComponent } from './Home/automation/automation.component';
+import { TestimonialsComponent } from './Home/testimonials/testimonials.component';
+import { ContactComponent } from "./Home/contact/contact.component";
+import { PricingComponent } from './Home/pricing/pricing.component';
 
 @NgModule({ declarations: [
         NumberInputDirective,
@@ -188,37 +194,38 @@ import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/mar
         UserrightsComponent, VoucherpostingComponent, AlertssetupComponent, AlerttemplateComponent, DayhistoryComponent, RepledgesComponent, RepledgeComponent, SearchPipe, 
         RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, 
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
-        AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent,
+        AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
+        ContactComponent, PricingComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        WebcamModule,
-        MatSlideToggleModule,
-        MatDialogModule,
-        MatMenuModule,
-        MatListModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatTabsModule,
-        MatIconModule,
-        MatGridListModule,
-        MatProgressBarModule,
-        MatSortModule,
-        NgxEchartsDirective,
-        MatTableExporterModule,
-        NgxEchartsModule.forRoot({
-            /**
-             * This will import all modules from echarts.
-             * If you only need custom modules,
-             * please refer to [Custom Build] section.
-             */
-            echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
-        })], providers: [
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    WebcamModule,
+    MatSlideToggleModule,
+    MatDialogModule,
+    MatMenuModule,
+    MatListModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatTabsModule,
+    MatIconModule,
+    MatGridListModule,
+    MatProgressBarModule,
+    MatSortModule,
+    NgxEchartsDirective,
+    MatTableExporterModule,
+    NgxEchartsModule.forRoot({
+        /**
+         * This will import all modules from echarts.
+         * If you only need custom modules,
+         * please refer to [Custom Build] section.
+         */
+        echarts: () => import('echarts'), // or import('./path-to-my-custom-echarts')
+    }),], providers: [
         provideEcharts(),
         { provide: HTTP_INTERCEPTORS,
             useClass: CustomHttpInterceptor,

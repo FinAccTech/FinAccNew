@@ -150,6 +150,7 @@ export class GlobalsService
      FormIdSupplierHistory = 33;
      FormIdAgeAnalysis = 34;
      FormIdMarketValueAnalysis = 35;
+     FormIdIntStatementCustom = 36;
 
      //Report Component Ids
      RepDayHistory = 1;

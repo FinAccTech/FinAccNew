@@ -91,9 +91,13 @@ export class ClsUser{
             { FormSno: 30, Form_Name: "ProfitandLoss", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
             { FormSno: 31, Form_Name: "BalanceSheet", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
             { FormSno: 32, Form_Name: "DayHistory", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
+            { FormSno: 33, Form_Name: "SupplierHistory", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
+            { FormSno: 34, Form_Name: "AgeAnalysis", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
+            { FormSno: 35, Form_Name: "MarketValueAnalysis", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
+            { FormSno: 36, Form_Name: "IntStatementCustom", View_Right: false,  Edit_Right: false,  Print_Right: false,  Delete_Right: false, Create_Right: false, Report_Right: false,  Date_Access: false, Search_Access: false},
 
         ];
-
+        
         return UserRights;
     }
 
