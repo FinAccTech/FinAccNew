@@ -1,4 +1,4 @@
-<div class="modalForm">
+<div class="modalForm" style="width: 100%;" >
     <div class="header">
         <div class="headerLeft">
             <span class="bar"></span>
@@ -24,6 +24,7 @@
                     <th>Loan Date</th>
                     <th>Customer</th>                        
                     <th>Principal</th>                        
+                    <th>Gross Wt</th>                        
                     <th>Nett Wt</th> 
                     <th>Duration</th> 
                 </thead>
@@ -34,6 +35,7 @@
                         <td class=""> {{loan.Loan_Date | intToDate | date: "dd/MM/yyyy" }} </td>
                         <td> {{loan.Party_Name}} </td>
                         <td class=""> {{loan.Principal}} </td>
+                        <td class=""> {{ loan.TotGrossWt }} </td>
                         <td class=""> {{ loan.TotNettWt }} </td>
                         <td class="">  {{loan.Ason_Duration_Months!==0 ? loan.Ason_Duration_Months + ' months ':'' }} {{ (loan.Ason_Duration_Months !==0 && loan.Ason_Duration_Days) ? ' and ' : '' }}  {{loan.Ason_Duration_Days !==0 ? loan.Ason_Duration_Days + ' days' :''}} </td>
                         

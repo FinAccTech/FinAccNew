@@ -52,7 +52,9 @@ export const menuTree =[
             {   Caption: "Opening RpPayments", Iconn: "", RouterLink:"rppayments/1"   },            
 
             {   Caption: "```````````````````", Iconn: "", RouterLink:""},
+            {   Caption: "Repledge Summary", Iconn: "", RouterLink:"repledgesummary"   },   
             {   Caption: "Supplier History", Iconn: "", RouterLink:"supplierhistory"   },            
+            {   Caption: "Repledge History", Iconn: "", RouterLink:"repledgehistory"   },            
 
         ]
     },

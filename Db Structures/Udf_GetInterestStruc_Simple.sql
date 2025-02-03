@@ -37,7 +37,7 @@ GO
                  DECLARE @ToDate         DATETIME
                  DECLARE @Duration       INT
                  DECLARE @IntAccured     MONEY
-				 DECLARE @TotIntAccured		MONEY = 0
+				          DECLARE @TotIntAccured		MONEY = 0
                  DECLARE @Receipt_Date        DATETIME
                  DECLARE @IntPaid        MONEY
                  DECLARE @PrinPaid       MONEY
@@ -59,14 +59,14 @@ GO
 				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup 
 				
 				SELECT		@Calc_Basis=Calc_Basis, @PreCloseDays=PreClosure_Days,@GraceDays=Grace_Days,@MinCalcDays=Min_CalcDays
-				FROM		Schemes 
-				WHERE		SchemeSno=@SchemeSno
+				FROM		  Schemes 
+				WHERE		  SchemeSno=@SchemeSno
 
-                 SELECT     @Loan_Date=[dbo].IntToDate(Loan_Date),@NewPrincipal=Principal,@Roi=Roi, 
-                            @AdvIntAmt=ISNULL(AdvIntAmt,0)
+        SELECT     @Loan_Date=[dbo].IntToDate(Loan_Date),@NewPrincipal=Principal,@Roi=Roi, 
+                  @AdvIntAmt=ISNULL(AdvIntAmt,0)
 
-                 From		VW_LOANS
-                 WHERE       LoanSno=@LoanSno
+        From		VW_LOANS
+        WHERE       LoanSno=@LoanSno
                  
                  IF @IsCompound=1 SET @AdvIntAmt=0
                  
@@ -82,13 +82,13 @@ GO
                          SET @ToDate = @AsOn
         
                          IF DATEDIFF(DAY,@FromDate,@ToDate) > @PreCloseDays
-                                    BEGIN
-                                        SET @Duration = DATEDIFF(DAY,@FromDate,@ToDate)
-                                    End
-                                Else
-                                    BEGIN
-                                        SET @Duration = @PreCloseDays
-                                    END
+                              BEGIN
+                                  SET @Duration = DATEDIFF(DAY,@FromDate,@ToDate)
+                              End
+                          Else
+                              BEGIN
+                                  SET @Duration = @PreCloseDays
+                              END
         
                          IF @Duration=0 SET @Duration=DATEDIFF(DAY,@FromDate,@ToDate)
                          IF @Duration=0 SET @Duration=1

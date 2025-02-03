@@ -64,6 +64,8 @@ export class RedemptionComponent implements OnInit {
   
   StdLedgerList: TypeLedger[] = [];
   
+  LockPreviousDate: boolean = false;
+
   constructor (      
                 private globals:      GlobalsService, 
                 private auth:         AuthService,
@@ -112,6 +114,8 @@ export class RedemptionComponent implements OnInit {
 
  ngOnInit(): void {    
     
+  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+  
   this.TillDate   = this.globals.DateToInt (new Date());
   let ser = new ClsVoucherSeries(this.dataService);
   ser.getVoucherSeries(0,this.globals.VTypLoanRedemption).subscribe(data=> {        

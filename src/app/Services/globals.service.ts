@@ -151,6 +151,8 @@ export class GlobalsService
      FormIdAgeAnalysis = 34;
      FormIdMarketValueAnalysis = 35;
      FormIdIntStatementCustom = 36;
+     FormIdRepledgeSummary = 37;
+     FormIdRepledgeHistory = 38;
 
      //Report Component Ids
      RepDayHistory = 1;

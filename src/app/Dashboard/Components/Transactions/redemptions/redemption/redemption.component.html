@@ -68,7 +68,7 @@
                     <div class="row" style="margin-top: 1rem;">
                         <div class="col50">
                             <div class="formGroup" [ngClass]="!RedemptionDateValid ? 'invalid' : ''">                                  
-                                <input type="date" class="formControl" required [ngModel]="Redemption.Redemption_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Redemption.Redemption_Date= DateToInt($event); TillDate = Redemption.Redemption_Date; callGetLoan()" />                                           
+                                <input type="date" class="formControl" [disabled]="LockPreviousDate"  required [ngModel]="Redemption.Redemption_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Redemption.Redemption_Date= DateToInt($event); TillDate = Redemption.Redemption_Date; callGetLoan()" />                                           
                                 <label for="" class="formLabel date"> Redemption Date </label>
                                 <div class="errorHint" *ngIf="!RedemptionDateValid" > Invalid Name </div> 
                             </div>
@@ -77,7 +77,7 @@
                         <div class="col50">
                             <div class="formGroup" [ngClass]="!TillDateValid ? 'invalid' : ''">
                                 <!-- <input type="date" class="formControl" [ngModel]="TillDate | date:'yyyy-MM-dd'"/>                                                 -->
-                                <input type="date" class="formControl" required [ngModel]="TillDate! | intToDate | date:'yyyy-MM-dd'" (blur)="TillDate= DateToInt($event); callGetLoan()" />                                           
+                                <input type="date" class="formControl" [disabled]="LockPreviousDate"  required [ngModel]="TillDate! | intToDate | date:'yyyy-MM-dd'" (blur)="TillDate= DateToInt($event); callGetLoan()" />                                           
                                 <label for="" class="formLabel date"> Till Date </label>
                                 <div class="errorHint" *ngIf="!TillDateValid" > Invalid Name </div> 
                             </div>

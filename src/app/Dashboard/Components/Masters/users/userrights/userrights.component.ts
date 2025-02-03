@@ -36,8 +36,7 @@ export class UserrightsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {    
-    
+  ngOnInit(): void {        
     if (this.UserRights.length < 30){
       let usr = new ClsUser(this.dataService);
       this.UserRights = usr.GetDefaultRightList();
@@ -168,6 +167,12 @@ export class UserrightsComponent implements OnInit {
       break;  
       case 36:
         FormName = "InterestStatementCustom";
+      break;                   
+      case 37:
+        FormName = "RepledgeSummary";
+      break;                   
+      case 38:
+        FormName = "RepledgeHistory";
       break;                   
     }
     return FormName;

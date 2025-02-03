@@ -60,12 +60,14 @@ import { AlertHistoryComponent } from './Dashboard/Components/Reports/alert-hist
 import { MarketValueAnalysisComponent } from './Dashboard/Components/Reports/marketvalueanalysis/marketvalueanalysis.component';
 import { IntStatement1percentComponent } from './Dashboard/Components/Reports/int-statement1percent/int-statement1percent.component';
 import { HomeComponent } from './Home/home/home.component';
+import { RepledgesummaryComponent } from './Dashboard/Components/Reports/repledgesummary/repledgesummary.component';
+import { RepledgehistoryComponent } from './Dashboard/Components/Reports/repledgehistory/repledgehistory.component';
 
 
 
 const routes: Routes = [
-  // { path:'', component: LoginComponent}, 
-  { path:'', component: HomeComponent},
+  { path:'', component: LoginComponent}, 
+  // { path:'', component: HomeComponent},
   { path:'dashboard', component: DashboardComponent,canActivate: [AuthGuard], canDeactivate: [DeactivateGuard],
 
     children:[
@@ -85,6 +87,9 @@ const routes: Routes = [
       { path:'rpclosures', component: RpclosuresComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":18} },     
       { path:'rpclosures/:rpclosure', component: RpclosureComponent, canActivate:[AuthGuard, CompGuard] },     
       { path:'supplierhistory', component: SupplierhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":33} },     
+      { path:'repledgesummary', component: RepledgesummaryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":37} },     
+      { path:'repledgehistory', component: RepledgehistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":38} },     
+      
 
       { path:'auctions', component: AuctionentriesComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":4} },      
       { path:'auctions/auction', component: AuctionentryComponent, canActivate:[AuthGuard, CompGuard] },      

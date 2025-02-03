@@ -1,7 +1,7 @@
 <div class="reportContainer">
     <div class="headerCard">
         <div class="headerLeft">                 
-            <p class="heading"> Loan History</p>        
+            <p class="heading"> Repledge History</p>        
         </div>
 
         <div class="headerRight">                 
@@ -39,7 +39,7 @@
 
     <ng-container *ngIf="StatusCount">
         <div class="statusHeader">
-            <div class="statusCard" *ngFor="let count of StatusCount" [ngClass]="count.Status == 1 ? 'openStatus' : count.Status == 2 ? 'closedStatus' : count.Status == 3 ? 'maturedStatus' : 'auctionedStatus' "  (click)="LoadLoanHistory(count.Status)" >
+            <div class="statusCard" *ngFor="let count of StatusCount" [ngClass]="count.Status == 1 ? 'openStatus' : count.Status == 2 ? 'closedStatus' : count.Status == 3 ? 'maturedStatus' : 'auctionedStatus' "  (click)="LoadRepledgeHistory(count.Status)" >
                 <div class="contentLeft">
                     <p class="caption"> {{count.Status == 1 ? 'Open Loans' : count.Status == 2 ? 'Closed Loans' : count.Status == 3 ? 'Matured Loans' : 'Auctioned Loans'}} </p>
                     <p class="value"> {{ count.Value  | number }}</p>
@@ -86,7 +86,7 @@
                     <div class="matLabel">Loan Status </div>
                 </div> -->
 
-                <button class="btn" (click)="LoadLoanHistory(0)"  >Load Details</button>
+                <button class="btn" (click)="LoadRepledgeHistory(0)"  >Load Details</button>
             
             </div>
         </div>
@@ -141,10 +141,10 @@
                         
                            <div class="expandDetails" >
                                 <div style="width: 100%;" > 
-                                    <app-partycard [Party]="element.Customer" > </app-partycard>                            
+                                    <app-partycard [Party]="element.Supplier" > </app-partycard>                            
                                 </div>
                                 <div style="width: 100%;" > 
-                                    <app-loandetails [Loan]="element" > </app-loandetails>                            
+                                    <app-repledgecard [Repledge]="element" [AsOnDate]="ToDate" > </app-repledgecard>                            
                                 </div>
                            </div>
                       </div>

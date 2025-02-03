@@ -4,15 +4,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
-import { TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
-import { ClsReports, TypeLoanHistory } from 'src/app/Dashboard/Classes/ClsReports';
+import { TypeRepledge } from 'src/app/Dashboard/Classes/ClsRepledges';
+import { ClsReports, TypeRepledgeHistory } from 'src/app/Dashboard/Classes/ClsReports';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
 @Component({
-  selector: 'app-loanhistory',
-  templateUrl: './loanhistory.component.html',
-  styleUrls: ['./loanhistory.component.scss'],
+  selector: 'app-repledgehistory',  
+  templateUrl: './repledgehistory.component.html',
+  styleUrl: './repledgehistory.component.scss',
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -23,15 +23,15 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 })
 
 @AutoUnsubscribe
-export class LoanhistoryComponent {
+export class RepledgehistoryComponent {
 
   constructor(private globals: GlobalsService, private dataService: DataService){}
   @ViewChild('TABLE')  table!: ElementRef;
   
-  dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date'];
+  dataSource!: MatTableDataSource<TypeRepledge>;  
+  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Repledge_No', 'Repledge_Date','Party_Name', 'Principal', 'TotNettWt', 'Mature_Date'];
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
-  expandedElement!: TypeLoan | null;
+  expandedElement!: TypeRepledge | null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
@@ -39,11 +39,11 @@ export class LoanhistoryComponent {
   FromDate: number = 0;
   ToDate: number = 0;
 
-  LoansList:       TypeLoanHistory[] = [];
-  SelectedLoan!:    TypeLoanHistory;
+  RepledgesList:       TypeRepledgeHistory[] = [];
+  SelectedRepledge!:    TypeRepledgeHistory;
   StatusList!: any[];
   StatusCount: any[] =  [{"Status":1, "Count":0,"Value":0}, {"Status":2,"Count":0,"Value":0}, {"Status":3,"Count":0,"Value":0}, {"Status":4,"Count":0,"Value":0} ];
-  SelectedLoanStatus: number = 0;
+  SelectedRepledgeStatus: number = 0;
 
   openpass: boolean = false;
   closepass: boolean = false;
@@ -55,34 +55,32 @@ export class LoanhistoryComponent {
     this.FromDate =  this.globals.DateToInt (new Date((newDate.getMonth() == 0 ? newDate.getFullYear() -1 :newDate.getFullYear()).toString() +  '/' + (newDate.getMonth() == 0 ? 12 : newDate.getMonth()).toString() + "/" + newDate.getDate().toString()));          
     this.ToDate = this.globals.DateToInt (new Date());
 
-    this.LoadLoanHistory(0);
+    this.LoadRepledgeHistory(0);
   }
 
-  LoadLoanHistory(LoanStatus: number){
+  LoadRepledgeHistory(RepledgeStatus: number){
     let ln = new ClsReports(this.dataService);    
-    ln.getLoanHistory(LoanStatus, this.FromDate, this.ToDate).subscribe(data=> { 
+    ln.getRepledgeHistory(RepledgeStatus, this.FromDate, this.ToDate).subscribe(data=> { 
       if (data.queryStatus == 0){
         this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
         return;
       }
       else{                
-        this.LoansList = JSON.parse (data.apiData);     
-        this.LoansList.map(ln=>{
-          ln.Customer = JSON.parse(ln.Party_Json)[0];
-          if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
-          ln.IGroup = JSON.parse(ln.Group_Json)[0];
-          ln.Location  = JSON.parse(ln.Location_Json)[0];          
+        this.RepledgesList = JSON.parse (data.apiData);     
+        this.RepledgesList.map(ln=>{
+          ln.Supplier = JSON.parse(ln.Party_Json)[0];
+          if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}          
           ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
         })
            
         this.LoadDataIntoMatTable();
 
-        ln.getLoanStatusCount(0).subscribe(data =>{
+        ln.getRepledgeStatusCount(0).subscribe(data =>{
           this.StatusList = JSON.parse(data.apiData);
           
           this.StatusList.forEach(stat =>{            
-              this.StatusCount[stat.Loan_Status-1].Count = stat.LoansCount;
-              this.StatusCount[stat.Loan_Status-1].Value = stat.Principal;            
+              this.StatusCount[stat.Repledge_Status-1].Count = stat.RepledgesCount;
+              this.StatusCount[stat.Repledge_Status-1].Value = stat.Principal;            
           })
           
         })
@@ -96,7 +94,7 @@ export class LoanhistoryComponent {
   }
 
   LoadDataIntoMatTable(){
-    this.dataSource = new MatTableDataSource<TypeLoan> (this.LoansList);     
+    this.dataSource = new MatTableDataSource<TypeRepledge> (this.RepledgesList);     
     if (this.dataSource.filteredData)
     {    
       setTimeout(() => this.dataSource.paginator = this.paginator);

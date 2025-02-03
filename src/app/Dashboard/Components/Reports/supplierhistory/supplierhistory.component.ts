@@ -24,10 +24,10 @@ export class SupplierhistoryComponent {
   
   SupplierDetails!: TypeSupplierDetailed;
   RepledgeData: any[] = [];
-  PrincipalTotal: number = 0;
+  PrincipalTotal: number = 0; 
   MarketValueTotal: number = 0;
   
-  ngOnInit(){
+  ngOnInit(){ 
     this.AsOnDate = this.globals.DateToInt( new Date());
     let pty = new ClsParties(this.dataService);
     
@@ -52,13 +52,14 @@ export class SupplierhistoryComponent {
       this.SupplierDetails = JSON.parse (data.apiData)[0];                
       this.RepledgeData = JSON.parse(this.SupplierDetails.RepledgeLoans_Json!);   
 
+      console.log(this.RepledgeData);
+      
       this.PrincipalTotal  = 0;
       this.MarketValueTotal = 0;
 
       this.RepledgeData.forEach(rp => {
         this.PrincipalTotal += +rp.Principal,
-        this.MarketValueTotal += +rp.Market_Value;
-        
+        this.MarketValueTotal += +rp.Market_Value;        
       });
     })
   }

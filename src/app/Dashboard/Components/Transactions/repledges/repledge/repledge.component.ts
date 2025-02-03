@@ -26,6 +26,7 @@ interface TypeLoansList{
   Loan_Date: number;
   Party_Name: string;
   Principal: number;
+  TotGrossWt: number;
   TotNettWt: number;
 }
 
@@ -64,6 +65,7 @@ export class RepledgeComponent implements OnInit {
   Repledge!:                TypeRepledge;
 
   TotalPrincipal: number = 0;
+  TotalGrossWt: number = 0;
   TotalNettWt: number = 0;
   
   MappedScheme: boolean  = false;
@@ -205,7 +207,8 @@ SaveRepledge(){
 
   let Rp  = new ClsRepledges(this.dataService);
   Rp.Repledge = this.Repledge;  
-  
+  Rp.Repledge.TotGrossWt = this.TotalGrossWt;
+  Rp.Repledge.TotNettWt = this.TotalNettWt;
   Rp.Repledge.ImageDetailXML  = StrImageXml;    
   Rp.Repledge.PaymentModesXML = this.globals.GetPaymentModeXml(this.Repledge.PaymentMode, this.globals.VTypRePledge);
   Rp.Repledge.RepledgeLoansXML = this.GetRepledgeXml();
@@ -406,7 +409,7 @@ SelectLoans(){
     
     const dialogRef = this.dialog.open(LoanSelectionComponent, 
       {         
-        // width:'50vw',
+        width:'50vw',
         data: {"Party_Name": "Non Repledged Loans", "LoanData": LoanData}  ,
       }); 
       
@@ -436,6 +439,7 @@ SetLoansTotal(){
 
   this.LoansList.forEach(ln=>{
     this.TotalPrincipal += +ln.Principal;
+    this.TotalGrossWt +=  +ln.TotGrossWt;
     this.TotalNettWt += +ln.TotNettWt;
   })
 }

@@ -46,7 +46,7 @@ GO
                  DECLARE @Calc_Basis     BIT
                  DECLARE @GraceDays      TINYINT
                  DECLARE @MinCalcDays    TINYINT
-                 DECLARE @AdvIntAmt      MONEY
+                 
                  DECLARE @IntCalcinDays		INTEGER
                  DECLARE @IntDurMonths		INT
                  DECLARE @IntDurDays        INT
@@ -68,7 +68,7 @@ GO
                  From		     VW_REPLEDGES
                  WHERE       RepledgeSno=@RepledgeSno
                  
-                 IF @IsCompound=1 SET @AdvIntAmt=0
+                 
                  
                 --IF (@CalcFrom = 0) OR (@CalcFrom < @Repledge_Date) SET @CalcFrom = @Repledge_Date
 				 SET @CalcFrom = @Repledge_Date
@@ -102,7 +102,7 @@ GO
                 --IF @CalcFrom = @Repledge_Date
                   --                  BEGIN
                                         INSERT INTO @Result VALUES(@FromDate,@ToDate,DATEDIFF(DAY,@FromDate,@ToDate),1,@Roi,ISNULL(@IntAccured,0),
-                                                                 ISNULL(@IntAccured,0),ISNULL(@IntPaid,0)+@AdvIntAmt,ISNULL(@PrinPaid,0),0,0,ISNULL(@NewPrincipal,0))
+                                                                 ISNULL(@IntAccured,0),ISNULL(@IntPaid,0),ISNULL(@PrinPaid,0),0,0,ISNULL(@NewPrincipal,0))
                     --                End
                       /*          Else
                                     BEGIN
@@ -130,8 +130,8 @@ GO
                          From			   VW_RPPAYMENTS
                          WHERE       RepledgeSno=@RepledgeSno AND RpPayment_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
                      
-                         SET @Intpaid = ISNULL(@IntPaid,0) + @AdvIntAmt
-                         SET @AdvIntAmt = 0
+                         SET @Intpaid = ISNULL(@IntPaid,0) 
+                         
                          SET @Duration = CASE @Calc_Basis WHEN 0 THEN
                                              DATEDIFF(MONTH,@FromDate,DATEADD(DAY,1,@ToDate))
                                          Else
@@ -169,8 +169,8 @@ GO
                                  SELECT @IntPaid=ISNULL(SUM(Rp_Interest),0),@PrinPaid=ISNULL(SUM(Rp_Principal),0) FROM VW_RPPAYMENTS
                                  WHERE   RepledgeSno=@RepledgeSno AND RpPayment_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
                         
-                                 SET @Intpaid = @IntPaid + @AdvIntAmt
-                                 SET @AdvIntAmt = 0
+                                 SET @Intpaid = @IntPaid 
+                                 
                                  INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,1,@Roi,0,0,@IntPaid,@PrinPaid,0,0,@NewPrincipal-@PrinPaid)
                                  GoTo ENDS_HERE
                             End
@@ -179,8 +179,8 @@ GO
                                  SELECT @IntPaid=ISNULL(SUM(Rp_Interest),0),@PrinPaid=ISNULL(SUM(Rp_Principal),0) FROM VW_RPPAYMENTS
                                  WHERE   RepledgeSno=@RepledgeSno AND RpPayment_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
                         
-                                 SET @Intpaid = @IntPaid + @AdvIntAmt
-                                 SET @AdvIntAmt = 0
+                                 SET @Intpaid = @IntPaid 
+                                 
                             End
                          
                      IF @Calc_Basis = 1

@@ -1,102 +1,621 @@
-<div class="homeContainer">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow"> <!-- Allows search engines to index the page -->    
+    <meta name="description" content="FinAccSaas is a best cloud based and offline gold loan software for gold financiers and pawnbrokers in India">
+    <meta name="keywords" content="gold loan software, gold finance software, pawnbroking software, nbfc software, goldloan, goldfinance">
+        
+    <!-- Open Graph for Social Sharing -->
+    <meta property="og:title" content="Best Gold Loan Software for Gold Financiers and Pawnbrokers">
+    <meta property="og:description" content="Effortlessly Manage Gold Loan Business with India's No.1 Gold Finance Software">
+    <meta property="og:image" content="https://www.finaccsaas.com/socialimage.png">
+    <meta property="og:url" content="https://www.finaccsaas.com">
+    
+    <title>Best Gold Loan Software for Gold Financiers and Pawnbrokers</title>
+    <link rel="canonical" href="https://www.finaccsaas.com"> <!-- Canonical URL to avoid duplicate content -->
+    
+    <!-- External CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://kit.fontawesome.com/4a299f63d2.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Best Gold Loan Software for Gold Financiers and Pawnbrokers",
+        "description": "FinAccSaas is a best cloud based and offline gold loan software for gold financiers and pawnbrokers in India",
+        "url": "https://www.finaccsaas.com",
+        "author": {
+          "@type": "Person",
+          "name": "Srinivasan"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "FinAcc Technologies",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.finaccsaas.com/assets/images/finacclogo.png"
+          }
+        },
+        "mainEntity": {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is FinAccSass the Best gold loan software in India",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. FinAccSaas has been in the market since 2008 and served over 1000+ clients across the country and stand best gold loan software in the market"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is FinAccSaas available in Kerala",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. FinAcc has been serving more than 200+ clients in Kerala since 2008. FinAccSaas covers all the method of gold loan operations in Kerala."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is the license I purchase is onetime?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely Yes. Any version of FinAccSaas you purchase is onetime cost and lifetime license."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use the software in my own regional language?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. You can enter your customers and item details in your own language like Tamil, Telugu, Kannada, Hindi, Malayalam etc., You can even have bills and printouts for your customers in your own language"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I host the software in my server?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. You can host and install FinAcc in any of your Windows server. FinAcc uses Microsoft SQL Server as backend for database storage. So Multiple Location is absolutely possible."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use the software in my Smartphone mobile?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "FinAccSaas is a browser based app where you can access software in any devices including Android, Windows, Ios and even Linux devices"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I customize and filter the reports as per my requirement?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. FinAccSaas provides unlimited filter and customization of Pawnbroking and Accounts Reports as per your needs, and you can export that to any specified formats."
+              }
+            }
+          ]
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <header class="desktopHeader">
+        <div class="headerLeft">
+            <div class="logoSection">
+                <img src="assets/images/newlogo.png"  />
+            </div>
+            <nav>
+                <ul>
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>Features</li>                
+                    <li>Videos</li>
+                    <li> Pricing</li>
+                    <li>Contact</li>
+                </ul>
+            </nav>        
+        </div>
+
+        <div class="headerRight">
+            <p> Contact Sales</p>
+            <button class="btn btnsansback">Client Login</button>
+            <button class="btn">Get Started</button>
+        </div>
+    </header>
+
+    <header class="mobileHeader">
+        <div class="headerLeft">
+            <div class="logoSection">
+                <img src="assets/images/newlogo.png"  />
+            </div>
+        </div>
+
+        <div class="headerRight">
+            <!-- <ng-container *ngIf="!ShowMobileMenu" > -->
+                <i class='bx bx-list-ul bx-tada bx-flip-horizontal' id="mnuShow" ></i>
+            <!-- </ng-container> -->
+            <!-- <ng-container *ngIf="ShowMobileMenu" > -->
+                <i class='bx bx-x bx-tada' id="mnuHide" ></i>
+            <!-- </ng-container> -->
+        </div>
+
+        <!-- <ng-container *ngIf="ShowMobileMenu" > -->
+            <div class="menuList">
+                <ul>
+                    <li>Home</li>
+                    <li>About</li>
+                    <li>Pricing</li>
+                </ul>
+
+                <div class="buttonSection">
+                    <button class="btn btnsansback">Client Login</button>            
+                    <button class="btn">Get Started</button>
+                </div>        
+            </div>
+        <!-- </ng-container> -->
+    </header>
 
 
-    <!-- <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="30" fill="blue">
-          <animate
-            attributeName="r"
-            from="30"
-            to="50"
-            dur="1s"
-            repeatCount="indefinite" />
-        </circle>
-      </svg>
+    <main>
+       
 
-      
-      <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-        <image href="assets/images/nocontent.png" x="0" y="0" width="300" height="300">
-          <animate attributeName="opacity" from="0" to="1" dur="3s" repeatCount="indefinite" />
-        </image>
-         <image href="assets/images/noimage.jpg" x="0" y="0" width="300" height="300">
-          <animate attributeName="opacity" from="0" to="1" dur="3s" repeatCount="indefinite" />
-        </image> 
-      </svg>
+        <section class="sidebodyContainer">
+            <h1>Effortlessly Manage Gold Loan Business with India's No.1 Gold Finance Software</h1>
+            
+            <h2>Work and Access app from anywhere using your Mobile Devices with Cloud Enabled Features. Keep your customers updated using SMS, WhatsApp and Email alerts</h2>
 
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="30" fill="blue">
-          <animate attributeName="r" from="30" to="60" dur="2s" repeatCount="indefinite" />
-        </circle>
-      </svg>
+            <div class="inputGrp">
+                <div class="grpLeft">
+                    <input type="text" placeholder="Enter your Mobile number here to Book Demo" />
+                </div>
 
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <rect x="50" y="50" width="100" height="100" fill="red">
-          <animateTransform 
-            attributeName="transform"
-            type="rotate"
-            from="0 100 100"
-            to="360 100 100"
-            dur="3s"
-            repeatCount="indefinite" />
-        </rect>
-      </svg>
+                <div class="grpRight">
+                    <button class="btn"> Book A Demo </button>
+                </div>
+            </div>
+            
+            <div class="videoDiv">
+                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/gen7MG-kt3A" title="FinAcc Pawnbroking Software, Gold Finance Software, Jewel Loan Software, Pawn Shop Software" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            
+            <h2>
+                Trusted by 1000+ Clients across India
+            </h2>
 
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="50" stroke="black" stroke-width="3" fill="blue">
-          <animate attributeName="fill" from="blue" to="green" dur="2s" repeatCount="indefinite" />
-          <animate attributeName="stroke" from="black" to="red" dur="2s" repeatCount="indefinite" />
-        </circle>
-      </svg>
-      
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" fill="transparent" stroke="black" stroke-width="2">
-          <animate attributeName="d" 
-            from="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" 
-            to="M10 80 C 40 150, 65 150, 95 80 S 150 10, 180 80" 
-            dur="3s" repeatCount="indefinite" />
-        </path>
-      </svg>
+        </section>
 
-      <svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
-        <text x="50" y="50" font-size="20" fill="blue">Hello, SVG!</text>
-        <text x="50" y="50" font-size="20" fill="blue">
-          <animate attributeName="font-size" from="20" to="30" dur="1s" repeatCount="indefinite" />
-          <animate attributeName="fill" from="blue" to="red" dur="1s" repeatCount="indefinite" />
-        </text>
-      </svg>
+        <section class="simplifyContainer">
+            
+            <article class="contentLeft">
+                <h3>all-in-one solution </h3>
+                <section>                    
+                    <h2>Simplify your PawnBroking Business with FinAcc Cloud</h2>        
+                    <p>Streamline your PawnBroking Business with FinAcc Cloud. Say Goodbye to manual books, manual receipts and bundle of receipt books.</p>
+                </section>
 
-      
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="blurFilter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="0">
-              <animate attributeName="stdDeviation" from="0" to="10" dur="1s" repeatCount="indefinite" />
-            </feGaussianBlur>
-          </filter>
-        </defs>
-        <circle cx="100" cy="100" r="50" fill="blue" filter="url(#blurFilter)" />
-      </svg>
+                <section>
+                    <ul>
+                        <li>
+                            <img src="assets/images/download.svg" /> 
+                            <p> Your transactions are 100% automated. Eliminate manual receipts and books and have computerized receipts with your preferred and regional language support.</p>                      
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Secure your business more with Photo Capture of Customers and Ornaments, SMS Otp validation and Biometric validations</p>                      
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p> Now record all your Repledge Transactions and get a insight view of your Interest earned and business profit. </p>                      
+                        </li>
+                    </ul>
+                </section>
+            </article>
+            
+            <article class="contentRight">
+                <img src="assets/images/appscreenshots/homepage.png" alt="Gold Loan Software for Home Page Screen" height="100%" width="100%"  >
+                <figcaption style="color: #fff;">Single Home Page Screen with Dashboard for Gold Financiers and Pawnbrokers</figcaption>
+            </article>           
+            
+        </section>
 
-      <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="30" fill="blue">
-          <animate attributeName="cx" from="50" to="350" dur="4s" repeatCount="indefinite" />
-          <animate attributeName="cy" from="50" to="350" dur="4s" repeatCount="indefinite" />
-          <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
-        </circle>
-      </svg> -->
 
-      
-      
-    <app-siteheader />     
-    <app-sitebody  />
-    <app-simplify />
-    <app-siteschemes />
-    <app-sitemodules />
-    <app-sitecashflow />
-    <app-siterepledge />
-    <app-sitemobileapp />
-    <app-everysize />
-    <app-automation />
-    <app-testimonials />    
-    <app-pricing />
-    <app-contact />
-</div>
+        <section class="schemesContainer">            
+            <article class="contentRight">
+                <img src="assets/images/appscreenshots/schemes.png" height="100%" width="100%" alt="Infographic explaining Gold Loan Schemes" />
+                <figcaption style="color: #fff;"> Infographic : Gold Loan Schemes with Multiple Interest Slabs</figcaption>
+            </article>                
+            
+            <article class="contentLeft">
+                <h3>Interest schemes</h3>
+                <section>                    
+                    <h2>More options and More Control over your Interest Schemes</h2>        
+                    <p>In the competitive Gold Loan business market, your Interest schemes plays a major role in your turnover </p>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <img src="assets/images/download.svg" /> 
+                            <p>Simple, Multiple, Compound, Emi and various other customized Interest Calculation methods are built in with FinAcc Cloud</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Interest Rates can be auto fetched based on the Loan value, Market value, Item Groups and various other parameters</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Create Multiple Interest Slabs and have full control over the interest calculations, maturity period etc.,</p>
+                        </li>
+                    </ul>
+                </section>     
+            </article>                   
+        </section>
+
+
+        <section class="modulesContainer">
+            <h2>FinAccSaas Modules</h2>
+            <p class="header">We listed here some of our major and exclusive modules covered in the pawnbroking software. Please call us for information about other modules and packages</p>
+
+            <div class="boxesContainer">
+                <div class="box">
+                    <img src="assets/images/loans.svg" height="50" width="50" />
+                    <p class="header">
+                        Gold Loan Module
+                    </p>
+                    <p class="text">
+                        Complete Gold Finance Customers databases with photos, Loan Details with Item Details and Photos
+                    </p>
+                </div>
+
+                <div class="box">
+                    <img src="assets/images/repledge.svg" height="50" width="50" />
+                    <p class="header">
+                        Repledge Module
+                    </p>
+                    <p class="text">
+                        Pledging Customers ornaments in your own banks. Banks details, Borrower Information and Interest Comparision
+                    </p>
+                </div>
+
+                <div class="box">
+                    <img src="assets/images/alerts.svg" height="50" width="50" />
+                    <p class="header">
+                        SMS and Whatsapp Integration
+                    </p>
+                    <p class="text">
+                        SMS and WhatsApp alerts on demand with OTP Generation for New Customers
+                    </p>
+                </div>
+
+                <div class="box">
+                    <img src="assets/images/aadhar.svg" height="50" width="50" />
+                    <p class="header">
+                        Aadhar and Biometric Integration
+                    </p>
+                    <p class="text">
+                        Aadhar Link with Goverment Database to fetch complete details about the customers
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="cashflowContainer">        
+            <article class="contentRight">
+                <img src="assets/images/appscreenshots/daybook.png" height="100%" width="100%" alt="Infographic containing information about a Pawnbroker Daybook" />
+                <figcaption style="color: #fff;"> Infographic about a Pawnbroker DayBook with information about Cash Flow </figcaption>
+            </article>            
+        
+            <article class="contentLeft">
+                <h3>Connected Accounts</h3>
+                <section>                    
+                    <h2>FinAccSaas comes with complete Financial Accounts inbuilt eliminating the need for seperate accounting software</h2>        
+                    <p>Get a Complete View of Your Cashflow </p>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <img src="assets/images/download.svg" /> 
+                            <p>All your gold loan transaction and repledge transaction vouchers are posted automatically. </p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Post your Expense vouchers, Assets and liabilities and prepare your financial statements instantly</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Maintain multiple companies for multiple licenses</p>
+                        </li>
+                    </ul> 
+                </section>  
+            </article>
+        </section>
+
+
+        <section class="repledgeContainer">
+            <article class="contentLeft">
+                <h3>Repledge</h3>
+                <section>                    
+                    <h2>Enhanced Repledge Module</h2>        
+                    <p>Repledge has become an important aspect in Todays Gold Loan Business. FinAccSaas provides comprehensive solution for Repledge</p>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>
+                            <img src="assets/images/download.svg" /> 
+                            <p>Maintain multiple Banks and their consolidated Repledges in a single view</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Borrowers option enables you to Repledge loans on different persons name in the same bank</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Repledge Multiple Customers Loans in a single Repledge</p>
+                        </li>
+                        <li>
+                            <img src="assets/images/download.svg" />
+                            <p>Compare the Interest Earned with the Interest Paid and analyze the profit derived</p>
+                        </li>
+                    </ul>
+                </section>  
+            </article>
+        
+            <article class="contentRight">
+                <img src="assets/images/appscreenshots/repledge.png" height="100%" width="100%" alt="Infographic of a Repledge Transaction" />
+                <figcaption style="color: #fff;"> Infographic : Repldege Screen of a Gold Financier repledged within your own bank</figcaption>
+            </article>                            
+        </section>
+
+
+        <section class="mobileappContainer">            
+            <article> 
+                <img src="assets/images/mob-screenshot.jpeg" alt="Image of a Gold Loan app" />
+                <figcaption style="text-align: center; color: #fff;" >Image of a Gold Loan app used by customers of Gold Financiers and Pawnbrokers</figcaption>
+
+                <div class="loans">
+                    <div class="loan">
+                        <div class="innerLoan">
+                            <p>Loans Analysis</p>
+                        </div>
+                    </div>        
+                </div>
+
+                
+                <div class="recents">
+                    <div class="recent">
+                        <div class="innerrecent">
+                            <p>Recent Transactions</p>
+                        </div>
+                    </div>        
+                </div>
+
+                <div class="graphs">
+                    <div class="graph">
+                        <div class="innergraph">
+                            <p>Graphical Analytics</p>
+                        </div>
+                    </div>        
+                </div>
+
+                <div class="customers">
+                    <div class="customer">
+                        <div class="innercustomer">
+                            <p>Customer Analysis</p>
+                        </div>
+                    </div>        
+                </div>
+            </article>
+        </section>
+
+        <section class="everySizeContainer">
+            <div class="heading">
+                <h1>Perfect for all Kind of Gold Financiers and Pawnbrokers </h1>
+            </div>
+
+            <div class="boxes">
+                <div class="Box">
+                    <img src="assets/images/pawnbroker.png" />
+                    <p>Small Pawnbrokers</p>
+                </div>
+                <div class="Box">
+                    <img src="assets/images/multi_branch_pawnbroker.jpg" />
+                    <p> Multiple Branch Gold Financiers</p>
+                </div>
+                <div class="Box">
+                    <img src="assets/images/nbfc.jpg" />
+                    <p> NBFC </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="automationContainer">
+            <article>
+                <h1>We make Pawnbroking and Gold Loan business  <br> Automation A Reality</h1>
+
+                <ul>
+                    <li> 
+                        <p class="caption">
+                            90%
+                        </p>
+                        <p class="text">
+                            FinAccSaas eliminates the need for manual books and records by more than 90% making your day to day transactions automated
+                        </p>
+                    </li>
+                    <li>
+                        <p class="caption">
+                            100 Hrs
+                        </p>
+                        <p class="text">
+                            Save on average 100 hrs every month by using FinAccSaas to reconcile your accounts, generate overdues list and Print auction notices
+                        </p>
+                    </li>
+                    <li>
+                        <p class="caption">
+                            40%
+                        </p>
+                        <p class="text">
+                            Enhance your business and find new customers in the market by using our Gold Loan app
+                        </p>
+                    </li>
+                </ul>
+            </article>           
+        </section>
+
+        <section class="testimonialsContainer">
+            
+            <h1>Testimonials</h1>
+
+            <article>
+                <ul>
+                    <li>
+                        <p class="name">
+                            Natarajan. R
+                        </p>
+                        <p class="company">
+                            Jayasakthi Finance, Coimbatore, Tamilnadu
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            "This Gold Loan Software is really good and user friendly. Am using it for more than 2 years. Good luck for future updations."
+                        </p>
+                    </li>
+
+                    <li>
+                        <p class="name">
+                            Sunnu Bohra
+                        </p>
+                        <p class="company">
+                            Sunil Finance and Investments, Bangalore, Karnataka
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            FinAccSaas pawnbroker software really helps our business a lot and saves lot of time. Thank you FinAcc team
+                        </p>
+                    </li>
+
+                    <li>
+                        <p class="name">
+                            Manish Marlecha
+                        </p>
+                        <p class="company">
+                            Marlecha Finance, Bangalore, Karnataka
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            I can see all my reports and transactions from my mobile and website. Its really amazing and helpful
+                        </p>
+                    </li>
+
+                    <li>
+                        <p class="name">
+                            Sunil
+                        </p>
+                        <p class="company">
+                            AAP Bankers, Pathanamthitta, Kerala
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            I am using this gold loan software from Kerala. It supports malayalam languages too. Thanks for you Support
+                        </p>
+                    </li>
+
+                    <li>
+                        <p class="name">
+                            Ashok Kumar
+                        </p>
+                        <p class="company">
+                            AK Finance, Tirupathi, Andhra Pradesh
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            FinAcc is really faster and accurate in all aspects when comparing with my old software. Keep going
+                        </p>
+                    </li>
+
+                    <li>
+                        <p class="name">
+                            Vinay Dutta
+                        </p>
+                        <p class="company">
+                            Sanjay Bankers, Kolkata, West Bengal
+                        </p>
+                        <hr>
+                        <p class="desc">
+                            I really like the software for its alert system like auto notifications and Sms. Good luck
+
+                        </p>
+                    </li>
+                </ul>
+            </article>
+          
+        </section>
+
+        
+    </main>
+
+    <footer>
+        <div class="content" >
+            <div class="contentLeft">
+                <h1>FinAccSaas</h1>
+                <p class="desc">
+                    FinAccSaas is a online cloud management application to record and maintain all pawnbroking and gold finance transactions in a most efficient way. It enables pawnbrokers to record all gold loan
+                    transactions with customer information with KYC. FinAccSaas is blended with latest technologies like Sms, Whatsapp and voice alerts, which helps to maintain good communication with gold loan customers.
+
+                    <br><br>
+                    In addition to record gold loan transactions, it has got seperaate modules to maintain even Repledge Transactions which is become more common now with most pawnbrokers and gold loan 
+                    providers. 
+                    
+                    <br><br>
+
+                    FinAccSaas comes up with more advanced features for maintaining various interest schemes like Simple, Multiple, Compound and customizable interes schemes too
+                </p>
+            </div>
+
+            <div class="contentRight">
+                <h2>Let's Talk</h2>
+                <p>Connect with us</p>
+                <p>finacctechnologies&#64;gmail.com</p>
+                <p>+91 98658 80356</p>
+                <div class="social">
+                    <i class='bx bxl-facebook-circle'></i>
+                    <i class='bx bxl-instagram-alt' ></i>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <p>FinAcc Technologies &copy; 2025</p>
+
+    </footer>
+
+    <script>
+        document.querySelectorAll('img').forEach(img => {
+            img.setAttribute('loading', 'lazy');
+        });
+    </script>
+
+    <script>
+        
+        const menuToggle = document.getElementById('mnuShow');
+        // const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {        
+        //navLinks.classList.toggle('show');
+        alert ("clec");
+        });
+    </script>
+</body>

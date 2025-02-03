@@ -28,12 +28,12 @@
     <div class="filterHeader">
         <div class="filterLeft">
             <div class="row">
-                <div class="col20" >
+                <!-- <div class="col20" >
                     <div class="formGroup" >
                         <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  />
                         <label for="" class="formLabelreadonly"> Bar Code </label>                                
                     </div>
-                </div>  
+                </div>   -->
                 
                 <div class="col80">
                     <app-selectionlist [Caption]="'Select Supplier'" [DataSource]="SuppliersList" [SelectedItem]="SelectedSupplier"  (newItemEvent)="getSupplier($event)" ></app-selectionlist>
@@ -67,7 +67,7 @@
                 </div>
                 <ng-container *ngIf="SelectedRepledge" >                    
                     <div class="loanDetails">
-                        <app-repledgecard [Repledge]="SelectedRepledge" ></app-repledgecard>
+                        <app-repledgecard [Repledge]="SelectedRepledge" [AsOnDate]="AsOnDate" ></app-repledgecard>
                     </div>
                 </ng-container>
             </div>               
@@ -103,7 +103,8 @@
                         <th>Mature Date</th>                                                                          
                         <th>Duration</th>                                
                         <th>Principal</th>                                
-                        <th>Market Value</th>                  
+                        <!-- <th>Market Value</th>                   -->
+                        <th>TotGrossWt</th>                     
                         <th>TotNettWt</th>                     
                     </thead>
                     <tr *ngFor="let rp of RepledgeData; let i = index" (click)="SelectedRepledge = rp"  >
@@ -113,12 +114,13 @@
                         <td [style.color]="GetStatusColor(rp)"> {{rp.Mature_Date | intToDate | date:'dd/MM/yyyy'}} </td>                        
                         <td [style.color]="GetStatusColor(rp)"> {{rp.Ason_Duration_Months }} months and {{rp.Ason_Duration_Days }} </td>
                         <td [style.color]="GetStatusColor(rp)" class="tdRight"> {{rp.Principal | number}} </td>
-                        <td [style.color]="GetStatusColor(rp)" class="tdRight"> {{rp.Market_Value | number}} </td>
+                        <!-- <td [style.color]="GetStatusColor(rp)" class="tdRight"> {{rp.Market_Value | number}} </td> -->
+                        <td [style.color]="GetStatusColor(rp)"> {{rp.TotGrossWt | number}} </td>
                         <td [style.color]="GetStatusColor(rp)"> {{rp.TotNettWt | number}} </td>
                         
                     </tr>
                     <tfoot>
-                        <td colspan="7"> Total </td>
+                        <td colspan="5"> Total </td>
                         <td> {{PrincipalTotal}} </td>
                         <td>{{MarketValueTotal}} </td>
                         <td></td>

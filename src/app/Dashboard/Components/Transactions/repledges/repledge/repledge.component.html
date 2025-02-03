@@ -160,6 +160,7 @@
                         <th>Repledge No</th>
                         <th>Repledge Date</th>                                         
                         <th>Principal</th>                        
+                        <th>Gross Wt</th>                        
                         <th>Nett Wt</th> 
                         <th>Duration</th> 
                     </thead>
@@ -169,6 +170,7 @@
                             <td [style.color]="GetStatusColor(Repledge)" > {{Repledge.Repledge_No}} </td>
                             <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.Repledge_Date | intToDate | date: "dd/MM/yyyy" }} </td>                            
                             <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.Principal}} </td>
+                            <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.TotGrossWt.toFixed(3) }} </td>
                             <td [style.color]="GetStatusColor(Repledge)"> {{Repledge.TotNettWt.toFixed(3) }} </td>
                             <td [style.color]="GetStatusColor(Repledge)">  {{Repledge.Ason_Duration_Months!==0 ? Repledge.Ason_Duration_Months + ' months ':'' }} {{ (Repledge.Ason_Duration_Months !==0 && Repledge.Ason_Duration_Days) ? ' and ' : '' }}  {{Repledge.Ason_Duration_Days !==0 ? Repledge.Ason_Duration_Days + ' days' :''}} </td>
                             
@@ -191,6 +193,7 @@
                             <th>Loan Date</th>
                             <th>Customer</th>
                             <th>Principal</th>
+                            <th>GrossWt</th>
                             <th>NettWt</th>
                             <th></th>
                         </thead>
@@ -201,6 +204,7 @@
                                 <td> {{ln.Loan_Date | intToDate | date:'dd/MM/yyyy' }} </td>
                                 <td> {{ln.Party_Name}} </td>
                                 <td> {{ln.Principal}} </td>
+                                <td> {{ln.TotGrossWt}} </td>
                                 <td> {{ln.TotNettWt}} </td>
                                 <td style="text-align: center;" class="zoomOnFocus" ><i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="RemoveLoan(i); $event.stopPropagation();"  ></i></td>
                             </tr>

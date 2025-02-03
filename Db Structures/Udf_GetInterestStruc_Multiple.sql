@@ -1,21 +1,17 @@
---SELECT * FROM vw_loans
+--select * from vw_loans
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetInterestStruc_Multiple') BEGIN DROP FUNCTION Udf_GetInterestStruc_Multiple END
 GO
 
 CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         --RETURNS @Result TABLE(Sno INT IDENTITY(1,1),FromDate DATE, ToDate DATE, Duration SMALLINT,Roi FLOAT,IntAccured MONEY,PrinPaid MONEY, IntPaid MONEY, AdjPrincipal MONEY, PrinBal MONEY)
         RETURNS	@Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY, TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY, AdjPrincipal MONEY,NewPrincipal MONEY)
-
-
-                                     
+                                                    
           WITH ENCRYPTION AS
-                BEGIN
- 
-
- /*
+                BEGIN 
+/*  
         DECLARE @Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY, TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY, AdjPrincipal MONEY,NewPrincipal MONEY)
-        DECLARE @LoanSno      INT = 102
-        DECLARE @AsOnDate         INT= 20240729
+        DECLARE @LoanSno      INT = 178
+        DECLARE @AsOnDate         INT= 20250210
   */
         DECLARE @AsOn DATETIME = [dbo].IntToDate(@AsOnDate)
         DECLARE @Loan_Date      DATE
@@ -23,14 +19,12 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         DECLARE @SchemeSno     INT
         DECLARE @Principal      MONEY
         
-        SELECT  @Loan_Date = [dbo].IntToDate(Loan_Date),@SchemeSno=SchemeSno,@Principal=Principal
-        From	  VW_LOANS
-        WHERE   LoanSno=@LoanSno
+        
         
         DECLARE @FromDate       DATE = @Loan_Date
         DECLARE @ToDate         DATE = @FromDate
         DECLARE @Receipt_Date        DATE
-        
+        DECLARE @PreClosureDays SMALLINT = 0
         DECLARE @TotDuration SMALLINT = 0
         DECLARE @Roi FLOAT = 0
         DECLARE @IntAccured MONEY = 0
@@ -41,12 +35,20 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         DECLARE @PrinBal MONEY = @Principal
         DECLARE @AdjPrincipal MONEY
         DECLARE @IntBal MONEY = 0
-        
-        --DECLARE @Result           TABLE(Sno INT IDENTITY(1,1),FromDate DATE, ToDate DATE, Duration SMALLINT,Roi FLOAT,IntAccured MONEY,PrinPaid MONEY, IntPaid MONEY, AdjPrincipal MONEY, PrinBal MONEY)
+
+        SELECT  @Loan_Date = [dbo].IntToDate(Loan_Date),@SchemeSno=SchemeSno,@Principal=Principal
+        From	  VW_LOANS
+        WHERE   LoanSno=@LoanSno
+
+        SELECT  @PreClosureDays=Preclosure_Days
+        FROM    Schemes 
+        WHERE   SchemeSno=@SchemeSno
+
+        --DECLARE @Result TABLE(Sno INT IDENTITY(1,1),FromDate DATE, ToDate DATE, Duration SMALLINT,Roi FLOAT,IntAccured MONEY,PrinPaid MONEY, IntPaid MONEY, AdjPrincipal MONEY, PrinBal MONEY)
+
         IF EXISTS(SELECT ReceiptSno FROM VW_RECEIPTS WHERE LoanSno=@LoanSno)
             BEGIN
-                DECLARE Rec_Cursor CURSOR FOR SELECT [dbo].IntToDate(Receipt_Date),Rec_Principal,Rec_Interest FROM VW_RECEIPTS WHERE LoanSno=@LoanSno  ORDER BY Receipt_Date
-        
+                DECLARE Rec_Cursor CURSOR FOR SELECT [dbo].IntToDate(Receipt_Date),Rec_Principal,Rec_Interest FROM VW_RECEIPTS WHERE LoanSno=@LoanSno  ORDER BY Receipt_Date        
                 OPEN Rec_Cursor
                 FETCH NEXT FROM Rec_Cursor INTO @Receipt_Date,@PrinPaid,@IntPaid
         
@@ -127,25 +129,30 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                     End
         
             End
-        Else
+        ELSE
             BEGIN
+                SET @FromDate = @Loan_Date
                 SET @TotDuration = DATEDIFF(DAY,@FromDate, @AsOn)
-                
+                SET @PrinBal = @Principal
                 SELECT      @Roi=Roi
                 From        Scheme_Details
                 WHERE       SchemeSno=@SchemeSno
                             AND (@TotDuration >= FromPeriod) AND (@TotDuration <=ToPeriod or ToPeriod=0)
                 
+                IF @TotDuration < @PreClosureDays BEGIN SET @TotDuration = @PreClosureDays END
                 SET @IntAccured = @TotDuration * ((@Roi/100)*@Principal / 12 /30)
 
-                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                 SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                 SET @AddedPrincipal = 0
 
                 INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured, IntPaid, PrinPaid, AddedPrincipal, AdjPrincipal,NewPrincipal)
                 VALUES             (@FromDate,@AsOn,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal,ISNULL(@AdjPrincipal,0), @PrinBal)
-            End
-        Return
-        End  
+            END
+          Return
+         End   
 
-        --select * from @Result
+        /*select * from @Result */
+
+        
+

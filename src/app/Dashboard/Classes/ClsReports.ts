@@ -4,6 +4,7 @@ import { TypeHttpResponse } from "../Types/TypeHttpResponse";
 import { TypeParties } from "./ClsParties";
 import { TypeLoan } from "./ClsLoan";
 import { AutoUnsubscribe } from "src/app/auto-unsubscribe.decorator";
+import { TypeRepledge } from "./ClsRepledges";
 
 @AutoUnsubscribe
 export class ClsReports{    
@@ -45,14 +46,24 @@ export class ClsReports{
         return this.dataService.HttpGet(postdata, "/getRepledgeStatement");                
     }
 
-    getLoanHistory(LoanStatus: number, AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={ "LoanStatus" :  LoanStatus, "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+    getLoanHistory(LoanStatus: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={ "LoanStatus" :  LoanStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
         return this.dataService.HttpGet(postdata, "/getLoanHistory");                
     }
     
+    getRepledgeHistory(RpStatus: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={ "RpStatus" :  RpStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
+        return this.dataService.HttpGet(postdata, "/getRepledgeHistory");                
+    }
+
     getLoanStatusCount(AsOn: number): Observable<TypeHttpResponse> {
         let postdata ={ "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getLoanStatusCount");                
+    }
+
+    getRepledgeStatusCount(AsOn: number): Observable<TypeHttpResponse> {
+        let postdata ={ "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        return this.dataService.HttpGet(postdata, "/getRepledgeStatusCount");                
     }
 
     getAuctionHistory(AsOn: number): Observable<TypeHttpResponse> {
@@ -143,6 +154,10 @@ export interface TypeLoanStatement{
 }
 
 export interface TypeLoanHistory extends TypeLoan{
+    StatusCount_Json: string;
+}
+
+export interface TypeRepledgeHistory extends TypeRepledge{
     StatusCount_Json: string;
 }
 

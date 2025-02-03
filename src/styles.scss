@@ -1116,6 +1116,8 @@ tr.example-element-row:not(.example-expanded-row):active {
   align-items: center;     
   color: black;
   border: 1px solid var(--ColorPrimary);
+  border-end-start-radius: 2rem;
+  border-end-end-radius: 2rem;
   padding: 1rem;
 }
 

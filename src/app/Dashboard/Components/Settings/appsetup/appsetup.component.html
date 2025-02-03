@@ -454,7 +454,21 @@
                     <div class="matLabel">
                         &nbsp;&nbsp; Enable Auto Approval
                     </div>
-                </div>                
+                </div>    
+            </div>
+
+            <div class="rows" style="margin-top: 1.5rem;" >
+                <div class="matGroup" style="width: 50%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.Lock_PreviousDate"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Lock Previous Date Entries
+                    </div>
+                </div>   
 
             </div>
         </div>     

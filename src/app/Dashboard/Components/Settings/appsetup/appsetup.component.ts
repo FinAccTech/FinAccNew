@@ -20,7 +20,7 @@ export class AppsetupComponent {
   ngOnInit(){
     let as = new ClsAppSetup(this.dataService);
     as.getAppSetup(0).subscribe(data =>{
-      this.AppSetup = JSON.parse (data.apiData)[0];
+      this.AppSetup = JSON.parse (data.apiData)[0];      
     })
   }
 

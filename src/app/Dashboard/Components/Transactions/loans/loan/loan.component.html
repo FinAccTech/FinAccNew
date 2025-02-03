@@ -85,7 +85,7 @@
                         <div class="col50">
                             <div class="formGroup" [ngClass]="!LoadnDateValid ? 'invalid' : ''">
                                 <!-- <input type="date" class="formControl" [ngModel]="LoanDate | date:'yyyy-MM-dd'" (ngModelChange)="LoanDate = $event"/>      -->
-                                <input type="date" class="formControl" required [ngModel]="Loan.Loan_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Loan_Date= DateToInt($event); SetMatureDate()" />                                                               
+                                <input type="date" class="formControl" [disabled]="LockPreviousDate" required [ngModel]="Loan.Loan_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Loan_Date= DateToInt($event); SetMatureDate()" />                                                               
                                 <label for="" class="formLabel date"> Loan Date </label>
                                 <div class="errorHint" *ngIf="!LoadnDateValid" > Invalid Name </div> 
                             </div>
@@ -251,8 +251,8 @@
                     </div>                    
                 </div>
 
-                <div class="row" style="margin-top: 1rem;" >                    
-                    <div class="col50">
+                <div class="row" style="margin-top: 1rem;"  >                     
+                    <div class="col50" [ngClass]="StdRoi ? 'disabledDiv':''" >
                         <div class="formGroup" [ngClass]="!IntRateValid ? 'invalid' : ''">
                             <input type="number" class="formControl" required #roi [(ngModel)]= "Loan.Roi" NumberInput MaxValue=99 (keydown.enter)="advinmonth.focus()" (change)="CalculateLoanValues()" />
                             <label for="" class="formLabel">Interest Rate </label>

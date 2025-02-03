@@ -136,6 +136,8 @@ import { AutomationComponent } from './Home/automation/automation.component';
 import { TestimonialsComponent } from './Home/testimonials/testimonials.component';
 import { ContactComponent } from "./Home/contact/contact.component";
 import { PricingComponent } from './Home/pricing/pricing.component';
+import { RepledgesummaryComponent } from './Dashboard/Components/Reports/repledgesummary/repledgesummary.component';
+import { RepledgehistoryComponent } from './Dashboard/Components/Reports/repledgehistory/repledgehistory.component';
 
 @NgModule({ declarations: [
         NumberInputDirective,
@@ -195,7 +197,7 @@ import { PricingComponent } from './Home/pricing/pricing.component';
         RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, 
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
-        ContactComponent, PricingComponent
+        ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
     AppRoutingModule,

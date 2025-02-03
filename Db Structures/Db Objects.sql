@@ -551,7 +551,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Enable_OldEntries     BIT,
   @IntCalcinDays          BIT,
   @MobileNumberMandatory BIT,
-  @Enable_AutoApproval BIT
+  @Enable_AutoApproval BIT,
+  @Lock_PreviousDate BIT
 
   
 WITH ENCRYPTION AS
@@ -572,7 +573,8 @@ BEGIN
                                       Enable_Opening = @Enable_Opening, Enable_RegLang = @Enable_RegLang, Reg_FontName = @Reg_FontName, Reg_FontSize = @Reg_FontSize, Enable_FingerPrint = @Enable_FingerPrint,
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
-                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,Enable_AutoApproval=@Enable_AutoApproval
+                                      Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,
+                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -3061,6 +3063,8 @@ WHERE       (Ln.LoanSno=@LoanSno OR @LoanSno=0) AND (Ln.CompSno=@CompSno)
 GO
 
 
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getRepledges') BEGIN DROP FUNCTION Udf_getRepledges END
 GO
 CREATE FUNCTION Udf_getRepledges(@RepledgeSno INT,@CompSno INT, @Repledge_Status TINYINT, @Cancel_Status TINYINT, @OpenStatus TINYINT)
@@ -3098,11 +3102,11 @@ SELECT      Rp.*, Rp.Repledge_No  as 'Name', Rp.Party_Name + ', Date:' + CAST([d
             (SELECT Pm.*, Led.LedSno as 'Ledger.LedSno', Led.Led_Name as 'Ledger.Name', Led.Led_Name as 'Ledger.Details'  FROM PaymentMode_Details Pm INNER JOIN Ledgers Led ON Led.LedSno = Pm.LedSno WHERE TransSno = Rp.RepledgeSno FOR JSON PATH) PaymentModes_Json,
             
              /* LOANS OBJECT (LOANS JSON)----------------------------------------------------------------------------------------------------------------------------------------------------------*/
-             (SELECT    Rd.DetSno, Rd.TransSno, Rd.LoanSno,Ln.Loan_No, Ln.Loan_Date, Ln.Principal, Ln.TotNettWt,Ln.Party_Name 
+             (SELECT    Rd.DetSno, Rd.TransSno, Rd.LoanSno,Ln.Loan_No, Ln.Loan_Date, Ln.Principal, Ln.TotGrossWt, Ln.TotNettWt,Ln.Party_Name 
 
              FROM       Repledge_Details Rd
                         INNER JOIN VW_LOANS Ln On Ln.LoanSno=Rd.LoanSno
-
+                        
              WHERE      Rd.TransSno = Rp.RepledgeSno FOR JSON PATH) RepledgeLoans_Json,
              ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
              
@@ -3589,24 +3593,24 @@ GO
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoanHistory') BEGIN DROP FUNCTION Udf_getLoanHistory END
 GO
 
-CREATE FUNCTION Udf_getLoanHistory(@LoanStatus INT, @CompSno INT, @AsOn INT)
+CREATE FUNCTION Udf_getLoanHistory(@LoanStatus INT, @CompSno INT, @Fromdate INT, @ToDate INT)
   RETURNS TABLE
   WITH ENCRYPTION AS
 RETURN
 
     SELECT    Ln.*,
-              AsOn_Loan_Status = CASE   WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=14) AND (Trans_Date <=@AsOn) ) -- Loan Closed and Redemption Made Redemtion VouTypeSno is 14
+              AsOn_Loan_Status = CASE   WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=14) AND (Trans_Date <=@ToDate) ) -- Loan Closed and Redemption Made Redemtion VouTypeSno is 14
                                           THEN 2
-                                        WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=15) AND (Trans_Date <=@AsOn)) -- Auction entry Made Auction Entry VouTypeSno is 15
+                                        WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=15) AND (Trans_Date <=@ToDate)) -- Auction entry Made Auction Entry VouTypeSno is 15
                                           THEN 4
-                                        WHEN (SELECT Mature_Date FROM Transactions WHERE TransSno=Ln.LoanSno) < @AsOn --Loan has crossed the mature date and Ready for Auction
+                                        WHEN (SELECT Mature_Date FROM Transactions WHERE TransSno=Ln.LoanSno) < @ToDate --Loan has crossed the mature date and Ready for Auction
                                           THEN 3
                                         ELSE
                                             1  -- So Reference entries and not crossed the mature date. So it is Open Loan
                                         END
 
     FROM      Udf_getLoans(0,@CompSno,0,2,1,0) Ln
-    WHERE     (Ln.Loan_Status=@LoanStatus OR @LoanStatus=0 AND Ln.Cancel_Status=1)
+    WHERE     (Ln.Loan_Date BETWEEN @FromDate AND @ToDate) AND (Ln.Loan_Status=@LoanStatus OR @LoanStatus=0 AND Ln.Cancel_Status=1)
 
 GO
 
@@ -3623,7 +3627,43 @@ RETURN
     GROUP BY	Ln.Loan_Status 	
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getRepledgeHistory') BEGIN DROP FUNCTION Udf_getRepledgeHistory END
+GO
+
+CREATE FUNCTION Udf_getRepledgeHistory(@RepledgeStatus INT, @CompSno INT, @Fromdate INT, @ToDate INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+    SELECT    Rp.*,
+              AsOn_Repledge_Status = CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=Rp.RepledgeSno AND VouTypeSno=19) -- Repledge Closed and Redemption Made Redemtion VouTypeSno is 19
+                                          THEN 2                               
+                                     WHEN (SELECT Mature_Date FROM Transactions WHERE TransSno=Rp.RepledgeSno) < [dbo].DateToInt(GETDATE()) --Repledge has crossed the mature date and Ready for Auction
+                                          THEN 3
+                                     ELSE
+                                        1  -- So Reference entries and not crossed the mature date. So it is Open Loan
+                                     END 
+
+    FROM      Udf_getRepledges(0,@CompSno,0,0,0) Rp
     
+    WHERE     (Rp.Repledge_Date BETWEEN @FromDate AND @ToDate) AND (Rp.Repledge_Status=@RepledgeStatus OR @RepledgeStatus=0 AND Rp.Cancel_Status=1)
+
+GO
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getRepledgeStatusCount') BEGIN DROP FUNCTION Udf_getRepledgeStatusCount END
+GO
+CREATE FUNCTION Udf_getRepledgeStatusCount(@CompSno INT, @AsOn INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN  
+
+    SELECT		Rp.Repledge_Status, COUNT(Rp.RepledgeSno) RepledgesCount, SUM(Rp.Principal) as Principal
+    FROM		  VW_REPLEDGES Rp
+    WHERE     Rp.CompSno = @CompSno
+    GROUP BY	Rp.Repledge_Status 	
+GO
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAuctionList') BEGIN DROP FUNCTION Udf_getAuctionList END
 GO
 
@@ -3686,12 +3726,9 @@ RETURN
 GO
 
 
-IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_getRepledgeDetailed') BEGIN DROP PROCEDURE Sp_getRepledgeDetailed END
-GO
-
-
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getSupplierDetailed') BEGIN DROP FUNCTION Udf_getSupplierDetailed END
 GO
+
 CREATE FUNCTION Udf_getSupplierDetailed(@PartySno INT)
   RETURNS TABLE
   WITH ENCRYPTION AS
@@ -3710,6 +3747,10 @@ RETURN
 			
   WHERE		Pty.PartySno=@PartySno
 
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_getRepledgeDetailed') BEGIN DROP PROCEDURE Sp_getRepledgeDetailed END
 GO
 
 CREATE PROCEDURE  Sp_getRepledgeDetailed

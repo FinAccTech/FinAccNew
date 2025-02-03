@@ -11,3 +11,4 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 export class CustomerdetailsComponent {
   @Input() Customer!: TypeParties;
 }
+ 

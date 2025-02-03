@@ -59,11 +59,11 @@ export class ReceiptComponent implements OnInit {
   LoanValid:      boolean = true;
   NettPayableValid: boolean = true; 
 
-  PaymnentModeLedgers:  TypeLedger[] = [];
-  
+  PaymnentModeLedgers:  TypeLedger[] = [];  
   StdLedgerList:       TypeLedger[] = [];
-
   IsOpen: number = 0;
+  LockPreviousDate: boolean = false;
+  
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
@@ -114,6 +114,8 @@ export class ReceiptComponent implements OnInit {
 
  ngOnInit(): void {     
     
+  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+
   this.TillDate   = this.globals.DateToInt (new Date());
   let ser = new ClsVoucherSeries(this.dataService);
   ser.getVoucherSeries(0,this.globals.VTypLoanReceipt).subscribe(data=> {

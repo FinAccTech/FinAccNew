@@ -16,16 +16,15 @@
 
     <div class="detRow">
         <div class="colDet">
-            <p class="caption"> Supplier </p>
-            <p class="value"> {{Repledge.Supplier.Party_Name}} </p>
+      
         </div>
         <div class="colDet">
-            <p class="caption"> Ref No </p>
+            <p class="caption"> Bank Ref No </p>
             <p class="value"> {{Repledge.Ref_No}} </p>
         </div>
         <div class="colDet">
             <p class="caption"> Borrower </p>
-            <p class="value"> {{Repledge.Borrower.Party_Name}} </p>
+            <p class="value"> {{Repledge.Borrower_Name}} </p>
         </div>        
     </div>
 
@@ -48,18 +47,14 @@
         <div class="colDet">
             <p class="caption"> Duration </p>
             <p class="value"  *ngIf="InterestDetails" style="color: red;"  > {{ InterestDetails.Ason_Duration_Months }} Months and {{ InterestDetails.Ason_Duration_Days }} days  </p>
+        </div>      
+        <div class="colDet">
+            <p class="caption"> Loan(s) </p>
+            <p class="value" >{{Repledge.Repledge_Details}}</p>         
         </div>        
     </div>
 
-    <div class="detRow">
-        <div class="singleColDet">
-            <span><strong>Loans</strong></span> {{StrLoansList}}
-        </div>
-        <!-- <div class="singleColDet" *ngFor="let ln of LoansList">
-            <p>{{ln.Loan_No}}</p>            
-        </div>         -->
-    </div>
-
+    
     <div class="detRow">
         <div class="colDet">
             <p class="caption"> Principal Balance </p>

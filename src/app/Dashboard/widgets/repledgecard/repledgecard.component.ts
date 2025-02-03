@@ -13,25 +13,24 @@ export class RepledgecardComponent {
 
   constructor(private dataService: DataService){}
 
-  @Input() Repledge!:TypeRepledge; 
+  @Input() Repledge!:any; 
   @Input() AsOnDate: number = 0;
   LoansList: any[] = [];
   StrLoansList: string = "";
   InterestDetails!: TypeInterestDetails;
 
+  ngOnInit(){
+    this.LoadInterestDetails();
+  }
+
   LoadInterestDetails(){
-    
-    
-    this.LoansList = JSON.parse(this.Repledge.RepledgeLoans_Json);
-    this.LoansList.forEach(ln=>{
-      this.StrLoansList += ln.Loan_No + ", ";
-    })
     let rep = new ClsReports(this.dataService);    
+        
     if (this.AsOnDate == 0 ) { return; }
-    rep.getRepledgeDetailed(this.Repledge.RepledgeSno, this.AsOnDate).subscribe(data => {                        
-      //console.log(data);            
-      this.InterestDetails =(JSON.parse(data.apiData)[0]);                    
+    rep.getRepledgeDetailed(this.Repledge.RepledgeSno, this.AsOnDate).subscribe(data => {                              
+      this.InterestDetails =(JSON.parse(data.apiData)[0]);                          
     })
+    
   } 
 
   ngOnChanges(changes: SimpleChanges){        

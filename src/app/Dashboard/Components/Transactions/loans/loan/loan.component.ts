@@ -96,6 +96,8 @@ export class LoanComponent implements OnInit {
   SchemeMaxper: number = 0; 
   LoanPerGram: number = 0;  
   IsOpen: number = 0;
+  LockPreviousDate: boolean = false;
+  StdRoi: boolean = false;
 
   constructor (  
                 private globals: GlobalsService, 
@@ -142,17 +144,20 @@ export class LoanComponent implements OnInit {
 
  ngOnInit(): void {  
     
+  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+  
   let ln = new ClsLoans(this.dataService);
   ln.getLoanMasters().subscribe(data=>{
     
-    this.VoucherSeriesList = JSON.parse(data.apiData.SeriesList);
-    this.DataSchemesList = JSON.parse(data.apiData.SchemesList);
-    this.SchemesList = JSON.parse(data.apiData.SchemesList);
-    this.GrpList = JSON.parse(data.apiData.ItemGroupsList);
-    this.LocationList = JSON.parse(data.apiData.LocationList);
-    this.CustomersList = JSON.parse(data.apiData.CustomerList);    
-    this.PaymnentModeLedgers = JSON.parse(data.apiData.PaymentModesList);
-    this.StdLedgerList = JSON.parse(data.apiData.StdLedgerList);
+    this.VoucherSeriesList    = JSON.parse(data.apiData.SeriesList);
+    this.DataSchemesList      = JSON.parse(data.apiData.SchemesList);
+    this.SchemesList          = JSON.parse(data.apiData.SchemesList);
+        
+    this.GrpList              = JSON.parse(data.apiData.ItemGroupsList);
+    this.LocationList         = JSON.parse(data.apiData.LocationList);
+    this.CustomersList        = JSON.parse(data.apiData.CustomerList);    
+    this.PaymnentModeLedgers  = JSON.parse(data.apiData.PaymentModesList);
+    this.StdLedgerList        = JSON.parse(data.apiData.StdLedgerList);
 
     if (this.Loan.LoanSno === 0){
       let Trans  = new ClsLoans(this.dataService);
@@ -388,7 +393,7 @@ SaveLoan(){
       }      
     }   
     StrImageXml += "</Images>"
-    StrImageXml += "</ROOT>";
+    StrImageXml += "</ROOT>"; 
 
   let Ln  = new ClsLoans(this.dataService);
   Ln.Loan = this.Loan;  
@@ -623,6 +628,7 @@ getNewScheme($event: TypeScheme){
 getScheme($event: TypeScheme){    
   this.SelectedScheme = $event;     
   
+  this.StdRoi = !this.SelectedScheme.IsStdRoi;
   if (this.Loan.LoanSno == 0 ){
     this.Loan.Roi = this.SelectedScheme.Roi!;   
     this.Loan.AdvIntDur = this.SelectedScheme.AdvanceMonth!;
@@ -719,8 +725,7 @@ DateToInt($event: any): number{
   return this.globals.DateToInt( new Date ($event.target.value));
 }
 
-AddPrincipal(){
-    
+AddPrincipal(){    
   const dialogRef = this.dialog.open(AddPrincipalComponent, 
     {         
       // width:'50vw',
