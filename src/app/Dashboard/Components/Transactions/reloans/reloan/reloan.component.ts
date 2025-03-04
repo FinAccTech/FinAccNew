@@ -16,6 +16,7 @@ import { ClsReLoans, TypeReLoan } from 'src/app/Dashboard/Classes/ClsReloans';
 import { ClsRedemptions } from 'src/app/Dashboard/Classes/ClsRedemptions';
 import { ClsSchemes, TypeScheme } from 'src/app/Dashboard/Classes/ClsSchemes';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 @Component({
   selector: 'app-reloan',
@@ -76,7 +77,8 @@ export class ReloanComponent implements OnInit {
                 private dataService: DataService, 
                 private router : Router,
                 private location: Location,
-                private dialog: MatDialog
+                private dialog: MatDialog,
+                private apidataService: ApiDataService
               )
               {           
                 this.ReLoan = reloanService.getReLoan();     
@@ -146,31 +148,45 @@ export class ReloanComponent implements OnInit {
     this.getNewLoanScheme(this.NewLoanSchemesList[0]);    
   })
 
-  let ln = new ClsLoans(this.dataService);
-  ln.getLoans(0,0,0,this.globals.LoanStatusOpen, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
-    if (data.queryStatus == 0){
-      this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-      return;
-    }
-    else{
-      this.LoansList = JSON.parse (data.apiData)
-      this.LoansList = this.LoansList.filter(ln =>{
-        return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
-      })
-
-      this.LoansList.map(loan => {        
-        return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
-                loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
-                loan.Location = JSON.parse (loan.Location_Json)[0], 
-                loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
-                loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-      })     
-    }
-  },
-  error => {
-    this.globals.ShowAlert(this.globals.DialogTypeError,error);
-    return;             
+  this.apidataService.getData("1").subscribe((data) => {
+    this.LoansList = JSON.parse (data.apiData);
+    this.LoansList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured;
+    })
+        this.LoansList.map(loan => {        
+          return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+                        loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+                        loan.Location = JSON.parse (loan.Location_Json)[0], 
+                        loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+                        loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+        });
   });
+
+  // let ln = new ClsLoans(this.dataService);
+  // ln.getLoans(0,0,0,this.globals.LoanStatusOpen, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
+  //   if (data.queryStatus == 0){
+  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+  //     return;
+  //   }
+  //   else{
+  //     this.LoansList = JSON.parse (data.apiData)
+  //     this.LoansList = this.LoansList.filter(ln =>{
+  //       return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
+  //     })
+
+  //     this.LoansList.map(loan => {        
+  //       return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+  //               loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+  //               loan.Location = JSON.parse (loan.Location_Json)[0], 
+  //               loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+  //               loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+  //     })     
+  //   }
+  // },
+  // error => {
+  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+  //   return;             
+  // });
 
   let cust = new ClsParties(this.dataService);
   cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {

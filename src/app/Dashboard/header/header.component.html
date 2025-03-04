@@ -11,22 +11,75 @@
             <i class='bx bx-bell bx-tada' ></i>
             <p>{{LoggedUser}}</p>
             <div class="profilePicture" [matMenuTriggerFor]="menu">
-                <ng-container *ngIf="UserProfileImage && UserProfileImage.length > 0" >
+                @if (UserProfileImage && UserProfileImage.length > 0) {
                     <img [src]="UserProfileImage" />
-                </ng-container>
-
-                <ng-container *ngIf="!UserProfileImage || UserProfileImage.length == 0" >
+                }
+                @else {
                     <img src="assets/images/partyimagepreview.png" />
-                </ng-container>
+                }
 
                 
                 <mat-menu #menu="matMenu" style="padding: 1rem;">
+
+                    <button mat-menu-item >
+                        <div class="menuHeader">
+                            @if (UserProfileImage && UserProfileImage.length > 0) {
+                                <img [src]="UserProfileImage" />
+                            }
+                            @else {
+                                <img src="assets/images/partyimagepreview.png" />
+                            }
+                            <span>{{LoggedUser}}</span>
+                        </div>                    
+                    </button>                
+
+                    
+                    <button mat-menu-item>
+                        <div class="menuClass menuClassCustom">
+                            <i class='bx bx-user' ></i>
+                            <a routerLink="clientprofile">Profile</a>                            
+                        </div>                    
+                    </button>    
+                    
+                    <button mat-menu-item  style="color: green;">
+                        <div class="menuClass menuClassCustom">
+                            <i class='bx bxs-barcode'></i>
+                            <span> Client Code: <b> {{ClientCode}}  </b> </span>
+                        </div>                    
+                    </button>    
+
+                    <button mat-menu-item  style="color: var(--ColorPrimary);" >
+                        <div class="menuClass menuClassCustom">
+                            <i class='bx bx-purchase-tag' ></i>
+                            <span> 
+                                @switch (VersionType) {
+                                    @case (1) {
+                                        Registered Version: <b> Advanced  </b>
+                                    }
+                                    @case (2) {
+                                        Registered Version: <b> Professional </b>
+                                    }
+                                    @case (3) {
+                                        Registered Version: <b> Enterprise </b>
+                                    }
+                                }
+                            </span>
+                        </div>                    
+                    </button>    
+
+                    
+                        <hr>
+                    
+
                     <button mat-menu-item  (click)="Logout()">
-                        <div class="menuClass">
-                            <i class='bx bx-log-out'></i> &nbsp;
+                        <div class="menuClass menuClassCustom menuClassRed">
+                            <i class='bx bx-log-out'></i>
                             <span>Log Out</span>
                         </div>                    
                     </button>                
+            
+
+                    
                 </mat-menu>
 
             </div>            

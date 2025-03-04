@@ -6,8 +6,22 @@
     <div class="headerContainer" >            
         <app-header (toggleEvent)="SetCompact($event)" ></app-header>
     </div>
-
+    
     <div class="bodyContainer">
+        @if (SubscriptionAlert && ShowAlert) {
+            <div class="alertHeader">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                <p class="desc">
+                    {{SubscriptionMsg}}
+                </p>
+                <p class="renew">
+                    Renew Now..
+                </p>        
+                @if (CloseEnable) {
+                    <p class="closeBtn" (click)="CloseAlert()" >X</p>
+                }
+            </div>
+        }
         <app-body></app-body>
     </div>    
 </div> 

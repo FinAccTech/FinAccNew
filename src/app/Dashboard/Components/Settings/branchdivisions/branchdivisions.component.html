@@ -1,0 +1,76 @@
+<div class="branchContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> &nbsp; Branches / Divisions</p>        
+        </div>
+
+        <div class="headerRight"> 
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="tableSection">
+            <div class="tableHeader">
+                <h2>Divisions</h2>
+                <button class="btnDefault" (click)="CreateDivision()">Create New</button>
+            </div>
+
+            <table>
+                <thead>
+                    <th>Division Code</th>
+                    <th>Division Name</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @for (div of DivisionList; track $index) {
+                        <tr (click)="LoadBranches(div); SelectedDivision = div">
+                            <td>{{div.Div_Code}}</td>
+                            <td>{{div.Div_Name}}</td>
+                            <td style="text-align: center;">
+                                <div class="crudIcons">                            
+                                    <i class="fa-solid fa-pen-to-square" style="color: green;" (click)="OpenDivision(div); $event.stopPropagation();" ></i>                                    
+                                    &nbsp;
+                                    <i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="DeleteDivision(div,$index); $event.stopPropagation();"  ></i>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tableSection">
+            <div class="tableHeader">
+                <h2>Branches</h2>
+                <button class="btnDefault" (click)="CreateBranch()" >Create New</button>
+            </div>
+
+            <table>
+                <thead>
+                    <th>Branch Code</th>
+                    <th>Branch Name</th>
+                    <th></th>
+
+                </thead>
+                <tbody>
+                    @for (brh of BranchesList; track $index) 
+                    {
+                        <tr>
+                            <td>{{brh.Branch_Code}}</td>
+                            <td>{{brh.Branch_Name}}</td>
+                            <td style="text-align: center;">
+                                <div class="crudIcons">                            
+                                    <i class="fa-solid fa-pen-to-square" style="color: green;" (click)="OpenBranch(brh); $event.stopPropagation();" ></i>                                    
+                                    &nbsp;
+                                    <i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="DeleteBranch(brh, $index); $event.stopPropagation();"  ></i>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

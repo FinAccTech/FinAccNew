@@ -171,7 +171,7 @@
                         <div class="col100" [ngClass]="!CustomerValid ? 'invalidSel' : ''">
                             <ng-container *ngIf="SelectedCustomer">
                                 @if (CustomerDetails) {
-                                    <app-partycard [Party]="CustomerDetails" ></app-partycard>
+                                    <app-partycard [Party]="CustomerDetails" [LoanData]="LoanDataAll" ></app-partycard>
                                 }
                             </ng-container>
                         </div>
@@ -208,8 +208,7 @@
     </div>
 
     <div class="grpschSection">
-        <div class="divScheme" [ngClass]="!SchemeValid ? 'invalidSel' : ''" >
-        <!-- <div class="divScheme" [ngClass]="!SchemeValid ? 'invalidSel' : ''" [ngClass]="MappedScheme ? 'disabledDiv' : '' " > -->
+        <div class="divScheme" [ngClass]="!SchemeValid ? 'invalidSel' : ''" >        
             <app-selectionlist [Caption]="'Scheme'" [MasterComponentId]="4"  [DataSource]="SchemesList" [SelectedItem]="SelectedScheme"  (newItemEvent)="getScheme($event)" (newMasterEmit)="getNewScheme($event)" ></app-selectionlist>
         </div>
         <div class="divGrp" [ngClass]="!GrpValid ? 'invalidSel' : ''">                        
@@ -219,8 +218,8 @@
             <app-selectionlist [Caption]="'Location'" [MasterComponentId]="5" [DataSource]="LocationList" [SelectedItem]="SelectedLocation"  (newItemEvent)="getLocation($event)" (newMasterEmit)="getNewLocation($event)"></app-selectionlist>
         </div>
         
-        <div class="divGrm" [ngClass]="!GrpValid ? 'invalidSel' : ''">                        
-            
+        <div class="divAgent" [ngClass]="!GrpValid ? 'invalidSel' : ''">                        
+            <app-selectionlist [Caption]="'Agent'" [MasterComponentId]="9" [DataSource]="AgentList" [SelectedItem]="SelectedAgent"  (newItemEvent)="getAgent($event)" (newMasterEmit)="getNewAgent($event)"></app-selectionlist>
         </div>
     </div>
 
@@ -239,105 +238,206 @@
             </app-itemdetails>
         </div>
         
-        <div class="amtDetails">
-            <div class="col30 loanAmount">
-                <div class="row" >                    
-                    <div class="col100">
-                        <div class="formGroup" [ngClass]="!PrincipalValid ? 'invalid' : ''">
-                            <input type="text" class="formControl"  required style="font-size: 20px;text-align: right;" [(ngModel)]= "Loan.Principal" (blur)="GetRoi($event)"  NumberInput MaxValue=0 (keydown.enter)="roi.focus()" (keyup)="CalculateLoanValues()" />
-                            <label for="" class="formLabel" >Loan Amount </label>    
-                            <div class="errorHint" *ngIf="!PrincipalValid" > Invalid Loan Amount </div>                         
-                        </div>
-                    </div>                    
-                </div>
+        @if (SelectedScheme && SelectedScheme.Calc_Method !== 3) {
+            <div class="amtDetails">
+                <div class="col30 loanAmount">
+                    <div class="row" >                    
+                        <div class="col100">
+                            <div class="formGroup" [ngClass]="!PrincipalValid ? 'invalid' : ''">
+                                <input type="text" class="formControl"  required style="font-size: 20px;text-align: right;" [(ngModel)]= "Loan.Principal" (blur)="GetRoi($event)"  NumberInput MaxValue=0 (keydown.enter)="roi.focus()" (keyup)="CalculateLoanValues()" />
+                                <label for="" class="formLabel" >Loan Amount </label>    
+                                <div class="errorHint" *ngIf="!PrincipalValid" > Invalid Loan Amount </div>                         
+                            </div>
+                        </div>                    
+                    </div>
 
-                <div class="row" style="margin-top: 1rem;"  >                     
-                    <div class="col50" [ngClass]="StdRoi ? 'disabledDiv':''" >
-                        <div class="formGroup" [ngClass]="!IntRateValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required #roi [(ngModel)]= "Loan.Roi" NumberInput MaxValue=99 (keydown.enter)="advinmonth.focus()" (change)="CalculateLoanValues()" />
-                            <label for="" class="formLabel">Interest Rate </label>
-                            <i class="rightIcon">%</i>
-                            <div class="errorHint" *ngIf="!IntRateValid" > Invalid Interest </div> 
+                    <div class="row" style="margin-top: 1rem;"  >                     
+                        <div class="col50" [ngClass]="StdRoi ? 'disabledDiv':''" >
+                            <div class="formGroup" [ngClass]="!IntRateValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required #roi [(ngModel)]= "Loan.Roi" NumberInput MaxValue=99 (keydown.enter)="advinmonth.focus()" (change)="CalculateLoanValues()" />
+                                <label for="" class="formLabel">Interest Rate </label>
+                                <i class="rightIcon">%</i>
+                                <div class="errorHint" *ngIf="!IntRateValid" > Invalid Interest </div> 
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  readonly [(ngModel)]= "IntAmtPerMonth" />
+                                <label for="" class="formLabelreadonly"> Interest Amount / Month </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
                         </div>
                     </div>
-                    <div class="col50">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControlreadonly" required NumberInput MaxValue=0  readonly [(ngModel)]= "IntAmtPerMonth" />
-                            <label for="" class="formLabelreadonly"> Interest Amount / Month </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required  [(ngModel)]= "Loan.AdvIntDur" NumberInput MaxValue=3 #advinmonth (keydown.enter)="doccharges.focus()" (keyup)="CalculateLoanValues()"/>
+                                <label for="" class="formLabel">Advance(In Month) </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="number" class="formControlreadonly" required [(ngModel)]= "Loan.AdvIntAmt" NumberInput MaxValue=0 readonly />
+                                <label for="" class="formLabelreadonly"> Advance Int Amt </label>                            
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row" style="margin-top: 1rem;">                    
-                    <div class="col50">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required  [(ngModel)]= "Loan.AdvIntDur" NumberInput MaxValue=3 #advinmonth (keydown.enter)="doccharges.focus()" (keyup)="CalculateLoanValues()"/>
-                            <label for="" class="formLabel">Advance(In Month) </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                    <div class="row" style="margin-top: 1rem;">                                        
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesPer" NumberInput MaxValue=30 #doccharges (keydown.enter)="docchargesamt.focus()" (keyup)="CalculateLoanValues()">
+                                <label for="" class="formLabel">Doc Charges </label>
+                                <i class="rightIcon">%</i>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
                         </div>
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0 (change)="CalculateLoanValues()"/>
+                                <label for="" class="formLabel"> Doc Charges Amt </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col100">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required style="font-size: 20px;text-align: right;font-weight: bold;" [(ngModel)]= "Loan.Nett_Payable" NumberInput MaxValue=0 readonly />
+                                <label for="" class="formLabel">Nett Payable </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>                    
                     </div>
-                    <div class="col50">
-                        <div class="formGroup">
-                            <input type="number" class="formControlreadonly" required [(ngModel)]= "Loan.AdvIntAmt" NumberInput MaxValue=0 readonly />
-                            <label for="" class="formLabelreadonly"> Advance Int Amt </label>                            
-                        </div>
+
+                    <div class="row" style="margin-top: 1rem;">                     
+                        <div class="col100">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">                            
+                                <input type="date" class="formControl" #maturedate required [ngModel]="Loan.Mature_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Mature_Date= DateToInt($event)" />                                                               
+                                <label for="" class="formLabel date"> Mature Date </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>                    
                     </div>
-                </div>
 
-                <div class="row" style="margin-top: 1rem;">                                        
-                    <div class="col50">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesPer" NumberInput MaxValue=30 #doccharges (keydown.enter)="docchargesamt.focus()" (keyup)="CalculateLoanValues()">
-                            <label for="" class="formLabel">Doc Charges </label>
-                            <i class="rightIcon">%</i>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
-                        </div>
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col50">
+                            <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
+                        </div>   
+                        <div class="col50">
+                            
+                        </div>                 
                     </div>
-                    <div class="col50">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0 (change)="CalculateLoanValues()"/>
-                            <label for="" class="formLabel"> Doc Charges Amt </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
-                        </div>
-                    </div>
-                </div> 
-
-                <div class="row" style="margin-top: 1rem;">                    
-                    <div class="col100">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="number" class="formControl" required style="font-size: 20px;text-align: right;font-weight: bold;" [(ngModel)]= "Loan.Nett_Payable" NumberInput MaxValue=0 readonly />
-                            <label for="" class="formLabel">Nett Payable </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
-                        </div>
-                    </div>                    
-                </div>
-
-                <div class="row" style="margin-top: 1rem;">                     
-                    <div class="col100">
-                        <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <!-- <input type="date" class="formControl" [ngModel]="MatureDate | date:'yyyy-MM-dd'" (ngModelChange)="MatureDate = $event" #maturedate (keydown.enter)="paymode.focus()" />     -->
-                            <input type="date" class="formControl" #maturedate required [ngModel]="Loan.Mature_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Mature_Date= DateToInt($event)" />                                                               
-                            <label for="" class="formLabel date"> Mature Date </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
-                        </div>
-                    </div>                    
-                </div>
-
-                <div class="row" style="margin-top: 1rem;">                    
-                    <div class="col50">
-                        <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
-                    </div>   
-                    <div class="col50">
-                        <!-- <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
-                            <input type="text" class="formControl" required [(ngModel)]= "Loan.PayModeSno"  #paymode />
-                            <label for="" class="formLabel">Payment Mode </label>
-                            <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
-                        </div>  -->
-                    </div>                 
                 </div>
             </div>
-        </div>
+        }
+
+        @if (SelectedScheme && SelectedScheme.Calc_Method == 3) {
+            <div class="amtDetails">
+                <div class="col30 loanAmount">
+                    <div class="row" >                    
+                        <div class="col100">
+                            <div class="formGroup" [ngClass]="!PrincipalValid ? 'invalid' : ''">
+                                <input type="text" class="formControl"  required style="font-size: 20px;text-align: right;" [(ngModel)]= "Loan.Principal" (blur)="GetRoi($event)"  NumberInput MaxValue=0 (keydown.enter)="roi.focus()" (keyup)="CalculateLoanValues()" />
+                                <label for="" class="formLabel" >Loan Amount </label>    
+                                <div class="errorHint" *ngIf="!PrincipalValid" > Invalid Loan Amount </div>                         
+                            </div>
+                        </div>                    
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;"  >                     
+                        <div class="col50" [ngClass]="StdRoi ? 'disabledDiv':''" >
+                            <div class="formGroup" [ngClass]="!IntRateValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required #roi [(ngModel)]= "Loan.Roi" NumberInput MaxValue=99 (keydown.enter)="advinmonth.focus()" (change)="CalculateLoanValues()" />
+                                <label for="" class="formLabel">Interest Rate </label>
+                                <i class="rightIcon">%</i>
+                                <div class="errorHint" *ngIf="!IntRateValid" > Invalid Interest </div> 
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControlreadonly" required NumberInput MaxValue=0 (blur)="ValidateDueAmount()"  [(ngModel)]= "Loan.Emi_Due_Amt"/>
+                                <label for="" class="formLabelreadonly"> Due Amount </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required  [(ngModel)]= "Loan.AdvIntDur" NumberInput MaxValue=3 #advinmonth (keydown.enter)="doccharges.focus()" (keyup)="CalculateLoanValues()"/>
+                                <label for="" class="formLabel">Advance(In Month) </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup">
+                                <input type="number" class="formControlreadonly" required [(ngModel)]= "Loan.AdvIntAmt" NumberInput MaxValue=0 readonly />
+                                <label for="" class="formLabelreadonly"> Advance Int Amt </label>                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">                                        
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesPer" NumberInput MaxValue=30 #doccharges (keydown.enter)="docchargesamt.focus()" (keyup)="CalculateLoanValues()">
+                                <label for="" class="formLabel">Doc Charges </label>
+                                <i class="rightIcon">%</i>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required [(ngModel)]= "Loan.DocChargesAmt" NumberInput #docchargesamt (keydown.enter)="maturedate.focus()" MaxValue=0 (change)="CalculateLoanValues()"/>
+                                <label for="" class="formLabel"> Doc Charges Amt </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col100">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">
+                                <input type="number" class="formControl" required style="font-size: 20px;text-align: right;font-weight: bold;" [(ngModel)]= "Loan.Nett_Payable" NumberInput MaxValue=0 readonly />
+                                <label for="" class="formLabel">Nett Payable </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>                    
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">                     
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">                            
+                                <input type="date" class="formControl" #maturedate required [ngModel]="Loan.Due_Start_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Due_Start_Date= DateToInt($event)" />                                                               
+                                <label for="" class="formLabel date"> Due Start Date </label>
+                                
+                            </div>
+                        </div>       
+                        <div class="col50">
+                            <div class="formGroup" [ngClass]="!LoanNumberValid ? 'invalid' : ''">                            
+                                <input type="date" class="formControl" #maturedate required [ngModel]="Loan.Mature_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Loan.Mature_Date= DateToInt($event)" />                                                               
+                                <label for="" class="formLabel date"> Mature Date </label>
+                                <div class="errorHint" *ngIf="!LoanNumberValid" > Invalid Name </div> 
+                            </div>
+                        </div>                    
+                    </div>
+
+                    <div class="row" style="margin-top: 1rem;">                    
+                        <div class="col50">
+                            <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
+                        </div>   
+                        <div class="col50">
+                            <button class="paymodeButton" (click)="GetEmiTable()" ><i class='bx bx-table'></i> &nbsp; Emi Table</button>
+                        </div>                 
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
     <div class="footer">

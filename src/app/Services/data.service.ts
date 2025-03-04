@@ -4,6 +4,7 @@ import { catchError, map, retry, } from 'rxjs';
 import { GlobalsService } from './globals.service';
 import { ProgressbroadcastService } from './progressbroadcast.service';
 import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
+import { UrlService } from './url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,18 @@ import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 
 @AutoUnsubscribe
 export class DataService {
-
-  baseApiURLAuth:string = "https://finaccsaas.com/data/RestApi.php/auth";
-  baseApiURL:string = "https://finaccsaas.com/data/RestApi.php/app";
-
-  // baseApiURLAuth:string = "https://cloud.finacc.in/data/RestApi.php/auth";
-  // baseApiURL:string = "https://cloud.finacc.in/data/RestApi.php/app";
-
-  constructor( private http: HttpClient, private globals: GlobalsService, private progressService: ProgressbroadcastService) { 
   
+  SassApiUrlAuth: string = "";
+  baseApiURLAuth:string =  "";
+  baseApiURL:string     = "";
+  
+  constructor( private http: HttpClient, private urls: UrlService, private globals: GlobalsService, private progressService: ProgressbroadcastService) { 
+    this.SassApiUrlAuth = this.urls.getSaasURLAuth();
+    this.baseApiURLAuth = this.urls.getbaseApiURLAuth();
+    this.baseApiURL = this.urls.getbaseApiURL();
   }
-    
+  
+
   HandleError(error: HttpErrorResponse):any{    
     // this.progressService.sendUpdate("stop",""),
     // console.log(error);  
@@ -70,7 +72,10 @@ export class DataService {
     .set('data', postdata)
     .set('DbName', DbName!)
     
-    if (ApiSuffix.trim() == "/CheckUserandgetCompanies"){
+    if (ApiSuffix.trim() == "/CheckSaasLogin"){
+      apiURL =  this.SassApiUrlAuth + ApiSuffix;
+    }
+    else if (ApiSuffix.trim() == "/CheckUserandgetCompanies"){
       apiURL =  this.baseApiURLAuth + ApiSuffix;
     }
     else{
@@ -84,10 +89,8 @@ export class DataService {
           map(datarecd => {                      
           //this.progressService.sendUpdate("stop","");    
             return ( datarecd);                        
-        }),        
-        
-        );
-        
+        }),                
+        );        
     return data;
   }
 
@@ -173,5 +176,29 @@ HttpSavePrintStyle(StyleName: string, JsonContent: string, savetype:string)
       }),
       );      
     return data;      
+  }
+
+  GetServerDate(){
+    let DbName = sessionStorage.getItem("sessionClientDbName")!;                                             
+    let postdata: string =""; 
+    let apiURL = "";
+    let params = new HttpParams()
+
+    .set('data', postdata)
+    .set('DbName', DbName!)
+
+    apiURL = this.baseApiURL + "/GetServerDate";
+    
+    let header = new HttpHeaders();
+    header.set("content-type", "charset=UTF-8");
+    let data = this.http.get<any>(apiURL, { params })
+        .pipe(
+          // catchError(this.HandleError),
+          map(datarecd => {                      
+          //this.progressService.sendUpdate("stop","");    
+            return ( datarecd);                        
+        }),                
+        );        
+    return data;
   }
 }

@@ -25,6 +25,8 @@ import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { TypeAgent } from 'src/app/Dashboard/Classes/ClsAgents';
+import { EmitableComponent } from 'src/app/Dashboard/widgets/emitable/emitable.component';
 
 
 @Component({
@@ -38,25 +40,28 @@ export class LoanComponent implements OnInit {
 
   private searchSubject = new Subject<number>();
 
-  CustomersList!:       TypeParties[];
+  CustomersList:       TypeParties[] = [];
   SelectedCustomer!:    TypeParties;
   CustomerDetails!:     TypeCustomerDetailed;
+  LoanDataAll!:            any[];
   LoanData!:            any[];
 
   VoucherSeriesList!:   TypeVoucherSeries[];
   SelectedSeries!:      TypeVoucherSeries;
   DefaultSeries!:       TypeVoucherSeries[];
 
-  SchemesList!:         TypeScheme[];
-  DataSchemesList!:         TypeScheme[];
+  SchemesList:         TypeScheme[] = [];
+  DataSchemesList:         TypeScheme[] = [];
   SelectedScheme!:      TypeScheme;
 
-  GrpList!:             TypeItemGroup[];
+  GrpList:             TypeItemGroup[] = [];
   SelectedGrp!:         TypeItemGroup;
 
-  LocationList!:        TypeLocation[];
+  LocationList:        TypeLocation[] = [];
   SelectedLocation!:    TypeLocation;
 
+  AgentList:            TypeAgent[] = [];
+  SelectedAgent!:        TypeAgent;
   //PaymentModesList:     TypePayMode[] = [];
   PaymnentModeLedgers:  TypeLedger[] = [];
 
@@ -152,9 +157,10 @@ export class LoanComponent implements OnInit {
     this.VoucherSeriesList    = JSON.parse(data.apiData.SeriesList);
     this.DataSchemesList      = JSON.parse(data.apiData.SchemesList);
     this.SchemesList          = JSON.parse(data.apiData.SchemesList);
-        
+    
     this.GrpList              = JSON.parse(data.apiData.ItemGroupsList);
     this.LocationList         = JSON.parse(data.apiData.LocationList);
+    this.AgentList            = JSON.parse(data.apiData.AgentList);
     this.CustomersList        = JSON.parse(data.apiData.CustomerList);    
     this.PaymnentModeLedgers  = JSON.parse(data.apiData.PaymentModesList);
     this.StdLedgerList        = JSON.parse(data.apiData.StdLedgerList);
@@ -177,13 +183,17 @@ export class LoanComponent implements OnInit {
       this.SchemesList = this.DataSchemesList.filter(sch =>{
           return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
         })
-        this.getScheme(this.SchemesList[0]);   
+        
+      this.getScheme(this.SchemesList[0]);   
       
       //Item Groups
       this.getGroup(this.GrpList[0]);
 
       //Locations
       this.getLocation (this.LocationList[0]);
+
+      //Agents
+      this.getAgent(this.AgentList[0]);
     }
     else
     {
@@ -199,15 +209,16 @@ export class LoanComponent implements OnInit {
       this.Loan.Location = JSON.parse(this.Loan.Location_Json!)[0]; 
       this.SelectedLocation = this.Loan.Location;
 
+      this.Loan.Agent = JSON.parse(this.Loan.Agent_Json!)[0]; 
+      this.SelectedAgent = this.Loan.Agent;
+
       this.Loan.Customer = JSON.parse(this.Loan.Party_Json!)[0];       
       this.getCustomer(this.Loan.Customer);      
 
       this.Loan.PaymentMode = JSON.parse (this.Loan.PaymentModes_Json);
-      //this.PaymentModesList = JSON.parse (this.Loan.PaymentModes_Json);
-            
-
-      this.GridList = JSON.parse (this.Loan.Items_Json);                    
-
+      
+      this.GridList = JSON.parse (this.Loan.Items_Json);    
+      
       if (this.Loan.Images_Json.trim() !== '' && JSON.parse (this.Loan.Images_Json).length > 0){
         this.TransImages =       JSON.parse (this.Loan.Images_Json);    
       }    
@@ -216,135 +227,7 @@ export class LoanComponent implements OnInit {
     }
   })
 
-  //console.log(this.Loan);
-  
-  
-  // let ser = new ClsVoucherSeries(this.dataService);
-  // ser.getVoucherSeries(0,this.globals.VTypLoanPayment).subscribe(data=> {
-  //   if (data.queryStatus == 0){
-  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-  //     return;
-  //   }
-  //   else{
-  //     this.VoucherSeriesList = JSON.parse (data.apiData);
-      
-  //     if (this.Loan.LoanSno === 0)
-  //     {
-  //       this.DefaultSeries = JSON.parse (data.apiData);        
-  //        this.DefaultSeries =  this.DefaultSeries.filter((obj) =>{
-  //         return obj.IsDefault == true;
-  //       })
-  //       this.getSeries(this.DefaultSeries[0]);        
-  //     }
-  //     else
-  //     {   
-  //       this.SelectedSeries = this.Loan.Series;
-  //     }     
-  //   }
-  // }, 
-  // error => {
-  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
-  //   return;             
-  // });
-  
-  // let sch = new ClsSchemes(this.dataService);
-  // sch.getSchemes(0,).subscribe(data=> {
-  //   if (data.queryStatus == 0){
-  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-  //     return;
-  //   }
-  //   else{
-  //     this.DataSchemesList = JSON.parse (data.apiData);
-  //     this.SchemesList = this.DataSchemesList;
-  //     this.SchemesList = this.DataSchemesList.filter(sch =>{
-  //       return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
-  //     })
-  //     if (this.Loan.LoanSno === 0)
-  //     {
-  //       this.getScheme(this.SchemesList[0]);        
-  //     }
-  //     else
-  //     {
-  //       this.getScheme(this.Loan.Scheme);
-  //     }      
-  //   }
-  // },
-  // error => {
-  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
-  //   return;             
-  // });
-
-  // let grp = new ClsItemGroups(this.dataService);    
-  // grp.getItemGroups(0).subscribe( data => {        
-  //   if (data.queryStatus == 0){
-  //     this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
-  //   }
-  //   else{      
-  //     this.GrpList = JSON.parse (data.apiData);
-  //     if (this.Loan.LoanSno === 0)
-  //     {        
-  //       this.getGroup(this.GrpList[0]);
-  //     }
-  //     else
-  //     {
-  //      this.getGroup (this.Loan.IGroup);
-  //     }
-  //   }
-  // },
-  // error => {
-  //   this.globals.ShowAlert(this.globals.DialogTypeError, error);      
-  // });
-
-  // let loc = new ClsLocations(this.dataService);    
-  // loc.getLocations(0).subscribe( data => {        
-  //   if (data.queryStatus == 0){
-  //     this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
-  //   }
-  //   else{      
-  //     this.LocationList = JSON.parse (data.apiData);
-  //     if (this.Loan.LoanSno == 0)
-  //     {
-  //       //this.SelectedLocation = this.LocationList[0];
-  //       this.getLocation (this.LocationList[0]);
-  //     }
-  //     else
-  //     {
-  //       // this.SelectedLocation = this.Loan.Location;        
-  //       this.getLocation(this.Loan.Location);
-  //     }
-  //   }
-  // },
-  // error => {
-  //   this.globals.ShowAlert(this.globals.DialogTypeError, error);      
-  // });
-
-  // let pty = new ClsParties(this.dataService);    
-  // pty.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe( data => {        
-  //   if (data.queryStatus == 0){
-  //     this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
-  //   }
-  //   else{      
-  //     this.CustomersList = JSON.parse (data.apiData);
-      
-  //     if (this.Loan.LoanSno !==0)
-  //     {
-  //       this.SelectedCustomer = this.Loan.Customer;
-  //     }      
-  //   }
-  // },
-  // error => {
-  //   this.globals.ShowAlert(this.globals.DialogTypeError, error);      
-  // }); 
-  
-  // let led = new ClsLedgers(this.dataService);
-  // led.getPaymentModes().subscribe(data=>{
-  //   this.PaymnentModeLedgers = JSON.parse(data.apiData);
-  // });
-  // let led = new ClsLedgers(this.dataService);
-  // led.getPaymentModes().subscribe(data =>{
-  //   this.PaymentModes = JSON.parse (data.apiData);
-  // })
-   
+     
 }
 
 SaveLoan(){      
@@ -359,9 +242,9 @@ SaveLoan(){
   }
   
   var StrItemXML: string = "";  
-  StrItemXML = "<ROOT>"
-  StrItemXML += "<Transaction>"  
-  for (var i=0; i < this.GridList.length; i++)
+  StrItemXML = "<ROOT>";
+  StrItemXML += "<Transaction>";  
+  for (var i=0; i < this.GridList.length; i++) 
   {
       StrItemXML += "<Transaction_Details ";
       StrItemXML += " ItemSno='" + this.GridList[i].Item.ItemSno + "' ";                 
@@ -375,7 +258,7 @@ SaveLoan(){
       StrItemXML += " >";
       StrItemXML += "</Transaction_Details>";    
   }   
-  StrItemXML += "</Transaction>"
+  StrItemXML += "</Transaction>";
   StrItemXML += "</ROOT>";
 
   var StrImageXml: string = "";
@@ -392,6 +275,7 @@ SaveLoan(){
         StrImageXml += "</Image_Details>";
       }      
     }   
+
     StrImageXml += "</Images>"
     StrImageXml += "</ROOT>"; 
 
@@ -403,7 +287,13 @@ SaveLoan(){
   
   Ln.Loan.fileSource      = this.Loan.fileSource;
   Ln.Loan.BranchSno = this.auth.SelectedBranchSno;
-  //Ln.Loan.VouDetailXML = this.globals.GetLoanVoucherXml(Ln.Loan, this.StdLedgerList);
+  
+  if (this.SelectedScheme.Calc_Method == 3){
+    const OriginalEmi           = (+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!;
+    this.Loan.OrgEmi_Due_Amt    = OriginalEmi;
+    this.Loan.Emi_Principal     = this.Loan.Principal / this.SelectedScheme.EmiDues!;
+    this.Loan.Emi_Interest      = (this.Loan.Principal * (this.Loan.Roi/100)) / this.SelectedScheme.EmiDues!;     
+  }
 
   Ln.saveLoan().subscribe(data => {
         if (data.queryStatus == 0) {
@@ -449,6 +339,7 @@ ValidateInputs(): boolean{
   this.Loan.Scheme          = this.SelectedScheme;
   this.Loan.IGroup          = this.SelectedGrp;
   this.Loan.Location        = this.SelectedLocation;
+  this.Loan.Agent           = this.SelectedAgent;
   this.Loan.fileSource      = this.TransImages;
 
   if (!this.Loan.Series )  { this.SeriesValid = false; this.globals.SnackBar("error","Invalid Series...");  return false; }  else  {this.SeriesValid = true; }    
@@ -529,7 +420,81 @@ CalculateLoanValues(){
     this.Loan.DocChargesAmt =  Math.round(this.Loan.Principal * (this.Loan.DocChargesPer / 100));  
   }  
   this.Loan.Nett_Payable = +(this.Loan.Principal - this.Loan.AdvIntAmt - this.Loan.DocChargesAmt).toFixed(2);
+
+  if (this.SelectedScheme.Calc_Method == 3){    
+    this.Loan.Emi_Due_Amt  =  this.globals.RoundDigitsToNear ((+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!);
+    this.Loan.AdvIntAmt = this.Loan.Emi_Due_Amt * this.Loan.AdvIntDur;  
+    this.Loan.Nett_Payable = +(this.Loan.Principal - (this.Loan.AdvIntDur * this.Loan.Emi_Due_Amt)).toFixed(2);
+  }
 }
+
+ValidateDueAmount(){  
+  
+  if ((this.SelectedScheme.Calc_Method == 3) && (this.Loan.Emi_Due_Amt !==0) ){    
+    if  (this.Loan.Emi_Due_Amt  < ((+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt )/ +this.SelectedScheme.EmiDues!))
+    {
+      this.globals.SnackBar("error", "Invalid Due Amount");
+      this.Loan.Emi_Due_Amt  =  (+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!;
+      this.Loan.AdvIntAmt = this.Loan.Emi_Due_Amt * this.Loan.AdvIntDur;  
+      this.Loan.Nett_Payable = +(this.Loan.Principal - (this.Loan.AdvIntDur * this.Loan.Emi_Due_Amt)).toFixed(2);
+      return;
+    }
+  }
+  this.Loan.AdvIntAmt = this.Loan.Emi_Due_Amt * this.Loan.AdvIntDur;  
+  this.Loan.Nett_Payable = +(this.Loan.Principal - (this.Loan.AdvIntDur * this.Loan.Emi_Due_Amt)).toFixed(2);
+}
+
+GetEmiTable(){
+  const FromDate: Date = new Date( this.globals.IntToDate (this.Loan.Due_Start_Date));
+  const PFreq: number = this.SelectedScheme.Payment_Frequency!;  
+  const EmiDues: number = this.SelectedScheme.EmiDues!;  
+  let DueAmt  = this.Loan.Emi_Due_Amt;
+  const OriginalEmi  =  +((+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!).toFixed(2);
+
+  let TblArray = [];  
+  let currentDate = FromDate;
+  let ExcessAmt: number = 0;
+
+  for (let index = 0; index < EmiDues; index++) {
+    ExcessAmt += DueAmt- OriginalEmi
+    if (index == EmiDues-1){
+      DueAmt = this.globals.RoundDigitsToNear (DueAmt - ExcessAmt);
+    }
+
+    TblArray.push({ "DueDate": this.globals.IntToDateString( this.globals.DateToInt(currentDate)), "DueAmt": DueAmt, "OrgEmi": OriginalEmi });
+
+    let tDate = currentDate;
+    switch (PFreq) {
+      case 0:        
+        tDate.setDate(tDate.getDate()+1);
+        currentDate = tDate;
+        break;
+      case 1:        
+        tDate.setDate(tDate.getDate()+7);
+        currentDate = tDate;
+        break;
+      case 2:
+        tDate.setDate(tDate.getDate()+15);
+        currentDate = tDate;
+        break;
+      case 3:
+        tDate.setMonth(tDate.getMonth()+1);
+        currentDate = tDate;
+        break;
+    }
+    
+  }
+
+  const dialogRef = this.dialog.open(EmitableComponent, 
+    { 
+      width:"35vw",
+      height:"100vh",
+      position:{"right":"0","top":"0" },
+      data: TblArray,
+    });    
+    dialogRef.disableClose = true;
+}
+
 
 getAutoLoanNumber(){
   let ln = new ClsLoans(this.dataService);
@@ -556,13 +521,16 @@ onSearchByBarCode(event: Event): void {
 getCustomer($event: TypeParties){   
   this.SelectedCustomer = $event;
   this.CustomerDetails = null!; 
+  this.LoanDataAll = [];
   this.LoanData = [];
   if(this.SelectedCustomer)
   {
   let rep = new ClsReports(this.dataService);
       rep.getCustomerDetailed(this.SelectedCustomer.PartySno).subscribe(data =>{        
-        this.CustomerDetails = JSON.parse (data.apiData)[0];                
+        this.CustomerDetails = JSON.parse (data.apiData)[0];   
+        this.LoanDataAll = JSON.parse(this.CustomerDetails.Loans_Json!);     
         this.LoanData = JSON.parse(this.CustomerDetails.Loans_Json!);     
+                
 
         if(this.LoanData)
         {
@@ -571,7 +539,7 @@ getCustomer($event: TypeParties){
                     && 
                     (ln.Cancel_Status == this.globals.CancelStatusNotCancelled) 
                     && 
-                    (ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured);
+                    ((ln.Loan_Status == this.globals.LoanStatusOpen) || (ln.Loan_Status == this.globals.LoanStatusMatured));
           })
         }
       })
@@ -645,6 +613,7 @@ getScheme($event: TypeScheme){
 
   this.SchemeMaxper = this.SelectedScheme.Max_MarketValue!;  
   this.SetMatureDate();
+  this.CalculateLoanValues();
 }
 
 getNewGroup($event: TypeItemGroup){
@@ -669,6 +638,18 @@ getNewLocation($event: TypeLocation){
 getLocation($event: TypeLocation){    
   this.SelectedLocation = $event;
 }
+
+getNewAgent($event: TypeAgent){
+  if ($event){
+    this.AgentList.push ($event);
+    this.getAgent($event); 
+  }
+}
+
+getAgent($event: TypeAgent){    
+  this.SelectedAgent = $event;
+}
+
 
 SetMatureDate(){
   let tDate = new Date( this.globals.IntToDate(this.Loan.Loan_Date) );
@@ -747,20 +728,10 @@ PrintTransaction(trans: TypeLoan){
   if (trans.Approval_Status == this.globals.ApprovalStatusUnApproved){
     this.globals.SnackBar("error","UnApproved Loans cannot be printed... ")
     return;
-  }
-  // let ser = new ClsVoucherSeries(this.dataService);
-  // trans.Series = JSON.parse(trans.Series_Json)[0];
-  // trans.Customer = JSON.parse(trans.Party_Json)[0];
-  // trans.Scheme = JSON.parse(trans.Scheme_Json)[0];
-  // trans.IGroup = JSON.parse(trans.IGroup_Json)[0];
-  // trans.Location = JSON.parse(trans.Location_Json)[0];
+  }  
   
   if (trans.Series.Print_Style == ""){ this.globals.SnackBar("error","No Print Style applied. Apply Print Styles in Voucher Series "); return; }
     else { this.vouprint.PrintVoucher(trans, 12 ,trans.Series.Print_Style!);}
-
-  // if (trans.Series.Print_Style !== "") {
-  //   this.vouprint.Style_Loan_Pgf(trans, trans.Series.Print_Style!);
-  // }
 }
 
 ApproveLoan(){
@@ -779,26 +750,10 @@ ApproveLoan(){
           this.PrintTransaction(this.Loan);
         }
         this.router.navigate(['dashboard/loans/' + this.IsOpen ]); 
-      }
-      // if (result == true){                   
-      //     this.Loan.Approval_Status = this.globals.ApprovalStatusApproved;
-      //     this.router.navigate(['dashboard/loans']); 
-      // }      
+      }      
     });  
 
-  // this.globals.QuestionAlert("Are you sure you want to Approve this Loan?").subscribe(data =>{
-  //   if (data == 0) { return; }
-  //   let ln = new ClsLoans(this.dataService);
-  //   ln.approveLoan(this.Loan.LoanSno).subscribe(data =>{
-  //       if (data.queryStatus == 0){
-  //         this.globals.ShowAlert(3,"Error Approving Loan!!")
-  //       }
-  //       else{
-  //         this.globals.SnackBar("info","Loan Approved Sucecssfully");
-  //         this.Loan.Approval_Status = 1;
-  //       }
-  //   })
-  //   });  
+ 
 }
 
 CancelLoan(){
@@ -818,19 +773,7 @@ CancelLoan(){
         
       }      
     }); 
-  // this.globals.QuestionAlert("Are you sure you want to Cancel this Loan?").subscribe(data =>{
-  //   if (data == 0) { return; }
-  //   let ln = new ClsLoans(this.dataService);
-  //   ln.cancelLoan(this.Loan.LoanSno, '').subscribe(data =>{
-  //       if (data.queryStatus == 0){
-  //         this.globals.ShowAlert(3,"Error Cancelling Loan!!")
-  //       }
-  //       else{
-  //         this.globals.SnackBar("info","Loan Cancelled Sucecssfully");
-  //         this.Loan.Cancel_Status = 1;
-  //       }
-  //   })
-  //   });  
+ 
 }
 
 MultiPaymentModes(){
@@ -852,6 +795,7 @@ MultiPaymentModes(){
       }      
     }); 
 }
+
 
 CanExit()
 {

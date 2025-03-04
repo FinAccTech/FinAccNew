@@ -19,6 +19,9 @@ export class HeaderComponent implements OnDestroy {
   LoggedUser: string = "";
   UserProfileImage: string = "";
 
+  ClientCode: string = "";
+  VersionType: number = 1;
+
   constructor(@Inject(DOCUMENT) private document: any, @Inject(AuthService) private auth: AuthService, private dialog: MatDialog, private router: Router ){
     this.subscriptionName= this.auth.getCompUpdate().subscribe
     (compname => { //message contains the data sent from service
@@ -48,6 +51,9 @@ export class HeaderComponent implements OnDestroy {
     this.CompName = this.auth.SelectedCompany.Comp_Name;
     this.LoggedUser = this.auth.LoggedUser.UserName!;
     this.UserProfileImage = this.auth.LoggedUser.Profile_Image;
+
+    this.ClientCode = this.auth.LoggedClient.Client_Code;
+    this.VersionType = this.auth.LoggedClient.Version_Type;
   }
 
   LoadCompanies(){

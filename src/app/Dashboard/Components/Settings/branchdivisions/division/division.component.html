@@ -1,0 +1,55 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Division </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Division.DivSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Division.Div_Code   />
+                    <label for="" class="formLabelreadonly"> Division Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!DivisionNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Division.Div_Name  />
+                    <label for="" class="formLabel"> Division Name </label>
+                    <div class="errorHint" *ngIf="!DivisionNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = Division.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="date" class="formControl" [ngModel]="Division.Create_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Division.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveDivision()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteDivision()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

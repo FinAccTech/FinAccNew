@@ -10,9 +10,7 @@ export class ClsAreas{
     private BranchSno: number = +sessionStorage.getItem("sessionSelectedBranchSno")!; 
     private UserSno: number =   JSON.parse(sessionStorage.getItem("sessionLoggedUser")!).UserSno; 
 
-    constructor(private dataService: DataService){
-        
-    	}
+    constructor(private dataService: DataService){}
 
     getAreas(AreaSno: number): Observable<TypeHttpResponse> {
         let postdata ={ "AreaSno" :  AreaSno, "CompSno" :  this.CompSno }; 

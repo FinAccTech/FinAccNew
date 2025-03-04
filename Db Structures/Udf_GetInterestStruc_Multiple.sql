@@ -45,6 +45,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         WHERE   SchemeSno=@SchemeSno
 
         --DECLARE @Result TABLE(Sno INT IDENTITY(1,1),FromDate DATE, ToDate DATE, Duration SMALLINT,Roi FLOAT,IntAccured MONEY,PrinPaid MONEY, IntPaid MONEY, AdjPrincipal MONEY, PrinBal MONEY)
+        SET @FromDate = @Loan_Date
 
         IF EXISTS(SELECT ReceiptSno FROM VW_RECEIPTS WHERE LoanSno=@LoanSno)
             BEGIN
@@ -131,7 +132,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
             End
         ELSE
             BEGIN
-                SET @FromDate = @Loan_Date
+                
                 SET @TotDuration = DATEDIFF(DAY,@FromDate, @AsOn)
                 SET @PrinBal = @Principal
                 SELECT      @Roi=Roi

@@ -1,0 +1,41 @@
+<div class="modalForm" style="width: 100%;" >
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Business Register - Daily </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="loanList">            
+         
+            <table>
+                <thead> 
+                    <th>#</th>
+                    <th>Day</th>
+                    <th>Loans Count</th>
+                    <th>Loans Value</th>                        
+                    <th>Red Count</th>                        
+                    <th>Red Value</th>                        
+                    <th>Interest</th>                     
+                </thead>
+                <tbody>
+                    @for (item of data; track $index) {
+                        <tr>
+                            <td>{{item.DayStart}}</td>
+                            <td>{{item.DayStart}}</td>
+                            <td>{{item.DayStart}}</td>
+                            <td>{{item.DayStart}}</td>
+                            <td>{{item.DayStart}}</td>
+                            <td>{{item.DayStart}}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

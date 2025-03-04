@@ -1,7 +1,7 @@
 <div class="cardContainer" *ngIf="Loan">
     <div class="statusCard">
         <ng-container *ngIf="Loan.Loan_Repledge_Status==1" >
-            <p style="font-weight: bold; color: red;" >Repledged</p>
+            <p style="font-weight: bold; color: red;" (click)="OpenRepledgeSummary()" >Repledged</p>
         </ng-container>
         <div [ngClass]="(Loan.Loan_Status == 1) ? 'statusLabelOpen smallLabel' : (Loan.Loan_Status == 2) ? 'statusLabelClosed' : (Loan.Loan_Status == 3)? 'statusLabelMatured' :'statusLabelAuctioned' " >
             <div class="caption">Loan Staus</div>
@@ -67,7 +67,7 @@
                     </div>
                     
                     <div class="row">
-                        <p class="caption" > Loan Age  </p>
+                        <p class="caption" > Loan Age  </p> 
                         <p class="value"  *ngIf="InterestDetails" style="color: red;"  > {{ InterestDetails.Ason_Duration_Months }} Months and {{ InterestDetails.Ason_Duration_Days }} days  </p>
                     </div>
 

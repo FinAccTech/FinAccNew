@@ -138,16 +138,29 @@ import { ContactComponent } from "./Home/contact/contact.component";
 import { PricingComponent } from './Home/pricing/pricing.component';
 import { RepledgesummaryComponent } from './Dashboard/Components/Reports/repledgesummary/repledgesummary.component';
 import { RepledgehistoryComponent } from './Dashboard/Components/Reports/repledgehistory/repledgehistory.component';
+import { AgentsComponent } from './Dashboard/Components/Masters/agents/agents.component';
+import { AgentComponent } from './Dashboard/Components/Masters/agents/agent/agent.component';
+import { LogindefaultComponent } from './Auth/logindefault/logindefault.component';
+import { LoginpennyComponent } from './Auth/loginpenny/loginpenny.component';
+import { RepledgeauctionhistoryComponent } from './Dashboard/Components/Reports/repledgeauctionhistory/repledgeauctionhistory.component';
+import { BranchComponent } from './Dashboard/Components/Settings/branchdivisions/branch/branch.component';
+import { DivisionComponent } from './Dashboard/Components/Settings/branchdivisions/division/division.component';
+import { BusinessregisterComponent } from './Dashboard/Components/Reports/businessregister/businessregister.component';
+import { IntToMonthYear } from './Dashboard/Pipes/int-to-monthyear.pipe';
+import { DailyRegisterComponent } from './Dashboard/widgets/daily-register/daily-register.component';
 
 @NgModule({ declarations: [
         NumberInputDirective,
         AppComponent,
         IntToDatePipe,
+        IntToMonthYear,
         DashboardComponent,
         SidenavComponent,
         HeaderComponent,
         BodyComponent,
         LoginComponent,
+        LogindefaultComponent,
+        LoginpennyComponent,
         CompaniesComponent,
         WebcamComponent,
         MsgboxComponent,
@@ -197,7 +210,8 @@ import { RepledgehistoryComponent } from './Dashboard/Components/Reports/repledg
         RppaymentsComponent, RppaymentComponent, RepledgecardComponent, RpclosuresComponent, RpclosureComponent, SupplierhistoryComponent, HomeComponent, SiteheaderComponent, 
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
-        ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent
+        ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
+        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
     AppRoutingModule,

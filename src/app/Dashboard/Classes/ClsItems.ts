@@ -42,7 +42,7 @@ export class ClsItems{
             IGroup:  {GrpSno:0, Grp_Code:"", Grp_Name: "", Create_Date:0},            
             Remarks: "",
             Active_Status: 1,
-            Create_Date: 20230908,
+            Create_Date: DateToInt(new Date()),
             UserSno: this.UserSno,
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
@@ -68,3 +68,12 @@ export interface TypeItem{
     Details?: string;
 }
 
+
+function DateToInt(inputDate: Date)
+  {
+    let month: string = (inputDate.getMonth() + 1).toString();    
+    let day: string = inputDate.getDate().toString();    
+    if (month.length == 1) { month = "0" + month }
+    if (day.length == 1) {day = "0" + day }
+    return parseInt (inputDate.getFullYear().toString() + month + day);
+  }

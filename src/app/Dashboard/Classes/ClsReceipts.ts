@@ -50,6 +50,8 @@ export class ClsReceipts{
         newTrans.Rec_Other_Debits       = this.Receipt.Rec_Other_Debits;                
         newTrans.Rec_Default_Amt        = this.Receipt.Rec_Default_Amt;                
         newTrans.Rec_Add_Less           = this.Receipt.Rec_Add_Less;                
+        newTrans.Rec_DuesCount           = this.Receipt.Rec_DuesCount;                        
+        newTrans.Rec_DueAmount           = this.Receipt.Rec_DueAmount;                
         newTrans.VouSno                 = this.Receipt.VouSno;                
 
         /*FOR REDEMPTION */
@@ -114,7 +116,8 @@ export class ClsReceipts{
 		    Rec_Other_Debits: 0,
 		    Rec_Default_Amt: 0,
 		    Rec_Add_Less: 0,
-	
+            Rec_DuesCount: 0,
+            Rec_DueAmount: 0,
 	  /*FOR REDEMPTION */
 		    Red_Method: 0,
 		    Nett_Payable: 0,
@@ -162,6 +165,8 @@ export class ClsReceipts{
 		Rec_Other_Debits: number;
 		Rec_Default_Amt: number;
 		Rec_Add_Less: number;
+        Rec_DuesCount: number;
+        Rec_DueAmount: number;
 	
 	  /*FOR REDEMPTION */
 		Red_Method: number;  

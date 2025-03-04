@@ -1,0 +1,68 @@
+<div class="modalForm">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Branch <b> ( {{Branch.Division?.Div_Name}} ) </b> </p>
+        </div>
+        <div class="headerRight">
+            <p mat-dialog-close="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 5px;" >
+            <div class="col50">
+                <input type="hidden" required [(ngModel)] = Branch.BranchSno  />
+                <div class="formGroup">                    
+                    <input type="text" class="formControlreadonly" disabled={{CodeAutoGen}} required [(ngModel)] = Branch.Branch_Code   />
+                    <label for="" class="formLabelreadonly"> Branch Code </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup" [ngClass]="!BranchNameValid ? 'invalid' : ''" >
+                    <input type="text" class="formControl" required [(ngModel)] = Branch.Branch_Name  />
+                    <label for="" class="formLabel"> Branch Name </label>
+                    <div class="errorHint" *ngIf="!BranchNameValid" > Invalid Name </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 15px;">
+            
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="text" class="formControl" required  [(ngModel)] = Branch.Remarks />
+                    <label for="" class="formLabel"> Remarks </label>
+                </div>
+            </div>
+
+            <div class="col50">
+                <div class="formGroup">
+                    <input type="date" class="formControl" [ngModel]="Branch.Create_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Branch.Create_Date = DateToInt($event) " />                    
+                    <label for="" class="formLabel date"> Create Date </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px; display: flex; flex-direction: row; align-items: center; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Branch.Active_Status" [(ngModel)]="Branch.Active_Status"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Branch.Active_Status == 1? 'Active' : 'InActive' }}  </span>
+                </label>
+            </div>
+
+            
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <button (click)="SaveBranch()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+        <button (click)="DeleteBranch()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+    </div>
+</div>

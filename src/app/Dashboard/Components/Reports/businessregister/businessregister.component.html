@@ -1,0 +1,78 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Business Register</p>        
+        </div>
+
+        <div class="headerRight">    
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> From Date </label>            
+            </div>
+
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> To Date </label>            
+            </div>
+            
+            <button class="newBtn" (click)="LoadBusinessRegister()"> <i class='bx bx-play'></i> &nbsp; Load Statement</button>             
+            
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" (click)="exportexcel()" >                        
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>            
+        </div>
+    </div>
+
+    <div class="body">        
+      <div class="tableBody">
+        <div class="tableContainer" #TABLE>
+            <table class="table" mat-table [dataSource]="dataSource" matSort  matTableExporter #exporter="matTableExporter" >
+
+              <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
+                    <th style="" mat-header-cell *matHeaderCellDef mat-sort-header>  {{ column=="crud"? '': column.replace("_"," ")}} </th>
+                    
+                  <td mat-cell *matCellDef="let element; let i = index;"
+                  [style.color]=" column == 'Active_Status' ? element['Active_Status'] == 1 ? 'green' : 'red' : '#6a7a8c'" 
+                  > 
+                    {{  
+                      column == "Active_Status"  
+                        ? element[column] == 1 
+                          ? "Active"
+                          : "InActive"                        
+
+                        : column == "#"
+                            ? i+1
+
+                        : (column == "MonthStart" )
+                            ? (element[column] | intToMonthYear)
+
+                      : element[column]      
+                   
+                    }}                     
+                  
+                  </td>            
+                  
+              </ng-container>
+             
+                   
+              <tr mat-header-row *matHeaderRowDef ="columnsToDisplay; sticky: true;"></tr>
+              <tr (click)="LoadDailyRegister(element)"  mat-row *matRowDef="let element; columns: columnsToDisplay;" >
+              </tr>
+              
+              
+              
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 25 aria-label="Select page of users"></mat-paginator> 
+          </div>
+    </div>
+    </div>
+
+ 
+</div>

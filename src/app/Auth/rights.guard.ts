@@ -15,6 +15,9 @@ export class RightsGuard  {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):boolean {
     
+      if (this.globals.SubscriptionExpired){
+        return false;
+      }
     if (this.authService.LoggedUser.User_Type == 1){
       return true;
     }

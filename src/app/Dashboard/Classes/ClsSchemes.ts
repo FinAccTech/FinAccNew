@@ -44,11 +44,13 @@ export class ClsSchemes{
             Scheme_Code: "AUTO",
             Scheme_Name: "",
             Roi: 0,
+            EmiDues:0,
             OrgRoi: 0,
             IsStdRoi: false,
             Calc_Basis: 0,
             Calc_Method: 0,
             Custom_Style: 0,
+            Payment_Frequency: 0,
             Enable_AmtSlab: false,
             Enable_FeeSlab: false,
             Preclosure_Days: 30,
@@ -88,11 +90,13 @@ export interface TypeScheme {
     Scheme_Code?: string;
     Scheme_Name?: string;
     Roi?: number;
+    EmiDues?: number;
     OrgRoi?: number;
     IsStdRoi?: boolean;
     Calc_Basis?: number;
     Calc_Method?: number;
     Custom_Style?: number;
+    Payment_Frequency?: number;
     Enable_AmtSlab?: boolean;
     Enable_FeeSlab?: boolean;
     Preclosure_Days?: number;

@@ -38,11 +38,14 @@ export class LoanhistoryComponent {
   
   FromDate: number = 0;
   ToDate: number = 0;
-
+ 
   LoansList:       TypeLoanHistory[] = [];
+  filterList:      TypeLoanHistory[] = [];
+
   SelectedLoan!:    TypeLoanHistory;
-  StatusList!: any[];
-  StatusCount: any[] =  [{"Status":1, "Count":0,"Value":0}, {"Status":2,"Count":0,"Value":0}, {"Status":3,"Count":0,"Value":0}, {"Status":4,"Count":0,"Value":0} ];
+  // StatusCount: any[] =  [{"Status":1, "Count":0,"Value":0}, {"Status":2,"Count":0,"Value":0}, {"Status":3,"Count":0,"Value":0}, {"Status":4,"Count":0,"Value":0} ];
+  StatusCount: any[] = [];
+
   SelectedLoanStatus: number = 0;
 
   openpass: boolean = false;
@@ -67,6 +70,7 @@ export class LoanhistoryComponent {
       }
       else{                
         this.LoansList = JSON.parse (data.apiData);     
+        
         this.LoansList.map(ln=>{
           ln.Customer = JSON.parse(ln.Party_Json)[0];
           if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
@@ -75,17 +79,10 @@ export class LoanhistoryComponent {
           ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
         })
            
+        this.filterList = this.LoansList;
         this.LoadDataIntoMatTable();
-
-        ln.getLoanStatusCount(0).subscribe(data =>{
-          this.StatusList = JSON.parse(data.apiData);
-          
-          this.StatusList.forEach(stat =>{            
-              this.StatusCount[stat.Loan_Status-1].Count = stat.LoansCount;
-              this.StatusCount[stat.Loan_Status-1].Value = stat.Principal;            
-          })
-          
-        })
+       
+        this.GetStatusCount();
         
       }
     },
@@ -95,8 +92,48 @@ export class LoanhistoryComponent {
     });
   }
 
+  GetStatusCount(){            
+    this.StatusCount = [];    
+    this.StatusCount.push({"Status":1, "Count": this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusOpen
+    }).length, "Value":this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusOpen
+    }).reduce((n, {Principal}) => n + +Principal, 0)});
+    this.filterList = this.LoansList;
+    
+    
+
+    this.StatusCount.push({"Status":2, "Count": this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusClosed
+    }).length,"Value":this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusClosed
+    }).reduce((n, {Principal}) => n + +Principal, 0)});
+    this.filterList = this.LoansList;
+
+    this.StatusCount.push({"Status":3, "Count": this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusMatured
+    }).length,"Value":this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusMatured
+    }).reduce((n, {Principal}) => n + +Principal, 0)});
+    this.filterList = this.LoansList;
+    
+    this.StatusCount.push({"Status":4, "Count": this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusAuctioned
+    }).length,"Value":this.filterList.filter(ln=>{
+      return ln.Loan_Status == this.globals.LoanStatusAuctioned
+    }).reduce((n, {Principal}) => n + +Principal, 0)});
+    this.filterList = this.LoansList;
+  }
+
+  FilterByStatus(filterStatus: number){    
+    this.filterList = this.LoansList.filter(ln=>{
+      return ln.Loan_Status == filterStatus;
+    })
+    this.LoadDataIntoMatTable()    
+  }
+
   LoadDataIntoMatTable(){
-    this.dataSource = new MatTableDataSource<TypeLoan> (this.LoansList);     
+    this.dataSource = new MatTableDataSource<TypeLoan> (this.filterList);     
     if (this.dataSource.filteredData)
     {    
       setTimeout(() => this.dataSource.paginator = this.paginator);

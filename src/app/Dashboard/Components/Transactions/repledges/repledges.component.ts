@@ -165,6 +165,7 @@ export class RepledgesComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+  
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
   }

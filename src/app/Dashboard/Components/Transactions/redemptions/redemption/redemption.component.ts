@@ -21,6 +21,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 @Component({
   selector: 'app-redemption',
@@ -75,7 +76,8 @@ export class RedemptionComponent implements OnInit {
                 private location:     Location,
                 private dialog:       MatDialog,
                 private alertService: AlertsService,
-                private vouPrint:     VoucherprintService
+                private vouPrint:     VoucherprintService,
+                private apidataService: ApiDataService,
               )
               {           
                 this.Redemption = redService.getRedemption();     
@@ -92,7 +94,7 @@ export class RedemptionComponent implements OnInit {
                 .subscribe((searchText) => {                  
                   if (searchText < 1) {return;}
                   let ln = new ClsLoans(this.dataService);  
-                  ln.getLoans(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                  ln.getLoanBySno(searchText,0,0,0,0,0,0,).subscribe(data=>{
                     if (data.apiData){
                       let fLn = JSON.parse(data.apiData)[0];
                       fLn.Customer = JSON.parse(fLn.Party_Json)[0];
@@ -146,30 +148,44 @@ export class RedemptionComponent implements OnInit {
     return;             
   });
   
-  let ln = new ClsLoans(this.dataService);
-  ln.getLoans(0,0,0,this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
-    if (data.queryStatus == 0){
-      this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-      return;
-    }
-    else{
-      this.LoansList = JSON.parse (data.apiData);
-      this.LoansList = this.LoansList.filter(ln =>{
+  this.apidataService.getData("1").subscribe((data) => {
+    this.LoansList = JSON.parse (data.apiData);
+        this.LoansList = this.LoansList.filter(ln =>{
         return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
-      })
-      this.LoansList.map(loan => {        
-        return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
-                loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
-                loan.Location = JSON.parse (loan.Location_Json)[0], 
-                loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
-                loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-      })     
-    }
-  },
-  error => {
-    this.globals.ShowAlert(this.globals.DialogTypeError,error);
-    return;             
+      }) 
+        this.LoansList.map(loan => {        
+          return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+                  loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+                  loan.Location = JSON.parse (loan.Location_Json)[0], 
+                  loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+                  loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+        });
   });
+
+  // let ln = new ClsLoans(this.dataService);
+  // ln.getLoans(0,0,0,this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
+  //   if (data.queryStatus == 0){
+  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+  //     return;
+  //   }
+  //   else{
+  //     this.LoansList = JSON.parse (data.apiData);
+  //     this.LoansList = this.LoansList.filter(ln =>{
+  //       return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
+  //     })
+  //     this.LoansList.map(loan => {        
+  //       return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+  //               loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+  //               loan.Location = JSON.parse (loan.Location_Json)[0], 
+  //               loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+  //               loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+  //     })     
+  //   }
+  // },
+  // error => {
+  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+  //   return;             
+  // });
 
   let cust = new ClsParties(this.dataService);
   cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
@@ -193,7 +209,7 @@ export class RedemptionComponent implements OnInit {
   else{
     this.Redemption.PaymentMode = JSON.parse( JSON.stringify (this.Redemption.PaymentModes_Json));
     let sln = new ClsLoans(this.dataService);
-    sln.getLoans(this.Redemption.Loan.LoanSno, 0,0,0, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled,this.globals.OpenStatusAllLoans).subscribe(data =>{    
+    sln.getLoanBySno(this.Redemption.Loan.LoanSno, 0,0,0, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled,this.globals.OpenStatusAllLoans).subscribe(data =>{    
       this.SelectedLoan           = JSON.parse(data.apiData)[0];  
       this.SelectedLoan.IGroup    =   JSON.parse (this.SelectedLoan.IGroup_Json)[0],  
       this.SelectedLoan.Location   =   JSON.parse (this.SelectedLoan.Location_Json)[0],
@@ -315,12 +331,8 @@ ValidateInputs(): boolean{
   return true;
 } 
 
-CalculateRedemptionValues(){
-  //console.log(this.Redemption.Rec_Other_Credits);
-  this.Redemption.Nett_Payable = +(+this.Redemption.Rec_Principal + +this.Redemption.Rec_Interest + +this.Redemption.Rec_Other_Credits - +this.Redemption.Rec_Other_Debits + +this.Redemption.Rec_Default_Amt + +this.Redemption.Rec_Add_Less).toFixed(2);
-
-
-  //this.Redemption.Nett_Payable = +(this.Redemption.Rec_Principal + this.Redemption.Rec_Interest + this.Redemption.Rec_Other_Credits + this.Redemption.Rec_Other_Debits + this.Redemption.Rec_Default_Amt + this.Redemption.Rec_Add_Less);
+CalculateRedemptionValues(){  
+  this.Redemption.Nett_Payable = this.globals.RoundDigitsToNear( +(+this.Redemption.Rec_Principal + +this.Redemption.Rec_Interest + +this.Redemption.Rec_Other_Credits - +this.Redemption.Rec_Other_Debits + +this.Redemption.Rec_Default_Amt + +this.Redemption.Rec_Add_Less).toFixed(2));
 }
 
 getAutoRedemptionNumber(){
@@ -377,7 +389,8 @@ getCustomer($event: TypeParties){
       dialogRef.disableClose = true;  
       dialogRef.afterClosed().subscribe(result => {        
         if (result){                
-          this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
+          this.getLoan(this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0]);
+          // this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
         }
         
       }); 

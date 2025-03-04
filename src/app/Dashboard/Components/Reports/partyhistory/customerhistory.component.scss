@@ -21,6 +21,7 @@
       .headerLeft{
           display: flex;
           align-items: center;
+          
           // .bar{
           //     border-left: 4px solid var(--ColorPrimary);        
           //     padding-top: 1rem;     
@@ -30,6 +31,7 @@
               font-size: 2rem;
               padding-right: 1rem;
               color: var(--ColorPrimary);  
+              cursor: pointer;
           }
 
           .heading{

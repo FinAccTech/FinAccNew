@@ -16,15 +16,13 @@ export class ClsTransactions{
 
     constructor(private dataService: DataService){}
 
-    getTransactions(TransSno: number): Observable<TypeHttpResponse> {
+	getTransactions(TransSno: number): Observable<TypeHttpResponse> {
         let postdata ={ "TransSno" :  TransSno, "CompSno" :  this.CompSno }; 
         return this.dataService.HttpGet(postdata, "/getTransactions");                
     }
 
 	saveTransaction(): Observable<TypeHttpResponse> {        
-		console.log(this.Transaction);
-						
-        let postdata = this.Transaction;		
+		let postdata = this.Transaction;		
         return this.dataService.HttpPost(postdata, "/saveTransaction");                        
     }
 
@@ -69,7 +67,7 @@ export class ClsTransactions{
     }
 
 	getLoanMasters(): Observable<TypeHttpResponse> {
-		let postdata ={ CompSno: this.CompSno  }; 
+		let postdata ={ CompSno: this.CompSno, "BranchSno": this.BranchSno  }; 
         return this.dataService.HttpGet(postdata, "/getLoanMasters");  
 	}
 	
@@ -182,6 +180,13 @@ export class ClsTransactions{
 			AdvIntAmt: 0,
 			DocChargesPer: 0,
 			DocChargesAmt: 0,        
+
+			Emi_Due_Amt: 0,
+			OrgEmi_Due_Amt: 0,
+			Due_Start_Date: 0,
+			Emi_Principal:0,
+            Emi_Interest:0,
+
 			RefSno: 0,
 			Rec_Principal: 0,
 			Rec_IntMonths: 0,
@@ -191,11 +196,15 @@ export class ClsTransactions{
 			Rec_Other_Debits: 0,
 			Rec_Default_Amt: 0,
 			Rec_Add_Less: 0,      
+			Rec_DuesCount:0,
+			Rec_DueAmount:0,
+			
 			Red_Method: 0,
 			Nett_Payable: 0,
 			Mature_Date: 0,
 			PayMode: [],
 			LocationSno: 0,
+			AgentSno:0,
 			Remarks: "",
 			Approval_Status: 0,
 			Loan_Status: 0,
@@ -246,6 +255,11 @@ export class ClsTransactions{
 		DocChargesPer: number;
 		DocChargesAmt: number;
 		
+		Emi_Due_Amt: number;
+		OrgEmi_Due_Amt: number;
+		Due_Start_Date: number;
+		Emi_Principal: number;
+		Emi_Interest: number;
 		/* FOR RECEIPT */
 		RefSno: number;
 		Rec_Principal: number;
@@ -256,6 +270,8 @@ export class ClsTransactions{
 		Rec_Other_Debits: number;
 		Rec_Default_Amt: number;
 		Rec_Add_Less: number;
+		Rec_DuesCount: number;
+		Rec_DueAmount: number;
 	
 	  /*FOR REDEMPTION */
 		Red_Method: number;  
@@ -263,6 +279,7 @@ export class ClsTransactions{
 		Mature_Date: number;
 		PayMode: TypePayMode[];
 		LocationSno: number; 
+		AgentSno: number; 
 		Remarks: string;
 		Approval_Status: number;
 		Loan_Status: number;

@@ -532,6 +532,11 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @BranchCode_Prefix   CHAR(4),
   @BranchCode_CurrentNo INT,
 
+  @AgentCode_AutoGen  BIT,
+  @AgentCode_Prefix   CHAR(4),
+  @AgentCode_CurrentNo INT,
+
+
   @Enable_Opening      BIT,
   @Enable_RegLang      BIT,
   @Reg_FontName        VARCHAR(20),
@@ -569,7 +574,8 @@ BEGIN
                                       GrpCode_CurrentNo = @GrpCode_CurrentNo, ItemCode_AutoGen = @ItemCode_AutoGen, ItemCode_Prefix = @ItemCode_Prefix, ItemCode_CurrentNo = @ItemCode_CurrentNo,  
                                       SchemeCode_AutoGen = @SchemeCode_AutoGen, SchemeCode_Prefix = @SchemeCode_Prefix, SchemeCode_CurrentNo = @SchemeCode_CurrentNo, LocCode_AutoGen = @LocCode_AutoGen,
                                       LocCode_Prefix = @LocCode_Prefix, LocCode_CurrentNo = @LocCode_CurrentNo, PurityCode_AutoGen = @PurityCode_AutoGen, PurityCode_Prefix = @PurityCode_Prefix,
-                                      PurityCode_CurrentNo = @PurityCode_CurrentNo, BranchCode_AutoGen = @BranchCode_AutoGen, BranchCode_Prefix = @BranchCode_Prefix, BranchCode_CurrentNo = @BranchCode_CurrentNo,  
+                                      PurityCode_CurrentNo = @PurityCode_CurrentNo, BranchCode_AutoGen = @BranchCode_AutoGen, BranchCode_Prefix = @BranchCode_Prefix, BranchCode_CurrentNo = @BranchCode_CurrentNo,
+                                      AgentCode_AutoGen = @AgentCode_AutoGen, AgentCode_Prefix = @AgentCode_Prefix, AgentCode_CurrentNo = @AgentCode_CurrentNo,
                                       Enable_Opening = @Enable_Opening, Enable_RegLang = @Enable_RegLang, Reg_FontName = @Reg_FontName, Reg_FontSize = @Reg_FontSize, Enable_FingerPrint = @Enable_FingerPrint,
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
@@ -813,6 +819,7 @@ CREATE PROCEDURE Sp_Branches
 	@Branch_Code VARCHAR(10),
 	@Branch_Name VARCHAR(20),
 	@Remarks VARCHAR(50),
+  @DivSno INT,
 	@Active_Status BIT,
 	@Create_Date INT,
   @UserSno INT,
@@ -825,7 +832,7 @@ BEGIN
 	BEGIN TRANSACTION
 		IF EXISTS(SELECT BranchSno FROM Branches WHERE BranchSno=@BranchSno)
 			BEGIN
-				UPDATE Branches SET Branch_Code=@Branch_Code,Branch_Name=@Branch_Name,Remarks=@Remarks,Active_Status=@Active_Status,Create_Date=@Create_Date, UserSno=@UserSno, CompSno=@CompSno
+				UPDATE Branches SET Branch_Code=@Branch_Code,Branch_Name=@Branch_Name,Remarks=@Remarks,DivSno=@DivSno,Active_Status=@Active_Status,Create_Date=@Create_Date, UserSno=@UserSno, CompSno=@CompSno
 				WHERE BranchSno=@BranchSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -837,8 +844,8 @@ BEGIN
               GOTO CloseNow
           END
 
-				INSERT INTO Branches(Branch_Code, Branch_Name, Remarks, Active_Status, Create_Date, UserSno, CompSno)
-        VALUES (@Branch_Code, @Branch_Name, @Remarks, @Active_Status, @Create_Date, @UserSno, @CompSno)	
+				INSERT INTO Branches(Branch_Code, Branch_Name, Remarks, DivSno, Active_Status, Create_Date, UserSno, CompSno)
+        VALUES (@Branch_Code, @Branch_Name, @Remarks, @DivSno, @Active_Status, @Create_Date, @UserSno, @CompSno)	
 				SET @BranchSno = @@IDENTITY
         IF @@ERROR <> 0 GOTO CloseNow								
 
@@ -1261,11 +1268,13 @@ CREATE PROCEDURE Sp_Scheme
   @Scheme_Code VARCHAR(10),
 	@Scheme_Name VARCHAR(20),
   @Roi DECIMAL(4,2),
+  @EmiDues TINYINT,
   @OrgRoi DECIMAL(4,2),
   @IsStdRoi BIT,
   @Calc_Basis TINYINT,
   @Calc_Method TINYINT,
   @Custom_Style TINYINT,
+  @Payment_Frequency TINYINT,
   @Enable_AmtSlab BIT,
   @Enable_FeeSlab BIT,
   @Preclosure_Days TINYINT,
@@ -1298,7 +1307,7 @@ BEGIN
 	BEGIN TRANSACTION
 		IF EXISTS(SELECT SchemeSno FROM Schemes WHERE SchemeSno=@SchemeSno)
 			BEGIN
-				UPDATE Schemes SET  Scheme_Code=@Scheme_Code,Scheme_Name=@Scheme_Name, Roi=@Roi, OrgRoi=@OrgRoi, IsStdRoi=@IsStdRoi, Calc_Basis=@Calc_Basis, Calc_Method=@Calc_Method,Custom_Style=@Custom_Style,Enable_AmtSlab=@Enable_AmtSlab, Enable_FeeSlab=@Enable_FeeSlab, Preclosure_Days=@Preclosure_Days, Min_CalcDays=@Min_CalcDays,
+				UPDATE Schemes SET  Scheme_Code=@Scheme_Code,Scheme_Name=@Scheme_Name, Roi=@Roi,EmiDues=@EmiDues,OrgRoi=@OrgRoi, IsStdRoi=@IsStdRoi, Calc_Basis=@Calc_Basis, Calc_Method=@Calc_Method,Custom_Style=@Custom_Style,Payment_Frequency=@Payment_Frequency,Enable_AmtSlab=@Enable_AmtSlab, Enable_FeeSlab=@Enable_FeeSlab, Preclosure_Days=@Preclosure_Days, Min_CalcDays=@Min_CalcDays,
                             Grace_Days=@Grace_Days, SeriesSno=@SeriesSno, LpYear=@LpYear, LpMonth=@LpMonth, LpDays=@LpDays, AdvanceMonth= @AdvanceMonth, ProcessingFeePer=@ProcessingFeePer,  Min_MarketValue=@Min_MarketValue, Max_MarketValue=@Max_MarketValue, Min_LoanValue=@Min_LoanValue, Max_LoanValue=@Max_LoanValue, Active_Status=@Active_Status,
                             Create_Date=@Create_Date,Remarks=@Remarks, UserSno=@UserSno, CompSno=@CompSno
 				WHERE SchemeSno=@SchemeSno
@@ -1330,9 +1339,9 @@ BEGIN
               GOTO CloseNow
           END
 
-				INSERT INTO Schemes (Scheme_Code,Scheme_Name, Roi, OrgRoi, IsStdRoi, Calc_Basis, Calc_Method, Custom_Style, Enable_AmtSlab, Enable_FeeSlab, Preclosure_Days, Min_CalcDays, Grace_Days, SeriesSno, LpYear, LpMonth, LpDays, AdvanceMonth, ProcessingFeePer,  Min_MarketValue, Max_MarketValue, Min_LoanValue, Max_LoanValue,
+				INSERT INTO Schemes (Scheme_Code,Scheme_Name, Roi,EmiDues, OrgRoi, IsStdRoi, Calc_Basis, Calc_Method, Custom_Style, Payment_Frequency, Enable_AmtSlab, Enable_FeeSlab, Preclosure_Days, Min_CalcDays, Grace_Days, SeriesSno, LpYear, LpMonth, LpDays, AdvanceMonth, ProcessingFeePer,  Min_MarketValue, Max_MarketValue, Min_LoanValue, Max_LoanValue,
                             Active_Status, Create_Date,Remarks, UserSno, CompSno)
-        VALUES              (@Scheme_Code,@Scheme_Name, @Roi, @OrgRoi, @IsStdRoi, @Calc_Basis, @Calc_Method, @Custom_Style, @Enable_AmtSlab, @Enable_FeeSlab, @Preclosure_Days, @Min_CalcDays, @Grace_Days, @SeriesSno, @LpYear, @LpMonth, @LpDays, @AdvanceMonth, @ProcessingFeePer, @Min_MarketValue, @Max_MarketValue, @Min_LoanValue, @Max_LoanValue,
+        VALUES              (@Scheme_Code,@Scheme_Name, @Roi, @EmiDues, @OrgRoi, @IsStdRoi, @Calc_Basis, @Calc_Method, @Custom_Style, @Payment_Frequency, @Enable_AmtSlab, @Enable_FeeSlab, @Preclosure_Days, @Min_CalcDays, @Grace_Days, @SeriesSno, @LpYear, @LpMonth, @LpDays, @AdvanceMonth, @ProcessingFeePer, @Min_MarketValue, @Max_MarketValue, @Min_LoanValue, @Max_LoanValue,
                             @Active_Status, @Create_Date, @Remarks, @UserSno, @CompSno)
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @SchemeSno = @@IDENTITY
@@ -1487,7 +1496,7 @@ CREATE FUNCTION Udf_getScheme(@SchemeSno INT,@CompSno INT)
 RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
-	SELECT (  SELECT	Sch.*, Scheme_Name as Name, (CAST(Roi AS VARCHAR)+'%  ' + CASE Calc_Method WHEN 1 THEN 'SIMPLE' WHEN 2 THEN 'MULTIPLE' WHEN 3 THEN 'COMPOUND' END) AS Details,
+	SELECT (  SELECT	Sch.*, Scheme_Name as Name, (CAST(Roi AS VARCHAR)+'%  ' + CASE Calc_Method WHEN 0 THEN 'SIMPLE' WHEN 1 THEN 'MULTIPLE' WHEN 2 THEN 'COMPOUND' WHEN 3 THEN 'EMI' WHEN 4 THEN 'CUSTOM' END) AS Details,
                     Ser.SeriesSno as 'Series.SeriesSno', Ser.Series_Name as 'Series.Series_Name', 12 as 'Series.VouType.VouTypeSno', 'Loan Payment' as 'Series.VouType.VouType_Name',
                     Ser.Series_Name as 'Series.Name', 'Loan Payment' as 'Series.Details',
                     (SELECT Slb.* FROM Scheme_Details Slb WHERE Slb.SchemeSno = Sch.SchemeSno FOR JSON PATH) Slab_Json,
@@ -2140,64 +2149,73 @@ GO
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Transactions') BEGIN DROP PROCEDURE Sp_Transactions END
 GO
 CREATE PROCEDURE Sp_Transactions
-	@TransSno				INT,
-	@VouTypeSno				INT,
-	@SeriesSno				INT,
-	@Trans_No				VARCHAR(20),
+	@TransSno				      INT,
+	@VouTypeSno				    INT,
+	@SeriesSno				    INT,
+	@Trans_No				      VARCHAR(20),
 
   /*FOR REPLEDGE */
-	@Ref_No					VARCHAR(20),
-	@BorrowerSno			INT,
+	@Ref_No					      VARCHAR(20),
+	@BorrowerSno			    INT,
 	
-	@Trans_Date				INT,
-	@PartySno				INT,
-	@SchemeSno				INT,
-	@GrpSno					INT,
-	@TotQty					TINYINT,
-	@TotGrossWt				DECIMAL(8,3),
-	@TotNettWt				DECIMAL(8,3),
-  @TotPureWt				DECIMAL(8,3),
-	@Market_Value			MONEY,
+	@Trans_Date				    INT,
+	@PartySno				      INT,
+	@SchemeSno				    INT,
+	@GrpSno					      INT,
+	@TotQty					      TINYINT,
+	@TotGrossWt				    DECIMAL(8,3),
+	@TotNettWt				    DECIMAL(8,3),
+  @TotPureWt				    DECIMAL(8,3),
+	@Market_Value			    MONEY,
 
-  @Market_Rate    MONEY,
-  @Loan_PerGram   MONEY,
+  @Market_Rate          MONEY,
+  @Loan_PerGram         MONEY,
 
-	@Principal				MONEY,
-	@Roi					DECIMAL(4,2),
-	@AdvIntDur				TINYINT,
-	@AdvIntAmt				MONEY,
-	@DocChargesPer			DECIMAL(2,1),
-	@DocChargesAmt			MONEY,
+	@Principal				    MONEY,
+	@Roi					        DECIMAL(4,2),
+	@AdvIntDur				    TINYINT,
+	@AdvIntAmt				    MONEY,
+	@DocChargesPer			  DECIMAL(2,1),
+	@DocChargesAmt			  MONEY,
+
+  @Emi_Due_Amt          MONEY,
+  @OrgEmi_Due_Amt       MONEY,
+  @Due_Start_Date       INT,
+  @Emi_Principal        MONEY,
+  @Emi_Interest         MONEY,
 	
 	/* FOR RECEIPT */
-	@RefSno				    INT,
-	@Rec_Principal			MONEY,
-	@Rec_IntMonths			MONEY,
-	@Rec_IntDays			MONEY,
-	@Rec_Interest			MONEY,
+	@RefSno				        INT,
+	@Rec_Principal			  MONEY,
+	@Rec_IntMonths			  MONEY,
+	@Rec_IntDays			    MONEY,
+	@Rec_Interest			    MONEY,
 	@Rec_Other_Credits		MONEY,
-	@Rec_Other_Debits		MONEY,
-	@Rec_Default_Amt		MONEY,
-	@Rec_Add_Less			MONEY,
+	@Rec_Other_Debits		  MONEY,
+	@Rec_Default_Amt		  MONEY,
+	@Rec_Add_Less			    MONEY,
+  @Rec_DuesCount        TINYINT,
+  @Rec_DueAmount        MONEY,
 
   /*FOR REDEMPTION */
-	@Red_Method				TINYINT,  
-	@Nett_Payable			MONEY,
-	@Mature_Date			INT,
-	@PayModeSno				INT,
-	@LocationSno			INT,
-	@Remarks				VARCHAR(100),
+	@Red_Method				    TINYINT,  
+	@Nett_Payable			    MONEY,
+	@Mature_Date			    INT,
+	@PayModeSno				    INT,
+	@LocationSno			    INT,
+  @AgentSno             INT,
+	@Remarks				      VARCHAR(100),
 	
-	@VouSno					INT,
-	@UserSno				INT,
-	@CompSno				INT,
-	@BranchSno				INT,
-	@ItemDetailXML			XML,
-	@ImageDetailXML			XML,
-  @RepledgeLoansXML XML,
-	@PaymentModesXML		XML,
-	@RetSno					INT OUTPUT,
-	@RetTrans_No			VARCHAR(20) OUTPUT
+	@VouSno					      INT,
+	@UserSno				      INT,
+	@CompSno				      INT,
+	@BranchSno				    INT,
+	@ItemDetailXML			  XML,
+	@ImageDetailXML			  XML,
+  @RepledgeLoansXML     XML,
+	@PaymentModesXML		  XML,
+	@RetSno					      INT OUTPUT,
+	@RetTrans_No			    VARCHAR(20) OUTPUT
 
 WITH ENCRYPTION AS
 BEGIN
@@ -2212,11 +2230,27 @@ BEGIN
 
 	IF EXISTS(SELECT TransSno FROM Transactions WHERE TransSno=@TransSno)
 			BEGIN
+
+        IF (@VouTypeSno = 12) AND EXISTS(SELECT TransSno FROM Transactions WHERE (VouTypeSno=13 OR VouTypeSno=14) AND RefSno=@TransSno)
+          BEGIN
+            Raiserror ('Cannot alter Loan when Receipt or Redemption exists', 16, 1) 
+            GOTO CloseNow
+          END
+
+        IF EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=@TransSno)
+          BEGIN
+            Raiserror ('Cannot alter when this Document is referenced in other document', 16, 1) 
+            GOTO CloseNow
+          END
+
+
 				UPDATE Transactions SET   VouTypeSno = @VouTypeSno, SeriesSno = @SeriesSno, Trans_No = @Trans_No, Ref_No = @Ref_No, BorrowerSno = @BorrowerSno, Trans_Date = @Trans_Date, PartySno = @PartySno, SchemeSno = @SchemeSno,
-	                                GrpSno = @GrpSno, TotQty = @TotQty,	TotGrossWt = @TotGrossWt,	TotNettWt = @TotNettWt,	TotPureWt=@TotPureWt, Market_Value = @Market_Value, Market_Rate=@Market_Rate, Loan_PerGram=@Loan_PerGram,	Principal = @Principal,	Roi = @Roi,	AdvIntDur = @AdvIntDur,	AdvIntAmt = @AdvIntAmt,
-	                                DocChargesPer = @DocChargesPer,	DocChargesAmt = @DocChargesAmt,	RefSno  = @RefSno,	Rec_Principal = @Rec_Principal,	Rec_IntMonths = @Rec_IntMonths,	Rec_IntDays = @Rec_IntDays,	Rec_Interest = @Rec_Interest,
-	                                Rec_Other_Credits = @Rec_Other_Credits,	Rec_Other_Debits = @Rec_Other_Debits,	Rec_Default_Amt = @Rec_Default_Amt,	Rec_Add_Less = @Rec_Add_Less, Red_Method = @Red_Method,	Nett_Payable = @Nett_Payable,
-	                                Mature_Date = @Mature_Date,	PayModeSno = @PayModeSno,	LocationSno = @LocationSno,	Remarks = @Remarks,	UserSno = @UserSno,	CompSno = @CompSno,BranchSno=@BranchSno					  
+	                                GrpSno = @GrpSno, TotQty = @TotQty,	TotGrossWt = @TotGrossWt,	TotNettWt = @TotNettWt,	TotPureWt=@TotPureWt, Market_Value = @Market_Value, Market_Rate=@Market_Rate, Loan_PerGram=@Loan_PerGram,
+                                  Principal = @Principal,	Roi = @Roi,	AdvIntDur = @AdvIntDur,	AdvIntAmt = @AdvIntAmt, DocChargesPer = @DocChargesPer, Emi_Due_Amt=@Emi_Due_Amt, OrgEmi_Due_Amt=@OrgEmi_Due_Amt,
+                                  Due_Start_Date=@Due_Start_Date, Emi_Principal=@Emi_Principal, Emi_Interest=@Emi_Interest, DocChargesAmt = @DocChargesAmt,	RefSno  = @RefSno,	Rec_Principal = @Rec_Principal,
+                                  Rec_IntMonths = @Rec_IntMonths,	Rec_IntDays = @Rec_IntDays, Rec_Interest = @Rec_Interest, Rec_Other_Credits = @Rec_Other_Credits,	Rec_Other_Debits = @Rec_Other_Debits,
+                                  Rec_Default_Amt = @Rec_Default_Amt,	Rec_Add_Less = @Rec_Add_Less, Rec_DuesCount=@Rec_DuesCount, Rec_DueAmount=@Rec_DueAmount, Red_Method = @Red_Method, Nett_Payable = @Nett_Payable, Mature_Date = @Mature_Date,	PayModeSno = @PayModeSno,
+                                  LocationSno = @LocationSno, AgentSno=@AgentSno,Remarks = @Remarks,	UserSno = @UserSno, CompSno = @CompSno,BranchSno=@BranchSno					  
 				WHERE TransSno=@TransSno
 				IF @@ERROR <> 0 GOTO CloseNow
 
@@ -2235,6 +2269,18 @@ BEGIN
 		ELSE
 			BEGIN
 
+        IF (@VouTypeSno=14)
+          BEGIN
+              DECLARE @RpStatus TINYINT
+              SELECT @RpStatus = Repledge_Status FROM VW_REPLEDGES WHERE RepledgeSno = (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=@RefSno)
+              SET @RpStatus = ISNULL(@RpStatus,0)
+              IF (@RpStatus = 1) OR (@RpStatus=3)
+                BEGIN
+                  Raiserror ('Cannot Close the Loan when Repledge exists for this Loan', 16, 1) 
+                  GOTO CloseNow
+                END
+          END
+
         DECLARE @Num_Method TINYINT
         SELECT @Num_Method=Num_Method FROM Voucher_Series WHERE SeriesSno=@SeriesSno
 
@@ -2250,11 +2296,11 @@ BEGIN
           END
 
       	INSERT INTO Transactions (VouTypeSno, SeriesSno, Trans_No, Ref_No, BorrowerSno, Trans_Date, PartySno, SchemeSno, GrpSno, TotQty, TotGrossWt, TotNettWt, TotPureWt,	Market_Value, Market_Rate, Loan_PerGram,	Principal, Roi,
-                                  AdvIntDur, AdvIntAmt, DocChargesPer, DocChargesAmt,	RefSno, Rec_Principal, Rec_IntMonths,	Rec_IntDays, Rec_Interest, Rec_Other_Credits,	Rec_Other_Debits,
-                                  Rec_Default_Amt,	Rec_Add_Less, Red_Method,	Nett_Payable, Mature_Date,	PayModeSno,	LocationSno,	Remarks, UserSno,	CompSno, BranchSno)
+                                  AdvIntDur, AdvIntAmt, DocChargesPer, DocChargesAmt, Emi_Due_Amt, OrgEmi_Due_Amt, Due_Start_Date, Emi_Principal, Emi_Interest, RefSno, Rec_Principal, Rec_IntMonths,	Rec_IntDays, Rec_Interest, Rec_Other_Credits,	Rec_Other_Debits,
+                                  Rec_Default_Amt,	Rec_Add_Less, Rec_DuesCount, Rec_DueAmount, Red_Method,	Nett_Payable, Mature_Date,	PayModeSno,	LocationSno, AgentSno, Remarks, UserSno,	CompSno, BranchSno)
         VALUES                    (@VouTypeSno, @SeriesSno, @Trans_No, @Ref_No, @BorrowerSno, @Trans_Date, @PartySno, @SchemeSno, @GrpSno, @TotQty, @TotGrossWt, @TotNettWt, @TotPureWt, @Market_Value, @Market_Rate, @Loan_PerGram,	@Principal, @Roi,
-                                  @AdvIntDur, @AdvIntAmt, @DocChargesPer, @DocChargesAmt,	@RefSno, @Rec_Principal, @Rec_IntMonths,	@Rec_IntDays, @Rec_Interest, @Rec_Other_Credits,	@Rec_Other_Debits,
-                                  @Rec_Default_Amt,	@Rec_Add_Less, @Red_Method,	@Nett_Payable, @Mature_Date,	@PayModeSno,	@LocationSno,	@Remarks, @UserSno,	@CompSno,@BranchSno)
+                                  @AdvIntDur, @AdvIntAmt, @DocChargesPer, @DocChargesAmt, @Emi_Due_Amt, @OrgEmi_Due_Amt, @Due_Start_Date, @Emi_Principal, @Emi_Interest, @RefSno, @Rec_Principal, @Rec_IntMonths,	@Rec_IntDays, @Rec_Interest, @Rec_Other_Credits,	@Rec_Other_Debits,
+                                  @Rec_Default_Amt,	@Rec_Add_Less, @Rec_DuesCount, @Rec_DueAmount, @Red_Method,	@Nett_Payable, @Mature_Date,	@PayModeSno,	@LocationSno,	@AgentSno, @Remarks, @UserSno,	@CompSno,@BranchSno)
 
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @TransSno = @@IDENTITY
@@ -2618,11 +2664,19 @@ CREATE PROCEDURE Sp_InsertDefaults
   @CompSno INT
 AS
 BEGIN
-  
+
+  DECLARE @DivSno INT = 0;
+  INSERT INTO Divisions(Div_Code, Div_Name,	Remarks,	Create_Date, CompSno )
+  VALUES ('MAIN','MAIN DIVISION','',[dbo].DateToInt(GETDATE()),@CompSno)
+  SET @DivSno = @@IDENTITY
+
   DECLARE @BranchSno INT = 0
-  INSERT INTO Branches(Branch_Code,Branch_Name,Remarks,Active_Status,Create_Date,UserSno,CompSno)
-  VALUES ('MAIN', 'MAIN BRANCH', '', 0, [dbo].DateToInt(GETDATE()) ,1,@CompSno)
+  INSERT INTO Branches(Branch_Code,Branch_Name,Remarks,DivSno,Active_Status,Create_Date,UserSno,CompSno)
+  VALUES ('MAIN', 'MAIN BRANCH', '',@DivSno, 0, [dbo].DateToInt(GETDATE()) ,1,@CompSno)
   SET @BranchSno = @@IDENTITY
+
+  INSERT INTO Agent(Agent_Code,	Agent_Name,	Remarks, Create_Date,	CompSno, BranchSno)
+  VALUES ('MAIN','MAIN AGENT','',[dbo].DateToInt(GETDATE()),@CompSno,@BranchSno)
 
   EXEC Sp_InsertSeriesDefaults @CompSno,@BranchSno
 
@@ -2738,6 +2792,7 @@ END
 GO
 
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='VW_LOANS') BEGIN DROP VIEW VW_LOANS END
 GO
 CREATE VIEW VW_LOANS
@@ -2753,6 +2808,8 @@ AS
 				    Sch.SchemeSno, Sch.Scheme_Code, Sch.Scheme_Name,
 				    Grp.GrpSno, Grp.Grp_Code, Grp.Grp_Name,
 
+            Trans.Emi_Due_Amt, Trans.OrgEmi_Due_Amt, Trans.Due_Start_Date, Trans.Emi_Principal, Trans.Emi_Interest,
+          
                STUFF(( SELECT   (','+ It.Item_Name + '-' + CAST(Ld.Qty AS VARCHAR))
                     FROM     Transaction_Details Ld
                              INNER JOIN Items it on it.itemsno =Ld.itemsno
@@ -2762,7 +2819,8 @@ AS
 				    Trans.TotQty, Trans.TotGrossWt, Trans.TotNettWt, Trans.TotPureWt, CAST(Trans.Market_Value AS DECIMAL(10,2)) as Market_Value, CAST(Trans.Market_Rate AS DECIMAL(10,2)) as Market_Rate, CAST(Trans.Loan_PerGram AS DECIMAL(10,2)) as Loan_PerGram, CAST(Trans.Principal AS DECIMAL(10,2)) as Principal, Trans.Roi, Trans.AdvIntDur,
             CAST(Trans.AdvIntAmt AS DECIMAL(10,2)) as AdvIntAmt, Trans.DocChargesPer, CAST(Trans.DocChargesAmt AS DECIMAL(10,2)) as DocChargesAmt, CAST(Trans.Nett_Payable AS DECIMAL(10,2)) as Nett_Payable,
 				    Trans.Mature_Date, Trans.PayModeSno, 
-				    Loc.LocationSno, Loc.Loc_Code, Loc.Loc_Name,            
+				    Loc.LocationSno, Loc.Loc_Code, Loc.Loc_Name,
+            Trans.AgentSno, Ag.Agent_Code, Ag.Agent_Name,
 				    Trans.Remarks, Trans.UserSno, Usr.UserName, Trans.CompSno, 
 				    Brh.BranchSno, Brh.Branch_Code, Brh.Branch_Name,            
             Loan_Status = CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14) -- Loan Closed and Redemption Made Redemtion VouTypeSno is 14
@@ -2799,7 +2857,14 @@ AS
                                   THEN
                                       (CASE WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno= (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=Trans.TransSno) AND VouTypeSno=19 ) THEN 0 ELSE 1 END)
                                   ELSE 0
+                             END,
+
+      Loan_RepledgeSno    = CASE WHEN EXISTS(SELECT DetSno FROM Repledge_Details WHERE LoanSno=Trans.TransSno)
+                                  THEN                                      
+										                  (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=Trans.TransSno)									                    
+                                  ELSE 0
                              END
+
 
 	FROM		Transactions Trans
 				  INNER JOIN Voucher_Series Ser ON Ser.SeriesSno=Trans.SeriesSno AND Ser.VouTypeSno=12
@@ -2808,10 +2873,12 @@ AS
 				  INNER JOIN Schemes Sch ON Sch.SchemeSno = Trans.SchemeSno
 				  INNER JOIN Item_Groups Grp ON Grp.GrpSno = Trans.GrpSno
 				  INNER JOIN Locations Loc ON Loc.LocationSno = Trans.LocationSno
+          INNER JOIN Agent Ag ON Ag.AgentSno = Trans.AgentSno
 				  INNER JOIN Branches Brh ON Brh.BranchSno = Trans.BranchSno
           INNER JOIN Users Usr On Usr.UserSno = Trans.UserSno
 
 GO
+
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='VW_RECEIPTS') BEGIN DROP VIEW VW_RECEIPTS END
@@ -2826,6 +2893,7 @@ AS
             Trans.RefSno as LoanSno, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
             CAST(Trans.Rec_Other_Credits AS DECIMAL(10,2)) as Rec_Other_Credits, CAST(Trans.Rec_Other_Debits AS DECIMAL(10,2)) as Rec_Other_Debits, CAST(Trans.Rec_Default_Amt AS DECIMAL(10,2)) as Rec_Default_Amt,
             CAST(Trans.Rec_Add_Less AS DECIMAL(10,2)) as Rec_Add_Less,
+            Trans.Rec_DuesCount, Trans.Rec_DueAmount,
             Trans.Red_Method,
 				    Trans.PayModeSno, CAST(Trans.Nett_Payable AS DECIMAL(10,2)) as Nett_Payable,
 				    Trans.Remarks, Trans.UserSno, Usr.UserName, Trans.CompSno, 
@@ -2854,6 +2922,7 @@ AS
              Trans.RefSno as LoanSno, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
             CAST(Trans.Rec_Other_Credits AS DECIMAL(10,2)) as Rec_Other_Credits, CAST(Trans.Rec_Other_Debits AS DECIMAL(10,2)) as Rec_Other_Debits, CAST(Trans.Rec_Default_Amt AS DECIMAL(10,2)) as Rec_Default_Amt,
             CAST(Trans.Rec_Add_Less AS DECIMAL(10,2)) as Rec_Add_Less,
+            Trans.Rec_DuesCount, Trans.Rec_DueAmount,
 				    Trans.Red_Method,
             Trans.PayModeSno, CAST(Trans.Nett_Payable AS DECIMAL(10,2)) as Nett_Payable,
 				    Trans.Remarks, Trans.UserSno, Usr.UserName, Trans.CompSno, 
@@ -2999,6 +3068,7 @@ GO
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getLoans') BEGIN DROP FUNCTION Udf_getLoans END
 GO
+
 CREATE FUNCTION Udf_getLoans(@LoanSno INT,@CompSno INT, @Loan_Status TINYINT, @Approval_Status TINYINT, @Cancel_Status TINYINT, @OpenStatus TINYINT)
 RETURNS TABLE
 WITH ENCRYPTION AS
@@ -3031,6 +3101,10 @@ SELECT      Ln.*, Ln.Loan_No  as 'Name', Ln.Party_Name + ', Date:' + CAST([dbo].
             (SELECT Loc.*, Loc.Loc_Name as 'Name', Loc.Loc_Name as 'Details' FROM Locations Loc WHERE LocationSno = Ln.LocationSno FOR JSON PATH) Location_Json,
             ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+            /* AGENTS OBJECT  (AGENT JSON)------------------------------------------------------------------------------------------------------------------------------------*/
+            (SELECT Ag.*, Ag.Agent_Name as 'Name', Ag.Agent_Name as 'Details' FROM Agent Ag WHERE AgentSno = Ln.AgentSno FOR JSON PATH) Agent_Json,
+            ----------------------------------------------------------------------------------------------------------------------------------------------------------
+
             /* GROUPS OBJECT  (GROUP JSON)------------------------------------------------------------------------------------------------------------------------------------*/
             (SELECT Grp.*, Grp.Grp_Name as 'Name', Grp.Grp_Name as 'Details' FROM Item_Groups Grp WHERE GrpSno = Ln.GrpSno FOR JSON PATH) IGroup_Json,
             ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3039,7 +3113,7 @@ SELECT      Ln.*, Ln.Loan_No  as 'Name', Ln.Party_Name + ', Date:' + CAST([dbo].
             (SELECT Pm.*, Led.LedSno as 'Ledger.LedSno', Led.Led_Name as 'Ledger.Name', Led.Led_Name as 'Ledger.Details'  FROM PaymentMode_Details Pm INNER JOIN Ledgers Led ON Led.LedSno = Pm.LedSno WHERE TransSno = Ln.LoanSno FOR JSON PATH) PaymentModes_Json,
             
              /* ITEMS OBJECT (ITEMS JSON)----------------------------------------------------------------------------------------------------------------------------------------------------------*/
-             (SELECT    Det.DetSno, Det.TransSno, Det.ItemSno, Det.Qty, Det.Gross_Wt, Det.Stone_Wt, Det.Nett_Wt, Det.PuritySno, CAST(Det.Item_Value AS DECIMAL(10,2)) as Item_Value,
+             (SELECT    Det.DetSno, Det.TransSno, Det.ItemSno, Det.Qty, Det.Gross_Wt, Det.Stone_Wt, Det.Nett_Wt, Det.PuritySno, CAST(Det.Item_Value AS DECIMAL(10,2)) as Item_Value, ISNULL(Det.Remarks,'') as Remarks,
                         It.ItemSno as 'Item.ItemSno', It.Item_Name as 'Item.Item_Name', It.Item_Name as 'Item.Name', 'Code:' + It.Item_Code as 'Item.Details',
                         Pur.PuritySno as 'Purity.PuritySno', Pur.Purity_Name as 'Purity.Purity_Name', Pur.Purity_Name as 'Purity.Name', 'Code:' + Pur.Purity_Code as 'Purity.Details', Pur.Purity as 'Purity.Purity'                
 
@@ -3214,21 +3288,21 @@ RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
 
-SELECT      Auc.*, Auc.Auction_No as 'Name', Auc.Auction_No as 'Details',
+  SELECT      Auc.*, Auc.Auction_No as 'Name', Auc.Auction_No as 'Details',
          
-             /* SERIES OBJECT  (SERIES JSON)------------------------------------------------------------------------------------------------------------------------------------*/
-            (SELECT Ser.*, Ser.Series_Name as 'Name', Ser.Series_Name as 'Details' FROM Voucher_Series Ser WHERE SeriesSno = Auc.SeriesSno FOR JSON PATH) Series_Json,
-            ----------------------------------------------------------------------------------------------------------------------------------------------------------
-            /* PAYMENT MODE JSON ---------------------------------- */
-            (SELECT Pm.*, Led.Led_Name as 'Ledger.Name', Led.Led_Name as 'Ledger.Details' FROM PaymentMode_Details Pm INNER JOIN Ledgers Led ON Led.LedSno = Pm.LedSno WHERE TransSno = Auc.AuctionSno FOR JSON PATH) PaymentModes_Json,
+               /* SERIES OBJECT  (SERIES JSON)------------------------------------------------------------------------------------------------------------------------------------*/
+              (SELECT Ser.*, Ser.Series_Name as 'Name', Ser.Series_Name as 'Details' FROM Voucher_Series Ser WHERE SeriesSno = Auc.SeriesSno FOR JSON PATH) Series_Json,
+              ----------------------------------------------------------------------------------------------------------------------------------------------------------
+              /* PAYMENT MODE JSON ---------------------------------- */
+              (SELECT Pm.*, Led.Led_Name as 'Ledger.Name', Led.Led_Name as 'Ledger.Details' FROM PaymentMode_Details Pm INNER JOIN Ledgers Led ON Led.LedSno = Pm.LedSno WHERE TransSno = Auc.AuctionSno FOR JSON PATH) PaymentModes_Json,
 
-            /* LOAN OBJECT (PARTY JSON)------------------------------------------------------------------------*/
-            (SELECT     Ln.*, Ln.Loan_No as 'Name', Ln.Party_Name as 'Details'
-             FROM       VW_LOANS Ln WHERE LoanSno = Auc.LoanSno FOR JSON PATH) Loan_Json
+              /* LOAN OBJECT (PARTY JSON)------------------------------------------------------------------------*/
+              (SELECT     Ln.*, Ln.Loan_No as 'Name', Ln.Party_Name as 'Details'
+               FROM       VW_LOANS Ln WHERE LoanSno = Auc.LoanSno FOR JSON PATH) Loan_Json
 
-FROM        VW_AUCTION_ENTRIES Auc
+  FROM        VW_AUCTION_ENTRIES Auc
 
-WHERE       (Auc.AuctionSno=@AuctionSno OR @AuctionSno=0) AND (Auc.CompSno=@CompSno)
+  WHERE       (Auc.AuctionSno=@AuctionSno OR @AuctionSno=0) AND (Auc.CompSno=@CompSno)
 GO
 
 
@@ -3350,6 +3424,13 @@ RETURN
 			      MaturedLoans = (SELECT COUNT(LoanSno) FROM VW_LOANS WHERE PartySno=Pty.PartySno AND Loan_Status=3 AND Cancel_Status <> 2),
 			      AuctionedLoans = (SELECT COUNT(LoanSno) FROM VW_LOANS WHERE PartySno=Pty.PartySno AND Loan_Status=4 AND Cancel_Status <> 2),
 			      ( SELECT    Ln.*,Grp_Name as 'IGroup.Grp_Name', Loc_Name as 'Location.Loc_Name' , Scheme_Name as 'Scheme.Scheme_Name',
+
+                       STUFF((  SELECT   (','+ It.Item_Name + '-' + CAST(Ld.Qty AS VARCHAR))
+                                FROM     Transaction_Details Ld
+                                          INNER JOIN Items it on it.itemsno =Ld.itemsno
+                                WHERE    Ld.TransSno = Ln.LoanSno
+                                FOR XML PATH('')), 1, 1, '') as Item_Details_With_Qty,
+
                         Interest_Balance = (SELECT Interest_Balance FROM Udf_getLoanDetailed(Ln.LoanSno,[dbo].DateToInt(GETDATE()),0)),
                         Principal_Balance = (SELECT Principal_Balance FROM Udf_getLoanDetailed(Ln.LoanSno,[dbo].DateToInt(GETDATE()),0))
               FROM      VW_LOANS Ln
@@ -3610,7 +3691,7 @@ RETURN
                                         END
 
     FROM      Udf_getLoans(0,@CompSno,0,2,1,0) Ln
-    WHERE     (Ln.Loan_Date BETWEEN @FromDate AND @ToDate) AND (Ln.Loan_Status=@LoanStatus OR @LoanStatus=0 AND Ln.Cancel_Status=1)
+    WHERE     (Ln.Loan_Date BETWEEN @FromDate AND @ToDate) AND (Ln.Loan_Status=@LoanStatus OR @LoanStatus=0) 
 
 GO
 
@@ -3663,6 +3744,24 @@ RETURN
     GROUP BY	Rp.Repledge_Status 	
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getRepledgeAuctionList') BEGIN DROP FUNCTION Udf_getRepledgeAuctionList END
+GO
+
+
+CREATE FUNCTION Udf_getRepledgeAuctionList(@CompSno INT, @AsOn INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+    SELECT	Rp.*
+
+    FROM		Udf_getRepledges(0,@CompSno,0,1,0) Rp
+    
+	  WHERE		Rp.RepledgeSno NOT IN (SELECT RepledgeSno FROM VW_RPCLOSURE	WHERE (RpClosure_Date <=@AsOn) AND RepledgeSno=Rp.RepledgeSno) -- No Redemptions Made
+				    AND
+				    Rp.Mature_Date < @AsOn
+GO
+
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAuctionList') BEGIN DROP FUNCTION Udf_getAuctionList END
 GO
@@ -3676,9 +3775,9 @@ RETURN
 
     FROM		Udf_getLoans(0,@CompSno,0,2,1,0) Ln
     
-	WHERE		Ln.LoanSno NOT IN (SELECT RedemptionSno FROM VW_REDEMPTIONS	WHERE (Redemption_Date <=@AsOn) AND LoanSno=Ln.LoanSno) 
+	WHERE		Ln.LoanSno NOT IN (SELECT LoanSno FROM VW_REDEMPTIONS	WHERE (Redemption_Date <=@AsOn) AND LoanSno=Ln.LoanSno) -- No Redemptions Made
 				AND 
-				Ln.LoanSno NOT IN (SELECT TransSno FROM Transactions WHERE VouTypeSno=15 AND (Trans_Date <=@AsOn)	AND RefSno=Ln.LoanSno)
+				Ln.LoanSno NOT IN (SELECT TransSno FROM Transactions WHERE VouTypeSno=15 AND (Trans_Date <=@AsOn)	AND RefSno=Ln.LoanSno) -- No Auction Entries Made
 				AND
 				Ln.Mature_Date < @AsOn
 GO
@@ -5055,7 +5154,7 @@ CREATE PROCEDURE Sp_Alerts_Setup
     @Sms_Username       VARCHAR(20),
     @Sms_Password       VARCHAR(20),
     @Sms_Peid           VARCHAR(50),
-    @WhatsApp_Instance  VARCHAR(100),
+    @WhatsApp_Instance  VARCHAR(200),
     @Add_91             BIT,
     @Add_91Sms             BIT,
     @AlertXml           XML,
@@ -5315,7 +5414,7 @@ WITH ENCRYPTION AS
 RETURN
     SELECT  *
     FROM    VW_LOANS
-    WHERE   (CompSno=@CompSno) AND (Loan_Repledge_Status=0) AND (Loan_Status IN (1,3))
+    WHERE   (CompSno=@CompSno) AND (Loan_Repledge_Status=0) AND (Loan_Status IN (1,3)) AND (Approval_Status=2) AND (Cancel_Status=1)
 
 GO
 
@@ -5479,6 +5578,246 @@ GO
 
 
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Agent' ) BEGIN DROP PROCEDURE Sp_Agent END
+GO
+
+CREATE PROCEDURE Sp_Agent
+    @AgentSno INT,
+    @Agent_Code VARCHAR(20),
+    @Agent_Name VARCHAR(50),
+    @Remarks VARCHAR(100),
+    @Create_Date INT,
+    @CompSno INT,
+    @BranchSno INT,
+    @RetSno INT OUTPUT
+WITH ENCRYPTION AS
+
+BEGIN
+    SET NOCOUNT ON
+    BEGIN TRANSACTION
+        IF EXISTS(SELECT AgentSno FROM Agent WHERE AgentSno=@AgentSno)
+            BEGIN
+                UPDATE Agent SET Agent_Code=@Agent_Code,Agent_Name=@Agent_Name,Remarks=@Remarks,Create_Date=@Create_Date,CompSno=@CompSno,BranchSno=@BranchSno
+                WHERE AgentSno=@AgentSno
+                IF @@ERROR <> 0 GOTO CloseNow
+            End
+        Else
+            BEGIN
+        IF EXISTS(SELECT AgentSno FROM Agent WHERE  Agent_Code=@Agent_Code AND CompSno =@CompSno)
+          BEGIN
+              Raiserror ('Agent exists with this Code', 16, 1)
+              GoTo CloseNow
+          End
+
+         INSERT INTO Agent(Agent_Code,Agent_Name,Remarks,Create_Date,CompSno,BranchSno)
+         VALUES (@Agent_Code,@Agent_Name,@Remarks,@Create_Date,@CompSno,@BranchSno)
+         IF @@ERROR <> 0 GOTO CloseNow
+         SET @AgentSno = @@IDENTITY
+
+            End
+
+    SET @RetSno = @AgentSno
+    COMMIT TRANSACTION
+    RETURN @RetSno
+CloseNow:
+    ROLLBACK TRANSACTION
+    RETURN 0
+End
+GO
 
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAgent') BEGIN DROP FUNCTION Udf_getAgent END
+GO
+
+CREATE FUNCTION Udf_getAgent(@AgentSno INT,@CompSno INT, @BranchSno INT)
+RETURNS Table
+WITH ENCRYPTION AS
+Return
+    SELECT  Ag.*, Ag.Agent_Name as Name, 'Code: '+ Ag.Agent_Code as Details
+    FROM      Agent Ag
+    WHERE     (AgentSno=@AgentSno OR @AgentSno = 0) AND (CompSno =@CompSno) AND (BranchSno=@BranchSno OR @BranchSno=0)
+
+GO
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Agent_Delete') BEGIN DROP PROCEDURE Sp_Agent_Delete END
+GO
+
+CREATE PROCEDURE Sp_Agent_Delete
+    @AgentSno INT
+WITH ENCRYPTION AS
+BEGIN
+    SET NOCOUNT ON
+    BEGIN TRANSACTION
+
+      IF EXISTS (SELECT AgentSno FROM Transactions WHERE AgentSno=@AgentSno)
+				BEGIN
+					Raiserror ('Transactions exists with this User', 16, 1) 
+					GOTO CloseNow
+				END
+
+      DELETE FROM Agent WHERE AgentSno=@AgentSno
+      IF @@ERROR <> 0 GOTO CloseNow
+    COMMIT TRANSACTION
+    RETURN 1
+CloseNow:
+    ROLLBACK TRANSACTION
+    RETURN 0
+End
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Divisions' ) BEGIN DROP PROCEDURE Sp_Divisions END
+GO
+
+CREATE PROCEDURE Sp_Divisions
+    @DivSno INT,
+    @Div_Code VARCHAR(10),
+    @Div_Name VARCHAR(50),
+    @Remarks VARCHAR(50),
+    @Create_Date INT,
+    @CompSno INT,
+    @RetSno INT OUTPUT
+WITH ENCRYPTION AS
+
+BEGIN
+    SET NOCOUNT ON
+    BEGIN TRANSACTION
+        IF EXISTS(SELECT DivSno FROM Divisions WHERE DivSno=@DivSno)
+            BEGIN
+                UPDATE Divisions SET Div_Code=@Div_Code,Div_Name=@Div_Name,Remarks=@Remarks,Create_Date=@Create_Date,CompSno=@CompSno
+                WHERE DivSno=@DivSno
+                IF @@ERROR <> 0 GOTO CloseNow
+            End
+        Else
+            BEGIN
+        IF EXISTS(SELECT DivSno FROM Divisions WHERE  Div_Code=@Div_Code AND CompSno =@CompSno)
+          BEGIN
+              Raiserror ('Divisions exists with this Code', 16, 1)
+              GoTo CloseNow
+          End
+
+         INSERT INTO Divisions(Div_Code,Div_Name,Remarks,Create_Date,CompSno)
+         VALUES (@Div_Code,@Div_Name,@Remarks,@Create_Date,@CompSno)
+         IF @@ERROR <> 0 GOTO CloseNow
+         SET @DivSno = @@IDENTITY
+
+            End
+
+    SET @RetSno = @DivSno
+    COMMIT TRANSACTION
+    RETURN @RetSno
+CloseNow:
+    ROLLBACK TRANSACTION
+    RETURN 0
+End
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getDivisions') BEGIN DROP FUNCTION Udf_getDivisions END
+GO
+
+CREATE FUNCTION Udf_getDivisions(@DivSno INT,@CompSno INT)
+RETURNS Table
+WITH ENCRYPTION AS
+Return
+    SELECT  div.*, div.Div_Name as Name, 'Code: '+ div.Div_Code as Details
+    FROM      Divisions div
+    WHERE     (DivSno=@DivSno OR @DivSno = 0) AND (CompSno =@CompSno)
+
+GO
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Divisions_Delete') BEGIN DROP PROCEDURE Sp_Divisions_Delete END
+GO
+
+CREATE PROCEDURE Sp_Divisions_Delete
+    @DivSno INT
+WITH ENCRYPTION AS
+BEGIN
+    SET NOCOUNT ON
+    BEGIN TRANSACTION
+        DELETE FROM Divisions WHERE DivSno=@DivSno
+        IF @@ERROR <> 0 GOTO CloseNow
+    COMMIT TRANSACTION
+    RETURN 1
+CloseNow:
+    ROLLBACK TRANSACTION
+    RETURN 0
+End
+GO
+
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getBusinessRegisterDaily') BEGIN DROP FUNCTION Udf_getBusinessRegisterDaily END
+GO
+
+CREATE FUNCTION Udf_getBusinessRegisterDaily(@CompSno INT, @FromDate INT,@ToDate INT)
+RETURNS Table
+WITH ENCRYPTION AS
+Return
+
+WITH DaySequence AS (
+    SELECT 
+        @FromDate AS DayStart
+    UNION ALL
+    SELECT 
+        [dbo].DateToInt(DATEADD(DAY, 1, [dbo].IntToDate(DayStart)))
+    FROM DaySequence
+    WHERE DayStart < @ToDate -- End date (adjust as needed)
+)
+SELECT		DayStart,			
+			(SELECT COUNT(LoanSno) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date = DayStart ) as LoansCount,
+			ISNULL((SELECT SUM(Principal) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date = DayStart),0) as LoansValue,
+			(SELECT COUNT(RedemptionSno) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date = DayStart) as RedCount,
+			ISNULL((SELECT SUM(Rec_Principal) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date = DayStart),0) as RedValue,
+			
+			ISNULL(	((SELECT SUM(AdvIntAmt) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date = DayStart)
+						+
+					(SELECT SUM(Rec_Interest) FROM VW_RECEIPTS WHERE CompSno=@CompSno AND Receipt_Date =DayStart )
+						+
+					(SELECT SUM(Rec_Interest) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date = DayStart)
+				),0) as Interest 
+			
+			--FORMAT(MonthStart, 'yyyy-MM') AS MonthFormatted
+FROM		DaySequence
+--OPTION		(MAXRECURSION 100) -- Adjust for longer date ranges
+
+GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getBusinessRegisterMonthly') BEGIN DROP FUNCTION Udf_getBusinessRegisterMonthly END
+GO
+
+CREATE FUNCTION Udf_getBusinessRegisterMonthly(@CompSno INT, @FromDate INT,@ToDate INT)
+RETURNS Table
+WITH ENCRYPTION AS
+Return
+
+WITH MonthSequence AS (
+    SELECT 
+        @FromDate AS MonthStart
+    UNION ALL
+    SELECT 
+        [dbo].DateToInt(DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart)))
+    FROM MonthSequence
+    WHERE MonthStart < @ToDate -- End date (adjust as needed)
+)
+SELECT		MonthStart,
+			[dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart)))) as MonthEnd,
+			(SELECT COUNT(LoanSno) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart))))) as LoansCount,
+			ISNULL((SELECT SUM(Principal) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart))))),0) as LoansValue,
+			(SELECT COUNT(RedemptionSno) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart))))) as RedCount,
+			ISNULL((SELECT SUM(Rec_Principal) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart))))),0) as RedValue,
+			
+			ISNULL(	((SELECT SUM(AdvIntAmt) FROM VW_LOANS WHERE CompSno=@CompSno AND Loan_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart)))))
+						+
+					(SELECT SUM(Rec_Interest) FROM VW_RECEIPTS WHERE CompSno=@CompSno AND Receipt_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart)))))
+						+
+					(SELECT SUM(Rec_Interest) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND Redemption_Date BETWEEN MonthStart AND [dbo].DateToInt(DATEADD(DAY, -1, DATEADD(MONTH, 1, [dbo].IntToDate(MonthStart)))))
+				),0) as Interest
+			
+			--FORMAT(MonthStart, 'yyyy-MM') AS MonthFormatted
+FROM		MonthSequence
+--OPTION		(MAXRECURSION 100) -- Adjust for longer date ranges
+
+GO
 

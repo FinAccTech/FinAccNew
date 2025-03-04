@@ -1,9 +1,9 @@
 <!-- <ng-container *ngIf="!MinimalView">  -->
   <div  [ngClass]="ShowCompact ? 'navCompact' : 'navContainer'"  (mouseover)="SlideNav=true; toggleSlide()" (mouseleave)="SlideNav=false;toggleSlide()">    
     <div class="logoSection" >
-      
-        <img src="assets/images/finacclogo.png" /> 
-        <p>FinAcc</p>
+       
+        <img src="{{LogoPath}}" /> 
+        <p>{{LogoName}}</p>
         
     </div>
   
@@ -19,7 +19,7 @@
         <i class="{{menu.Icon}} iconLeft" ></i>
         <p>{{menu.Caption}}</p>
         <i *ngIf="Expanded[i]==false" class='bx bx-chevron-right iconRight' style="color: rgb(75, 71, 56);"></i>
-        <i *ngIf="Expanded[i]==true" class='bx bx-chevron-down iconRight' style="color: rgb(185, 116, 25);"></i>                            
+        <i *ngIf="Expanded[i]==true" class='bx bx-chevron-down iconRight' style="color: var(--ColorPrimary);"></i>                            
       </div>
 
       <ng-container *ngIf="Expanded[i]" >
@@ -29,11 +29,7 @@
         </div>
       </ng-container>
 
-    </div>
-    <br>
-    <p>Client Code</p>
-    <b>{{ClientCode}}</b>
-    
+    </div>       
   </div>
 
 </div>  

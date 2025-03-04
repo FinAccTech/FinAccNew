@@ -19,8 +19,10 @@
                 <p >{{Customer.Address4}}</p>
                 <p >{{Customer.City}}</p>
                 <p class="middleItems"><i style="font-size: 1.5rem;" class='bx bx-mobile'></i> &nbsp; {{Customer.Mobile}}</p>
-                <p class="code"> Code:  <strong> {{Customer.Party_Code}} </strong> </p>
+                <p class="code"> <a class="link" (click)="OpenHistory()" > <i class="fa fa-history"></i> Open History</a> &nbsp; Code:  <strong> {{Customer.Party_Code}} </strong> </p>
                 <p class="nominee"> Nominee:  <strong> <span *ngIf="!Customer.Nominee" [style.color]="!Customer.Nominee? 'red':''" >Not Updated</span>   {{Customer.Nominee}}</strong></p>
+
+                <p class="link">History</p>
             </div>        
         </div>
     }

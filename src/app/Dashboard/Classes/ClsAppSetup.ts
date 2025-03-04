@@ -70,6 +70,10 @@ export class ClsAppSetup{
             BranchCode_Prefix:   "",
             BranchCode_CurrentNo: 0,
 
+            AgentCode_AutoGen:  0,
+            AgentCode_Prefix:   "",
+            AgentCode_CurrentNo: 0,
+
             Enable_Opening:      0,
             Enable_RegLang:      0,
             Reg_FontName:        "",
@@ -140,6 +144,10 @@ export interface TypeAppSetup{
     BranchCode_AutoGen:  number;
     BranchCode_Prefix:   string;
     BranchCode_CurrentNo: number;
+
+    AgentCode_AutoGen:  number;
+    AgentCode_Prefix:   string;
+    AgentCode_CurrentNo: number;
 
     Enable_Opening:      number;
     Enable_RegLang:      number;

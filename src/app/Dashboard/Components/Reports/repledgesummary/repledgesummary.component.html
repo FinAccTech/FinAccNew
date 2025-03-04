@@ -1,7 +1,9 @@
 <div class="reportContainer">
     <div class="headerCard">
         <div class="headerLeft">     
-            
+            @if (RoutedRepledgeSno !==0) {                
+                <i class="fa fa-arrow-circle-left back" style="color: var(--ColorPrimary);" (click)="GoBack()" ></i>
+            }       
             <p class="heading"> Repledge Summary</p>        
 
         </div>

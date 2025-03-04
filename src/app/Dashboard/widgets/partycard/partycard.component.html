@@ -15,7 +15,7 @@
         </div>
 
         <div class="personalInfo" *ngIf="Party">
-            <p class="code">Code: <strong> {{Party.Party_Code}} </strong>  </p>
+            <p class="code"> <a class="link" (click)="OpenHistory()" > <i class="fa fa-history" ></i> Open History </a> &nbsp;  Code: <strong> {{Party.Party_Code}} </strong>  </p>
             <p class="name"> {{Party.Party_Name}} </p>
             <p class="relName"> {{Party.Rel == 0 ? 'S/o. ' : Party.Rel == 1 ? 'D/o. ' : Party.Rel == 2 ? 'W/o. ' :'C/o. ' }}  {{Party.RelName}} </p>
             <p class="relName"> {{Party.Address1}} </p>
@@ -31,11 +31,17 @@
 
     </div>
 
-    <div class="loanDetails" *ngIf="Party" >
-        <p>Live <br> {{ Party.OpenLoans }} </p>
+    <div class="loanDetails" *ngIf="Party && (HideStatusCount == false)" >
+        <!-- <p>Live <br> {{ Party.OpenLoans }} </p>
         <p>Closed <br> {{Party.ClosedLoans }}</p>
         <p>Matured <br> {{Party.MaturedLoans }}</p>
-        <p>Auctioned <br> {{Party.AuctionedLoans }}</p>
+        <p>Auctioned <br> {{Party.AuctionedLoans }}</p> -->
+
+        <p>Live <br> {{ OpenLoans }} </p>
+        <p>Closed <br> {{ ClosedLoans }}</p>
+        <p>Matured <br> {{  MaturedLoans }}</p>
+        <p>Auctioned <br> {{ AuctionedLoans }}</p>
+        
     </div>
 
 </div>

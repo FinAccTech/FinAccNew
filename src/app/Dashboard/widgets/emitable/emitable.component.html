@@ -1,0 +1,33 @@
+<div class="modalForm" style="width: 100%;" >
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; EMI Table </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">
+        <table class="stdTable" >
+            <thead>
+                <th>Sno</th>
+                <th>Due Date</th>
+                <th>Due Amount</th>
+                <th>OrgEmi</th>
+            </thead>
+            <tbody>
+                @for (item of data; track $index) {
+                    <tr>
+                        <td> {{$index+1}} </td>
+                        <td> {{item.DueDate}} </td>
+                        <td> {{item.DueAmt}} </td>
+                        <td> {{item.OrgEmi}} </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

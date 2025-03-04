@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Location,} from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { ClsRepledges, TypeRepledge } from 'src/app/Dashboard/Classes/ClsRepledges';
 import { ClsReports, TypeInterestDetails, TypeInterestStructure, TypeLoanStatement } from 'src/app/Dashboard/Classes/ClsReports';
 import { DataService } from 'src/app/Services/data.service';
@@ -11,7 +13,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 })
 export class RepledgesummaryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService){
+  constructor(private globals: GlobalsService, private dataService: DataService, private route: ActivatedRoute, private location: Location,){
   
   }
 
@@ -24,8 +26,14 @@ export class RepledgesummaryComponent {
   Statement: TypeLoanStatement[] = [];
 
   BarCode: number = 0;
+  RoutedRepledgeSno: number = 0;
 
-  ngOnInit(){
+  ngOnInit(){ 
+    this.route.paramMap.subscribe(params => {
+      const repledegesno = params.get('repledgesno'); 
+      this.RoutedRepledgeSno = +repledegesno!;      
+    });
+
     this.AsOnDate = this.globals.DateToInt( new Date());
     let ln = new ClsRepledges(this.dataService);
     
@@ -36,6 +44,15 @@ export class RepledgesummaryComponent {
       }
       else{
         this.RepledgesList = JSON.parse (data.apiData);
+        console.log(this.RepledgesList);
+        
+        if (this.RoutedRepledgeSno !== 0){
+          this.SelectedRepledge = this.RepledgesList.find(rp=>{ return rp.RepledgeSno == this.RoutedRepledgeSno})!;
+          console.log(this.SelectedRepledge);
+          
+          this.LoadDetails();
+        }
+        
         this.RepledgesList.map(Repledge => {        
         return    Repledge.Supplier   =   JSON.parse (Repledge.Party_Json)[0], 
                   Repledge.fileSource =   Repledge.Images_Json ? JSON.parse (Repledge.Images_Json) : '';
@@ -67,5 +84,9 @@ export class RepledgesummaryComponent {
 
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
+  }
+
+  GoBack(){
+    this.location.back();
   }
 }

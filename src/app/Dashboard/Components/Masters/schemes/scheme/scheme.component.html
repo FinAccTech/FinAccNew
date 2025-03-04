@@ -86,7 +86,29 @@
                 <!-- </ng-container> -->
 
                 
-                <button class="btn" [disabled]="Scheme.Calc_Method !== 1" (click)="OpenSlab(0)" >Open Slab</button>                   
+                @if (Scheme.Calc_Method == 3) {
+                    <div class="formGroup" style="width: 50%;">                    
+                        <input type="text" class="formControl"  required [(ngModel)] = Scheme.EmiDues   />
+                        <label for="" class="formLabel"> Total Dues </label>
+                    </div>
+                    <div class="matGroup" style="width: 50%;">
+                        <div class="matSelect">
+                            <mat-select [(value)]="Scheme.Payment_Frequency"  >
+                                <mat-option [value]="0">Daily</mat-option>                                
+                                <mat-option [value]="1">Weekly</mat-option>
+                                <mat-option [value]="2">Bi-Weekly</mat-option>
+                                <mat-option [value]="3">Monthly</mat-option>
+                            </mat-select>
+                        </div>
+                        <div class="matLabel">
+                            &nbsp;&nbsp; Payment Frequency
+                        </div>
+                    </div>     
+                }
+                @else {                    
+                    <button class="btn" [disabled]="Scheme.Calc_Method !== 1" (click)="OpenSlab(0)" >Open Slab</button>                   
+                }
+                
                 
 
                 <ng-container *ngIf="Scheme.Calc_Method == 4" >
@@ -102,6 +124,8 @@
                         </div>
                     </div>               
                 </ng-container>
+
+               
 
             </div>
         </div>

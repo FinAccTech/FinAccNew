@@ -28,9 +28,18 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-  :root{    
-    --ColorPrimary:#EAA63E;
-  }
+// :root{    
+//   --ColorPrimary:#EAA63E;
+// }
+
+.finaccTheme{
+  --ColorPrimary:#EAA63E;
+}
+
+.pennyTheme{
+  --ColorPrimary:#071F3C;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -127,63 +136,130 @@ input[type=number] {
       font-weight: 500;
   }
 }
-.statusLabelClosed{
-  border: 2px solid darkgray;    
+
+.statusLabelClosed{  
   display: flex;                    
   border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
   .caption{    
       color: darkgray;            
-      padding: .7rem;
+      padding: .5rem;
       background-color: #fff;        
       text-wrap: nowrap;
   }
   .value{
-      width: 100%;
+      border-radius: 20%;
       color: #fff;
       background-color: darkgray;
-      padding: .7rem;
+      padding: .5rem;
       text-align: center;
       font-weight: 500;
   }
 }
-.statusLabelMatured{
-  border: 2px solid red;    
+
+.statusLabelMatured{  
   display: flex;                    
   border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
   .caption{    
       color: red;            
-      padding: .7rem;
+      padding: .2rem;
       background-color: #fff;        
       text-wrap: nowrap;
   }
   .value{
-      width: 100%;
+      border-radius: 20%;
       color: #fff;
       background-color: red;
-      padding: .7rem;
+      padding: .2rem;
       text-align: center;
       font-weight: 500;
   }
 }
-.statusLabelAuctioned{
-  border: 2px solid black;    
+
+.statusLabelAuctioned{  
   display: flex;                    
   border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
   .caption{    
       color: black;            
-      padding: .7rem;
+      padding: .5rem;
       background-color: #fff;        
       text-wrap: nowrap;
   }
   .value{
-      width: 100%;
+      border-radius: 20%;
       color: #fff;
       background-color: black;
-      padding: .7rem;
+      padding: .5rem;
       text-align: center;
       font-weight: 500;
   }
 }
+
+// .statusLabelClosed{
+//   border: 2px solid darkgray;    
+//   display: flex;                    
+//   border-radius: 5px;
+//   .caption{    
+//       color: darkgray;            
+//       padding: .7rem;
+//       background-color: #fff;        
+//       text-wrap: nowrap;
+//   }
+//   .value{
+//       width: 100%;
+//       color: #fff;
+//       background-color: darkgray;
+//       padding: .7rem;
+//       text-align: center;
+//       font-weight: 500;
+//   }
+// }
+// .statusLabelMatured{
+//   border: 2px solid red;    
+//   display: flex;                    
+//   border-radius: 5px;
+//   .caption{    
+//       color: red;            
+//       padding: .7rem;
+//       background-color: #fff;        
+//       text-wrap: nowrap;
+//   }
+//   .value{
+//       width: 100%;
+//       color: #fff;
+//       background-color: red;
+//       padding: .7rem;
+//       text-align: center;
+//       font-weight: 500;
+//   }
+// }
+// .statusLabelAuctioned{
+//   border: 2px solid black;    
+//   display: flex;                    
+//   border-radius: 5px;
+//   .caption{    
+//       color: black;            
+//       padding: .7rem;
+//       background-color: #fff;        
+//       text-wrap: nowrap;
+//   }
+//   .value{
+//       width: 100%;
+//       color: #fff;
+//       background-color: black;
+//       padding: .7rem;
+//       text-align: center;
+//       font-weight: 500;
+//   }
+// }
 
 .smallLabel{
   .caption{
@@ -275,7 +351,7 @@ input[type=number] {
     position: relative;
     .matSelect{
       border: 1px solid #ccc;
-      padding: 1rem;
+      padding: .5rem;
       border-radius: 5px;
       position: relative;
     }
@@ -283,7 +359,7 @@ input[type=number] {
     .matLabel {
       top: -8px;
       left: 10px;    
-      font-size: 1rem;
+      font-size: .9rem;
       background-color: #fff;
       position: absolute;    
     }
@@ -708,6 +784,37 @@ input[type=number] {
     }
   }
   
+}
+
+
+.stdTable{
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 100;
+  width: 100%;
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+
+  td,th{
+      border: 1px solid #ddd;
+      padding: 8px;
+  }
+
+  th{
+      background-color: var(--ColorPrimary);
+      color: #fff;
+      font-weight: 400;
+  }
+  tr:hover{
+      background-color: #ddd;
+      cursor: pointer;
+      td{
+          font-weight: bold;
+      }
+  }
+}
+
+input[readonly] {  
+  cursor: not-allowed; /* Show disabled cursor */
 }
 
 //For All Masters List with Mat Table 

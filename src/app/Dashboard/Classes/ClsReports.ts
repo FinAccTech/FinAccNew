@@ -65,6 +65,11 @@ export class ClsReports{
         let postdata ={ "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeStatusCount");                
     }
+    
+    getRepledgeAuctionHistory(AsOn: number): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        return this.dataService.HttpGet(postdata, "/getRepledgeAuctionHistory");                
+    }
 
     getAuctionHistory(AsOn: number): Observable<TypeHttpResponse> {
         let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn }; 
@@ -100,6 +105,17 @@ export class ClsReports{
         let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "SubmitInt": SubmitInt }; 
         return this.dataService.HttpGet(postdata, "/get1percentIntStatement");                
     }
+
+    getBusinessRegisterMonthly(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        return this.dataService.HttpGet(postdata, "/getBusinessRegisterMonthly");                
+    }
+    
+    getBusinessRegisterDaily(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        return this.dataService.HttpGet(postdata, "/getBusinessRegisterDaily");                
+    }
+    
 }
 
 export interface TypeCustomerDetailed extends TypeParties{
@@ -188,6 +204,25 @@ export interface TypeIntStatementCustom extends TypeLoan{
     IntAmount: number;    
 }
 
+export interface TypeBusinessRegister{
+    MonthStart: number;
+    MonthEnd: number;    
+    LoansCount: number;    
+    LoansValue: number;    
+    RedCount: number;    
+    RedValue: number;    
+    Interest: number;    
+}
+
+export interface TypeBusinessRegisterDaily{
+    DayStart: number;
+    DayEnd: number;    
+    LoansCount: number;    
+    LoansValue: number;    
+    RedCount: number;    
+    RedValue: number;    
+    Interest: number;    
+}
 
 export interface TypeDayHistyory {
     TransSno: number;

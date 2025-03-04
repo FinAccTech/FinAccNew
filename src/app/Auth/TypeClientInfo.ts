@@ -14,4 +14,5 @@ export interface TypeClientInfo {
     App_Login: string;
     Db_Name: string;
     Status: number;
+    Version_Type: number;
 }

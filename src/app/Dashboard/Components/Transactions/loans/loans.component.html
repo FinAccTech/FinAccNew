@@ -11,25 +11,25 @@
             <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
 
             <mat-menu #menu="matMenu" style="padding: 1rem;">
-                <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'FinAccSaas'}})" >
                     <div class="menuClass">
                         <i class="fas fa-file-excel" style="color: green;" ></i>
                         <span> &nbsp; Excel</span>
                     </div>                    
                 </button>             
-                <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'FinAccSaas'}})" >
                     <div class="menuClass">
                         <i class="fas fa-file-csv" style="color: rgb(168, 15, 168);" ></i>
                         <span> &nbsp; Csv</span>
                     </div>                    
                 </button>             
-                <button mat-menu-item (click)="exporter.exportTable('json', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <button mat-menu-item (click)="exporter.exportTable('json', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'FinAccSaas'}})" >
                     <div class="menuClass">
                         <i class="fab fa-js" style="color: yellowgreen;"></i>
                         <span> &nbsp; Json</span>
                     </div>                    
                 </button>         
-                <button mat-menu-item (click)="exporter.exportTable('txt', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <button mat-menu-item (click)="exporter.exportTable('txt', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'FinAccSaas'}})" >
                     <div class="menuClass">
                         <i class="fas fa-file-alt" style="color: chocolate;" ></i>
                         <span> &nbsp; Text</span>
@@ -63,7 +63,7 @@
             </div>
 
             <button class="btn" (click)="FilterByDate()" >Filter Date</button>
-            <button class="btn" > <i class='bx bx-filter-alt' style='color:#f3bf4e' ></i> Advance Filter</button>
+            <button class="btn" > <i class='bx bx-filter-alt' style='color:var(--ColorPrimary)' ></i> Advance Filter</button>
         </div>
     </div>
 
@@ -128,10 +128,10 @@
                     
                        <div class="expandDetails" >
                             <div style="width: 100%;" > 
-                                <app-partycard [Party]="element.Customer" > </app-partycard>                            
+                                <app-partycard [Party]="element.Customer" [HideStatusCount]="true"  > </app-partycard>                            
                             </div>
                             <div style="width: 100%;" > 
-                                <app-loandetails [Loan]="element" > </app-loandetails>                            
+                                <app-loandetails [Loan]="element" [AsOnDate]="ToDate" > </app-loandetails>                             
                             </div>
                        </div>
                   </div>

@@ -39,7 +39,7 @@
 
     <ng-container *ngIf="StatusCount">
         <div class="statusHeader">
-            <div class="statusCard" *ngFor="let count of StatusCount" [ngClass]="count.Status == 1 ? 'openStatus' : count.Status == 2 ? 'closedStatus' : count.Status == 3 ? 'maturedStatus' : 'auctionedStatus' "  (click)="LoadLoanHistory(count.Status)" >
+            <div class="statusCard" *ngFor="let count of StatusCount" [ngClass]="count.Status == 1 ? 'openStatus' : count.Status == 2 ? 'closedStatus' : count.Status == 3 ? 'maturedStatus' : 'auctionedStatus' "  (click)="FilterByStatus(count.Status)" >
                 <div class="contentLeft">
                     <p class="caption"> {{count.Status == 1 ? 'Open Loans' : count.Status == 2 ? 'Closed Loans' : count.Status == 3 ? 'Matured Loans' : 'Auctioned Loans'}} </p>
                     <p class="value"> {{ count.Value  | number }}</p>
@@ -100,7 +100,7 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{ column=="crud"? '': column.replace("_"," ")}} </th>
                         
                       <td mat-cell *matCellDef="let element; let i = dataIndex;"
-                      [style.color]=" column == 'Approval_Status' ? element['Approval_Status'] == 1 ? 'green' : 'red' : '#6a7a8c'"                   
+                      [style.color]=" element['Loan_Status'] == 1 ? 'green' : element['Loan_Status'] == 2 ? 'darkgray' : element['Loan_Status'] == 3 ? 'red' : 'black'"                   
                       > 
                         {{  
                           column == "Approval_Status"  

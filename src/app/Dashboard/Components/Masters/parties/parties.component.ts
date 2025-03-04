@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { ClsParties, TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PartyComponent } from './party/party.component';
 import { AuthService } from 'src/app/Services/auth.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
@@ -29,7 +29,7 @@ export class PartiesComponent {
   PartyCaption: string = "";
  ShowPreview: TypePreviewStatus[] = [];
   
-  constructor(private route: ActivatedRoute, private dataService: DataService, private auth: AuthService, private globals: GlobalsService, private dialog: MatDialog ){
+  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService, private auth: AuthService, private globals: GlobalsService, private dialog: MatDialog ){
     this.route.params.subscribe(             
       (params: Params) => 
       {                      
@@ -59,7 +59,9 @@ export class PartiesComponent {
     this.LoadPartiesList();    
   }
 
-  LoadPartiesList(){    
+  LoadPartiesList(){        
+    this.PartiesList = [];
+    this.LoadDataIntoMatTable();
     let pty = new ClsParties(this.dataService);     
     
     pty.getParties(0,this.Party_Cat,0,0,0).subscribe ( data => {       
@@ -150,6 +152,9 @@ export class PartiesComponent {
     })
   }
 
+  OpenCustomerHistory(pty: TypeParties){
+    this.router.navigate(['dashboard/customerhistory/'+pty.PartySno]);
+  }
   LoadDataIntoMatTable(){
     this.dataSource = new MatTableDataSource<TypeParties> (this.PartiesList);       
     if (this.dataSource.filteredData)

@@ -14,6 +14,7 @@
 import { AuctionService } from '../auction.service';
 import { ClsAuctionEntries, TypeAuctionEntry } from 'src/app/Dashboard/Classes/ClsAuctionEntries';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ApiDataService } from 'src/app/Services/api-data.service';
   
   @Component({
     selector: 'app-auctionentry',
@@ -59,7 +60,8 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
                   private dataService: DataService, 
                   private router : Router,
                   private location: Location,
-                  private dialog: MatDialog
+                  private dialog: MatDialog,
+                  private apidataService: ApiDataService
                 )
                 {           
                   this.Auction = auctionservice.getAuction();     
@@ -99,28 +101,42 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
       this.globals.ShowAlert(this.globals.DialogTypeError,error);
       return;             
     });
-    
-    let ln = new ClsLoans(this.dataService);
-    ln.getLoans(0,0,0,this.globals.LoanStatusOpen,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans ).subscribe(data=> {
-      if (data.queryStatus == 0){
-        this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-        return;
-      }
-      else{
-        this.LoansList = JSON.parse (data.apiData);
-        this.LoansList.map(loan => {        
-          return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
-                  loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
-                  loan.Location = JSON.parse (loan.Location_Json)[0], 
-                  loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
-                  loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-        })     
-      }
-    },
-    error => {
-      this.globals.ShowAlert(this.globals.DialogTypeError,error);
-      return;             
+
+    this.apidataService.getData("1").subscribe((data) => {
+      this.LoansList = JSON.parse (data.apiData);
+      this.LoansList.filter(ln=>{
+        return ln.Loan_Status == this.globals.LoanStatusMatured;
+      })
+          this.LoansList.map(loan => {        
+          return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
+                    loan.Location   =   JSON.parse (loan.Location_Json)[0],
+                    loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
+                    loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
+                    loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+          });
     });
+    
+    // let ln = new ClsLoans(this.dataService);
+    // ln.getLoans(0,0,0,this.globals.LoanStatusMatured,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans ).subscribe(data=> {
+    //   if (data.queryStatus == 0){
+    //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+    //     return;
+    //   }
+    //   else{
+    //     this.LoansList = JSON.parse (data.apiData);
+    //     this.LoansList.map(loan => {        
+    //       return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+    //               loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+    //               loan.Location = JSON.parse (loan.Location_Json)[0], 
+    //               loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+    //               loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+    //     })     
+    //   }
+    // },
+    // error => {
+    //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+    //   return;             
+    // });
   
     let cust = new ClsParties(this.dataService);
     cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
@@ -143,7 +159,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
     }
     else{    
       let sln = new ClsLoans(this.dataService);
-      sln.getLoans(this.Auction.Loan.LoanSno,0,0,0,0,0,0).subscribe(data =>{    
+      sln.getLoanBySno(this.Auction.Loan.LoanSno,0,0,0,0,0,0).subscribe(data =>{    
         this.SelectedLoan           = JSON.parse(data.apiData)[0];  
         this.SelectedLoan.IGroup    =   JSON.parse (this.SelectedLoan.IGroup_Json)[0],  
         this.SelectedLoan.Location   =   JSON.parse (this.SelectedLoan.Location_Json)[0],
@@ -289,11 +305,11 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
   getSeries($event: TypeVoucherSeries){    
     this.SelectedSeries = $event;
     this.AutoSeriesNo = this.SelectedSeries.Num_Method == 2 ? true : false;
-    if (this.SelectedSeries !== $event ){
-      // if ($event.Num_Method !== 0){
+    // if (this.SelectedSeries !== $event ){
+      if ($event.Num_Method !== 0){
         this.getAutoAuctionNumber();
-      // }    
-    }  
+      }    
+    // }  
   }
   
   

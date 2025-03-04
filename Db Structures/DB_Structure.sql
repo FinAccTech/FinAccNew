@@ -133,6 +133,10 @@ CREATE TABLE Transaction_Setup
   BranchCode_Prefix   CHAR(4),
   BranchCode_CurrentNo INT,
 
+  AgentCode_AutoGen  BIT,
+  AgentCode_Prefix   CHAR(4),
+  AgentCode_CurrentNo INT,
+
   Enable_Opening      BIT,
   Enable_RegLang      BIT,
   Reg_FontName        VARCHAR(20),
@@ -238,6 +242,7 @@ CREATE TABLE Branches
   Branch_Code       VARCHAR(10),
   Branch_Name       VARCHAR(20),
   Remarks           VARCHAR(50),
+  DivSno            INT,
   Active_Status     BIT,
   Create_Date       INT,
   UserSno           INT,
@@ -325,11 +330,13 @@ CREATE TABLE Schemes
   Scheme_Code VARCHAR(10),
   Scheme_Name VARCHAR(20),
   Roi DECIMAL(4,2),
+  EmiDues TINYINT,
   OrgRoi DECIMAL(4,2),
   IsStdRoi BIT,
   Calc_Basis TINYINT,
   Calc_Method TINYINT,
   Custom_Style TINYINT,
+  Payment_Frequency TINYINT,
   Enable_AmtSlab BIT,
   Enable_FeeSlab BIT,
   Preclosure_Days TINYINT,
@@ -451,35 +458,41 @@ GO
 
 CREATE TABLE Transactions
 (
-	TransSno				INT PRIMARY KEY IDENTITY(1,1),
-	VouTypeSno		  INT,
-	SeriesSno				INT,
-	Trans_No				VARCHAR(20),
+	TransSno				    INT PRIMARY KEY IDENTITY(1,1),
+	VouTypeSno		      INT,
+	SeriesSno				    INT,
+	Trans_No				    VARCHAR(20),
 
   /*FOR REPLEDGE */
-  Ref_No          VARCHAR(20),
-  BorrowerSno     INT,
+  Ref_No              VARCHAR(20),
+  BorrowerSno         INT,
 
-	Trans_Date			INT,
-	PartySno				INT,
-	SchemeSno				INT,
-	GrpSno					INT,
-  TotQty          TINYINT,
-	TotGrossWt			DECIMAL(8,3),
-	TotNettWt				DECIMAL(8,3),
-  TotPureWt       DECIMAL(8,3),
-	Market_Value		MONEY,
+	Trans_Date			    INT,
+	PartySno				    INT,
+	SchemeSno				    INT,
+	GrpSno					    INT,
+  TotQty              TINYINT,
+	TotGrossWt			    DECIMAL(8,3),
+	TotNettWt				    DECIMAL(8,3),
+  TotPureWt           DECIMAL(8,3),
+	Market_Value		    MONEY,
 
-  Market_Rate     MONEY,
-  Loan_PerGram    MONEY,
+  Market_Rate         MONEY,
+  Loan_PerGram        MONEY,
 
-	Principal				MONEY,
-	Roi						  DECIMAL(4,2),
-	AdvIntDur				TINYINT,
-	AdvIntAmt				MONEY,
-	DocChargesPer		DECIMAL(2,1),
-	DocChargesAmt		MONEY,
-	
+	Principal				    MONEY,
+	Roi						      DECIMAL(4,2),
+	AdvIntDur				    TINYINT,
+	AdvIntAmt				    MONEY,
+	DocChargesPer		    DECIMAL(2,1),
+	DocChargesAmt		    MONEY,
+
+  Emi_Due_Amt         MONEY,
+  OrgEmi_Due_Amt      MONEY,
+  Due_Start_Date      INT,
+  Emi_Principal       MONEY,
+  Emi_Interest        MONEY,
+
 	/* FOR RECEIPT */
 	RefSno				      INT,
 	Rec_Principal			  MONEY,
@@ -490,14 +503,17 @@ CREATE TABLE Transactions
 	Rec_Other_Debits		MONEY,
 	Rec_Default_Amt			MONEY,
 	Rec_Add_Less			  MONEY,
+  Rec_DuesCount       TINYINT,
+  Rec_DueAmount       MONEY,
 
   /*FOR REDEMPTION */
   Red_Method          TINYINT,
   
 	Nett_Payable			  MONEY,
 	Mature_Date				  INT,
-	PayModeSno				  INT,
+	PayModeSno				  INT,  
 	LocationSno				  INT,
+  AgentSno            INT,
 	Remarks					    VARCHAR(100),
 
   VouSno              INT,	
@@ -757,5 +773,30 @@ CREATE TABLE Report_Properties
 
 GO
 
+
+CREATE TABLE Agent
+(
+	AgentSno INT PRIMARY KEY IDENTITY(1,1),
+	Agent_Code VARCHAR(20),
+	Agent_Name VARCHAR(50),
+	Remarks VARCHAR(100),
+	Create_Date INT,
+	CompSno INT,
+	BranchSno INT
+)
+
+GO
+
+CREATE TABLE Divisions
+(
+	DivSno INT PRIMARY KEY IDENTITY(1,1),
+	Div_Code VARCHAR(10),
+	Div_Name VARCHAR(50),
+	Remarks VARCHAR(50),
+	Create_Date INT,
+	CompSno INT
+)
+
+GO
 
 

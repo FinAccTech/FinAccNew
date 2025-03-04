@@ -270,6 +270,10 @@
             width: 100%;
         }
 
+        .divAgent{
+            width: 100%;
+        }
+
     }
 
     .itemandamountSection{
@@ -295,7 +299,9 @@
             .paymodeButton{
                 padding: .6rem;
                 background-color: #fff;
-                border: 1px solid var(--ColorPrimary)
+                border: 1px solid var(--ColorPrimary);
+                width:100%;
+                
             }
 
             .paymodeButton:hover{

@@ -7,6 +7,7 @@ import { DataService } from 'src/app/Services/data.service';
 import { EChartsOption } from 'echarts';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 interface TypeStatusCard{
   FreshCount: number;
@@ -48,8 +49,7 @@ export class IndexpageComponent {
   LineDataSource: Array<number> = [];
   DataChartList: TypeChartDataList[] = [];
   chartOption!: EChartsOption;
-  constructor(private globals: GlobalsService, private dataService: DataService, private auth: AuthService, private dialog: MatDialog){
-    
+  constructor(private globals: GlobalsService, private dataService: DataService, private auth: AuthService, private dialog: MatDialog, private apidataService: ApiDataService){    
   }
 
   LoggedUser: string = "";
@@ -60,9 +60,12 @@ export class IndexpageComponent {
   ChartPeriod: number = 1;
 
   ngOnInit(){
-    this.LoggedUser = this.auth.LoggedUser.UserName!;
-
     
+    console.log("Init Index");
+    
+    this.apidataService.fetchData("1");
+
+    this.LoggedUser = this.auth.LoggedUser.UserName!;      
     if (this.auth.CompSelected == 0){      
       const dialogRef = this.dialog.open(CompaniesComponent,  
         {
@@ -82,6 +85,9 @@ export class IndexpageComponent {
       this.TransactionList = JSON.parse (data.apiData);      
     })
     this.LoadChart();
+
+   
+
   }
 
   

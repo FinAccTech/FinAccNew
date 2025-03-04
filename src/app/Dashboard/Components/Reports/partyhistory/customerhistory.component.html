@@ -1,6 +1,9 @@
 <div class="reportContainer">
     <div class="headerCard">
-        <div class="headerLeft">                 
+        <div class="headerLeft">     
+            @if (RoutedPartySno !==0) {                
+                <i class="fa fa-arrow-circle-left back" style="color: var(--ColorPrimary);" (click)="GoBack()" ></i>
+            }            
             <p class="heading"> Customer History</p>        
         </div>
 
@@ -12,8 +15,8 @@
             </button>
 
             <mat-menu #menu="matMenu" style="padding: 1rem;">               
-                <button mat-menu-item class>
-                    <div class="menuClass">
+                <button mat-menu-item class (click)="printTable()" >
+                    <div class="menuClass" style="display: flex; align-items: center; column-gap: 1rem; " >
                         <i class='bx bx-printer' style='color:gray' ></i>
                         <span>Print Summary</span>
                     </div>
@@ -94,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="tabSection">    
+            <div class="tabSection" #historyTable>    
                 <table>
                     <thead>
                         <th>Loan No</th>
@@ -106,7 +109,8 @@
                         <th>Duration</th>                                
                         <th>Principal</th>                                
                         <th>Market Value</th>                  
-                        <th>TotNettWt</th>                     
+                        <th>Weight</th>                
+                        <th>Item Details</th>                
                         <!-- <th>Interest</th>                     
                         <th>Principal</th>                      -->
                         <th>Nett Payable</th>                     
@@ -118,23 +122,30 @@
                         <td [style.color]="GetStatusColor(ln)"> {{ln.Scheme_Name}} </td>
                         <td [style.color]="GetStatusColor(ln)"> {{ln.Mature_Date | intToDate | date:'dd/MM/yyyy'}} </td>
                         <td [style.color]="GetStatusColor(ln)"> {{ln.Loc_Name }} </td>
-                        <td [style.color]="GetStatusColor(ln)"> {{ln.Ason_Duration_Months }} months and {{ln.Ason_Duration_Days }} </td>
+                        <td [style.color]="GetStatusColor(ln)"> 
+                            {{ln.Ason_Duration_Months }} months and {{ln.Ason_Duration_Days }}  
+                            @switch (ln.Loan_Status) {
+                                @case (2) {
+                                    / Closed
+                                }
+                                @case (3) {
+                                    / Matured
+                                }
+                            }                            
+                        </td>
                         <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Principal | number}} </td>
                         <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Market_Value | number}} </td>
-                        <td [style.color]="GetStatusColor(ln)"> {{ln.TotNettWt | number}} </td>
-                        <!-- <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance | number}} </td>
-                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Principal_Balance | number}} </td> -->
-                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance + ln.Principal_Balance | number}} </td>
-                        
+                        <td [style.color]="GetStatusColor(ln)" style="text-align: center;" > Gw: {{ln.TotGrossWt | number}} / Nw: {{ln.TotNettWt | number}} </td>
+                        <td [style.color]="GetStatusColor(ln)" > {{ln.Item_Details_With_Qty}} </td>                        
+                        <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance + ln.Principal_Balance | number}} </td>                        
                     </tr>
                     <tfoot>
                         <td colspan="7"> Total </td>
-                        <td> {{PrincipalTotal}} </td>
-                        <td> {{MarketValueTotal}} </td>
-                        <td></td>
-                        <!-- <td></td>
-                        <td></td> -->
-                        <td> {{NettPayableTotal}} </td>
+                        <td> {{PrincipalTotal.toFixed(2) }} </td>
+                        <td> {{MarketValueTotal.toFixed(2)}} </td>
+                        <td></td>                        
+                        <td></td>          
+                        <td> {{NettPayableTotal.toFixed(2)}} </td>
                     </tfoot>
                 </table>
             </div>

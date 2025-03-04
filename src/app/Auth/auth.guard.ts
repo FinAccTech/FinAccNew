@@ -16,8 +16,7 @@ export class AuthGuard  {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):boolean {
     let isLoggedIn = this.authService.Authenticated;
-    
-    
+        
     let adminCheck = next.data["adminCheck"];
     let printSetupCheck = next.data["printSetupCheck"];
 

@@ -5,6 +5,7 @@ import { TypeClientInfo } from '../Auth/TypeClientInfo';
 import { TypeUser, TypeUserRights } from '../Dashboard/Classes/ClsUsers';
 import { TypeCompanies } from '../Dashboard/Classes/ClsCompanies';
 import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
+import { UrlService } from './url.service';
 
 @Injectable({ 
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class AuthService {
   SelectedCompany!: TypeCompanies;
   
   SelectedBranchSno: number = 1;
- 
-  //ServerImagePath: string = "https://cloud.finacc.in/data/";
-  ServerImagePath: string = "https://finaccsaas.com/data/";
-  
-  constructor(private http: DataService) {     
+  ServerImagePath: string = "";
+
+  constructor(private http: DataService, private urls: UrlService) {     
+    this.ServerImagePath = urls.getServerImagePath();
+
     this.Authenticated  = +sessionStorage.getItem("sessionAuthenticated")!;
     this.LoggedClient   = JSON.parse (sessionStorage.getItem("sessionLoggedClient")!);  
     this.LoggedUser     = JSON.parse (sessionStorage.getItem("sessionLoggedUser")!);  
@@ -78,6 +79,12 @@ export class AuthService {
             return this.subjectName.asObservable(); //it returns as an observable to which the receiver funtion will subscribe
         }
         
+  CheckSaasLogin( username: string,password: string)
+  {          
+    let postdata ={ "App_Login" :  username, "App_Pwd" :  password }; 
+    return this.http.HttpGet(postdata, "/CheckSaasLogin");     
+  }   
+
   CheckLogin( username: string,password: string)
   {          
     let postdata ={ "App_Login" :  username, "App_Pwd" :  password }; 

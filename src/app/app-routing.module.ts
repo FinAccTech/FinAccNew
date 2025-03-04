@@ -62,11 +62,22 @@ import { IntStatement1percentComponent } from './Dashboard/Components/Reports/in
 import { HomeComponent } from './Home/home/home.component';
 import { RepledgesummaryComponent } from './Dashboard/Components/Reports/repledgesummary/repledgesummary.component';
 import { RepledgehistoryComponent } from './Dashboard/Components/Reports/repledgehistory/repledgehistory.component';
+import { AgentsComponent } from './Dashboard/Components/Masters/agents/agents.component';
+import { ClientprofileComponent } from './Dashboard/Components/Settings/clientprofile/clientprofile.component';
+import { LoginpennyComponent } from './Auth/loginpenny/loginpenny.component';
+import { UserResolver } from './Auth/user.resolver';
+import { LogindefaultComponent } from './Auth/logindefault/logindefault.component';
+import { BranchdivisionsComponent } from './Dashboard/Components/Settings/branchdivisions/branchdivisions.component';
+import { RepledgeauctionhistoryComponent } from './Dashboard/Components/Reports/repledgeauctionhistory/repledgeauctionhistory.component';
+import { BusinessregisterComponent } from './Dashboard/Components/Reports/businessregister/businessregister.component';
 
 
 
 const routes: Routes = [
-  { path:'', component: LoginComponent}, 
+  { path:'', component: LoginComponent, resolve:{user: UserResolver}}, 
+  { path:'logindefault', component: LogindefaultComponent}, 
+  { path:'loginpenny', component: LoginpennyComponent}, 
+
   // { path:'', component: HomeComponent},
   { path:'dashboard', component: DashboardComponent,canActivate: [AuthGuard], canDeactivate: [DeactivateGuard],
 
@@ -87,10 +98,10 @@ const routes: Routes = [
       { path:'rpclosures', component: RpclosuresComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":18} },     
       { path:'rpclosures/:rpclosure', component: RpclosureComponent, canActivate:[AuthGuard, CompGuard] },     
       { path:'supplierhistory', component: SupplierhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":33} },     
-      { path:'repledgesummary', component: RepledgesummaryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":37} },     
+      { path:'repledgesummary/:repledgesno', component: RepledgesummaryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":37} },     
       { path:'repledgehistory', component: RepledgehistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":38} },     
+      { path:'repledgeauctionhistory', component: RepledgeauctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":40} },     
       
-
       { path:'auctions', component: AuctionentriesComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":4} },      
       { path:'auctions/auction', component: AuctionentryComponent, canActivate:[AuthGuard, CompGuard] },      
 
@@ -104,6 +115,7 @@ const routes: Routes = [
       { path:'areas', component: AreasComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":13} },    
       { path:'schemes', component: SchemesComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":14} },    
       { path:'locations', component: LocationsComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":15} },    
+      { path:'agents', component: AgentsComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":39} },    
             
       { path:'ledgergroups', component: LedgergroupsComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":24} },     
       { path:'ledgers', component: LedgersComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":25} },     
@@ -118,21 +130,25 @@ const routes: Routes = [
 
       { path:'dayhistory', component: DayhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":32} },     
       { path:'loansummary', component: LoansummaryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":19} },     
-      { path:'customerhistory', component: CustomerhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":20} },     
+      { path:'customerhistory/:partysno', component: CustomerhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":20} },     
       { path:'loanhistory', component: LoanhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":21} },     
       { path:'auctionhistory', component: AuctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":22} }, 
       { path:'pendingreport', component: PendingreportComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 23} }, 
       { path:'ageanalysis', component: AgeAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 34 }}, 
       { path:'marketvalueanalysis', component: MarketValueAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 35 }},       
       { path:'intstatementcustom', component: IntStatement1percentComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 36 }}, 
+      { path:'businessregister', component: BusinessregisterComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 41 }}, 
       
       { path:'appsetup', component: AppsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },     
       { path:'voucherseries', component: VoucherserieslistComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },        
-      { path:'users', component: UsersComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
+      { path:'users', component: UsersComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},          
+      { path:'branchesdivisions', component: BranchdivisionsComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       { path:'printsetup', component: PrintsetupComponent, canActivate:[AuthGuard, CompGuard],data:{"printSetupCheck":true}},    
       { path:'alertsetup', component: AlertssetupComponent, canActivate:[AuthGuard, CompGuard],data:{"admincheck":true}}, 
       { path:'alerthistory', component: AlertHistoryComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },              
       { path:'voucherposting', component: VoucherpostingComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
+
+      { path:'clientprofile', component: ClientprofileComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       
   ]},  
 ];

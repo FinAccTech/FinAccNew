@@ -98,51 +98,114 @@
                             <app-selectionlist [Caption]="'Select by Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer"  (newItemEvent)="getCustomer($event)" ></app-selectionlist>
                         </div>
                     </div>
-
-                    <div class="row" style="margin-top: 1rem;" >
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_Principal"/>
-                                <label for="" class="formLabel" >Principal </label>                                
-                            </div>
-                        </div>
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl"  NumberInput (blur)="CalculateReceiptValues()" #interest (keydown.enter)="ocredits.focus()" required [(ngModel)]= "Receipt.Rec_Interest"/>
-                                <label for="" class="formLabel">Interest </label>                                
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 1rem;" >
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #ocredits (keydown.enter)="odebits.focus()" required [(ngModel)]= "Receipt.Rec_Other_Credits"/>
-                                <label for="" class="formLabel" >Other Credits </label>                                
-                            </div>
-                        </div>
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #odebits (keydown.enter)="default.focus()" required [(ngModel)]= "Receipt.Rec_Other_Debits"/>
-                                <label for="" class="formLabel">Other Debits </label>                                
-                            </div>
-                        </div>
-                    </div>
                     
-                    <div class="row" style="margin-top: 1rem;" >
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #default (keydown.enter)="addless.focus()" required [(ngModel)]= "Receipt.Rec_Default_Amt"/>
-                                <label for="" class="formLabel" >Default Amount </label>                                
+                    @if (SelectedLoan && SelectedLoan.Scheme.Calc_Method==3) {
+                        <div class="row"style="margin-top: 1rem;">
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (keyup)="CalculateEmiValues()" (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_DuesCount"/>
+                                    <label for="" class="formLabel" >Dues</label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput readonly (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_DueAmount"/>
+                                    <label for="" class="formLabel" >DueAmount</label>                                
+                                </div>
                             </div>
                         </div>
-                        <div class="col50">
-                            <div class="formGroup">                                
-                                <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #addless  required [(ngModel)]= "Receipt.Rec_Add_Less"/>
-                                <label for="" class="formLabel">Add / Less </label>                                
+
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput readonly (blur)="CalculateReceiptValues()" (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_Principal"/>
+                                    <label for="" class="formLabel" >Principal </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl"  NumberInput  readonly (blur)="CalculateReceiptValues()" #interest (keydown.enter)="ocredits.focus()" required [(ngModel)]= "Receipt.Rec_Interest"/>
+                                    <label for="" class="formLabel">Interest </label>                                
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #ocredits (keydown.enter)="odebits.focus()" required [(ngModel)]= "Receipt.Rec_Other_Credits"/>
+                                    <label for="" class="formLabel" >Other Credits </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #odebits (keydown.enter)="default.focus()" required [(ngModel)]= "Receipt.Rec_Other_Debits"/>
+                                    <label for="" class="formLabel">Other Debits </label>                                
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #default (keydown.enter)="addless.focus()" required [(ngModel)]= "Receipt.Rec_Default_Amt"/>
+                                    <label for="" class="formLabel" >Default Amount </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #addless  required [(ngModel)]= "Receipt.Rec_Add_Less"/>
+                                    <label for="" class="formLabel">Add / Less </label>                                
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @else {
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" (keydown.enter)="interest.focus()" required [(ngModel)]= "Receipt.Rec_Principal"/>
+                                    <label for="" class="formLabel" >Principal </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl"  NumberInput (blur)="CalculateReceiptValues()" #interest (keydown.enter)="ocredits.focus()" required [(ngModel)]= "Receipt.Rec_Interest"/>
+                                    <label for="" class="formLabel">Interest </label>                                
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #ocredits (keydown.enter)="odebits.focus()" required [(ngModel)]= "Receipt.Rec_Other_Credits"/>
+                                    <label for="" class="formLabel" >Other Credits </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #odebits (keydown.enter)="default.focus()" required [(ngModel)]= "Receipt.Rec_Other_Debits"/>
+                                    <label for="" class="formLabel">Other Debits </label>                                
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-top: 1rem;" >
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #default (keydown.enter)="addless.focus()" required [(ngModel)]= "Receipt.Rec_Default_Amt"/>
+                                    <label for="" class="formLabel" >Default Amount </label>                                
+                                </div>
+                            </div>
+                            <div class="col50">
+                                <div class="formGroup">                                
+                                    <input type="number" class="formControl" NumberInput (blur)="CalculateReceiptValues()" #addless  required [(ngModel)]= "Receipt.Rec_Add_Less"/>
+                                    <label for="" class="formLabel">Add / Less </label>                                
+                                </div>
+                            </div>
+                        </div>
+                    }
 
                     <div class="row" style="margin-top: 1rem;" >
                         <div class="col50">

@@ -1,0 +1,144 @@
+<div class="profileContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> <i class="fa fa-user-o" aria-hidden="true"></i> Client Profile</p>        
+        </div>
+
+        <div class="headerRight">    
+            
+        </div>
+
+    </div>
+
+    <div class="body">
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Client_Code   />
+                    <label for="" class="formLabel"> Client Code </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Client_Name   />
+                    <label for="" class="formLabel"> Client Name </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="formGroup">                  
+                    <textarea rows="10" class="formControl" readonly  [(ngModel)] = ClientInfo.Address>
+
+                    </textarea>  
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="formGroup">                  
+                    <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.State   />
+                    <label for="" class="formLabel"> State </label>                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Mobile   />
+                            <label for="" class="formLabel"> Mobile </label>                    
+                        </div>
+                    </div>
+                    <div class="col50">                        
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Alternate_Mobile   />
+                            <label for="" class="formLabel"> Alternate Mobile </label>                    
+                        </div>                        
+                    </div>
+                </div>                
+            </div>
+            
+        </div>
+
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Email   />
+                            <label for="" class="formLabel"> Email </label>                    
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = ClientInfo.Contact_Person   />
+                            <label for="" class="formLabel"> Contact Person </label>                    
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+
+            <div class="col50">
+                <div class="row">
+                    <div class="col50">
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = SubsStartDate   />
+                            <label for="" class="formLabel"> Subscription Start Date </label>                    
+                        </div>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">                  
+                            <input type="text" class="formControl" readonly required [(ngModel)] = SubsEndDate   />
+                            <label for="" class="formLabel"> Subscription End Date </label>                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="col100"  >
+                <span style="font-size: 1.5rem;"> 
+                    @switch (ClientInfo.Version_Type) {
+                        @case (1) {
+                            Registered Version:  Advanced  
+                        }
+                        @case (2) {
+                            Registered Version:  Professional 
+                        }
+                        @case (3) {
+                            Registered Version:  Enterprise 
+                        }
+                    }
+                </span>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 1.5rem;" >
+            <div class="alertHeader">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                <p class="desc">
+                    {{SubscriptionMsg}}
+                </p>
+                <p class="renew">
+                    Renew Now..
+                </p>        
+            </div>
+        </div>        
+    </div>
+    
+</div>

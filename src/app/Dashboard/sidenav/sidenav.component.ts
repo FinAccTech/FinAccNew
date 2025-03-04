@@ -14,7 +14,9 @@ import { AuthService } from 'src/app/Services/auth.service';
 @AutoUnsubscribe 
 export class SidenavComponent {  
 
-  ClientCode: string = "";
+ 
+  LogoPath: string = "";
+  LogoName: string = "";
 
   constructor(@Inject(DOCUMENT) private document: any, private router: Router, private auth: AuthService){
     
@@ -56,11 +58,39 @@ export class SidenavComponent {
   }
 
   ngOnInit(){
+    const baseUrl = window.location.origin;
+    switch (baseUrl) {
+      case 'https://admin.pennygold.in':
+        this.LogoPath = "assets/images/pennygold.png";
+        this.LogoName = "";
+        break;
+
+      case 'https://finaccsaas.com':
+        this.LogoPath = "assets/images/finacclogo.png";
+        this.LogoName = "FinAcc";
+        break;
+
+      case 'http://localhost:4200':
+        this.LogoPath = "assets/images/finacclogo.png";
+        this.LogoName = "FinAcc";
+        break;
+
+      case 'http://localhost:4200/#/':
+        this.LogoPath = "assets/images/finacclogo.png";
+        this.LogoName = "FinAcc";
+        break;
+        
+      default:
+        this.LogoPath = "assets/images/finacclogo.png";
+        this.LogoName = "FinAcc";
+        break;
+    }   
+
     for (var i=0; i<=this.TreeData.length; i++)
       {
         this.Expanded[i] = false;
       }   
-      this.ClientCode = this.auth.LoggedClient.Client_Code;
+
   }
 
   Expandme(i: number){
@@ -87,7 +117,7 @@ export class SidenavComponent {
     }
   }
 
-  GotoHome(){
+  GotoHome(){ 
     this.router.navigate(['dashboard'])
   }
 

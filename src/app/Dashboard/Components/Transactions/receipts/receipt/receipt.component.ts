@@ -19,6 +19,7 @@ import { AlertsService } from 'src/app/Services/alerts.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 @Component({
   selector: 'app-receipt',
@@ -46,7 +47,10 @@ export class ReceiptComponent implements OnInit {
   Receipt!:                TypeReceipt;  
   
   TillDate!: number;
-  
+  // PayingDues: number = 1;
+  // TotalDueAmount: number = 0;
+
+
   InterestDetails!: TypeInterestDetails;
   InterestStructure: TypeInterestStructure[] = [];
   AutoSeriesNo: boolean = false;
@@ -63,7 +67,7 @@ export class ReceiptComponent implements OnInit {
   StdLedgerList:       TypeLedger[] = [];
   IsOpen: number = 0;
   LockPreviousDate: boolean = false;
-  
+   
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
@@ -72,7 +76,8 @@ export class ReceiptComponent implements OnInit {
                 private router : Router,
                 private location: Location,
                 private dialog: MatDialog,
-                private alertService: AlertsService
+                private alertService: AlertsService,
+                private apidataService: ApiDataService
               )
               {           
                 this.Receipt = ReceiptService.getReceipt();    
@@ -92,7 +97,7 @@ export class ReceiptComponent implements OnInit {
                 .subscribe((searchText) => {                  
                   if (searchText < 1) {return;}
                   let ln = new ClsLoans(this.dataService);  
-                  ln.getLoans(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                  ln.getLoanBySno(searchText,0,0,0,0,0,0,).subscribe(data=>{
                     if (data.apiData){
                       let fLn = JSON.parse(data.apiData)[0];
                       fLn.Customer = JSON.parse(fLn.Party_Json)[0];
@@ -112,8 +117,7 @@ export class ReceiptComponent implements OnInit {
 
               }
 
- ngOnInit(): void {     
-    
+ ngOnInit(): void {             
   this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
 
   this.TillDate   = this.globals.DateToInt (new Date());
@@ -146,30 +150,44 @@ export class ReceiptComponent implements OnInit {
     return;             
   });
   
-  let ln = new ClsLoans(this.dataService);
-  ln.getLoans(0,0,0,this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
-    if (data.queryStatus == 0){
-      this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-      return;
-    }
-    else{
-      this.LoansList = JSON.parse (data.apiData);
-      this.LoansList = this.LoansList.filter(ln =>{
+  this.apidataService.getData("1").subscribe((data) => {
+    this.LoansList = JSON.parse (data.apiData);
+        this.LoansList = this.LoansList.filter(ln =>{
         return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
       }) 
-      this.LoansList.map(loan => {        
-        return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
-                loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
-                loan.Location = JSON.parse (loan.Location_Json)[0], 
-                loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
-                loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-      })     
-    }
-  },
-  error => {
-    this.globals.ShowAlert(this.globals.DialogTypeError,error);
-    return;             
+        this.LoansList.map(loan => {        
+          return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+                  loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+                  loan.Location = JSON.parse (loan.Location_Json)[0], 
+                  loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+                  loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+        });
   });
+
+  // let ln = new ClsLoans(this.dataService);
+  // ln.getLoans(0,0,0,this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
+  //   if (data.queryStatus == 0){
+  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+  //     return;
+  //   }
+  //   else{
+  //     this.LoansList = JSON.parse (data.apiData);            
+  //     this.LoansList = this.LoansList.filter(ln =>{
+  //       return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
+  //     }) 
+  //     this.LoansList.map(loan => {        
+  //       return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+  //               loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+  //               loan.Location = JSON.parse (loan.Location_Json)[0], 
+  //               loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+  //               loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+  //     })     
+  //   }
+  // },
+  // error => {
+  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+  //   return;             
+  // });
 
   let cust = new ClsParties(this.dataService);
   cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
@@ -195,7 +213,7 @@ export class ReceiptComponent implements OnInit {
     this.Receipt.PaymentMode = JSON.parse ( JSON.stringify (this.Receipt.PaymentModes_Json));
     console.log(this.Receipt.PaymentMode);
     let sln = new ClsLoans(this.dataService);
-    sln.getLoans(this.Receipt.Loan.LoanSno,0,0,0,0,0,0).subscribe(data =>{    
+    sln.getLoanBySno(this.Receipt.Loan.LoanSno,0,0,0,0,0,0).subscribe(data =>{    
       this.SelectedLoan             = JSON.parse(data.apiData)[0];  
       this.SelectedLoan.IGroup      =   JSON.parse (this.SelectedLoan.IGroup_Json)[0],  
       this.SelectedLoan.Location    =   JSON.parse (this.SelectedLoan.Location_Json)[0],
@@ -332,17 +350,24 @@ onSearchByBarCode(event: Event): void {
   this.searchSubject.next(+input.value);
 }
 
-getLoan($event: TypeLoan){      
+getLoan($event: TypeLoan){        
   this.SelectedLoan = $event;  
   this.InterestDetails = null!;
   this.InterestStructure = [];
-  if (this.SelectedLoan && this.SelectedLoan.LoanSno){
+ 
+  if (this.SelectedLoan && this.SelectedLoan.LoanSno)
+  {
     this.SelectedCustomer = this.SelectedLoan.Customer;
     let rep = new ClsReports(this.dataService);  
-    rep.getLoanDetailed(this.SelectedLoan.LoanSno, this.TillDate).subscribe(data => {
-      this.InterestDetails = JSON.parse (data.apiData)[0];        
-      this.InterestStructure = JSON.parse (this.InterestDetails.Struc_Json);    
-    });
+      rep.getLoanDetailed(this.SelectedLoan.LoanSno, this.TillDate).subscribe(data => {
+        this.InterestDetails = JSON.parse (data.apiData)[0];        
+        this.InterestStructure = JSON.parse (this.InterestDetails.Struc_Json);    
+      });
+
+    this.Receipt.Rec_DueAmount = this.globals.RoundDigitsToNear (this.SelectedLoan.Emi_Due_Amt);
+    this.Receipt.Rec_Principal = this.SelectedLoan.Emi_Principal;
+    this.Receipt.Rec_Interest = this.SelectedLoan.Emi_Interest;
+    this.CalculateEmiValues();
   }  
 }
 
@@ -367,7 +392,8 @@ getCustomer($event: TypeParties){
       dialogRef.disableClose = true;  
       dialogRef.afterClosed().subscribe(result => {        
         if (result){                
-          this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
+          this.getLoan(this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0]);
+          // this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
         }
         
       }); 
@@ -407,6 +433,22 @@ MultiPaymentModes(){
         }        
       }      
     }); 
+}
+
+CalculateEmiValues(){
+  this.Receipt.Rec_DueAmount = this.Receipt.Rec_DuesCount * this.SelectedLoan.Emi_Due_Amt;
+  const DiffEmi = +this.SelectedLoan.Emi_Due_Amt -  (+this.SelectedLoan.Emi_Principal + +this.SelectedLoan.Emi_Interest);
+  this.Receipt.Rec_Principal = this.Receipt.Rec_DuesCount * this.SelectedLoan.Emi_Principal;
+  this.Receipt.Rec_Interest = this.Receipt.Rec_DuesCount * this.SelectedLoan.Emi_Interest;
+  
+  if (DiffEmi > 0 ){
+    this.Receipt.Rec_Other_Credits =  DiffEmi * this.Receipt.Rec_DuesCount;
+  }
+  else{
+    this.Receipt.Rec_Other_Debits =  DiffEmi * this.Receipt.Rec_DuesCount;
+  }
+  
+  this.CalculateReceiptValues();
 }
 
 CanExit()

@@ -82,23 +82,24 @@ InitLoansList(){
   LoadLoansList(FromDate: number, ToDate: number){ 
     let ln = new ClsLoans(this.dataService);    
     
-    ln.getLoans(0,FromDate, ToDate,this.globals.LoanStatusAll, this.globals.ApprovalStatusAll, this.globals.CancelStatusAll, this.IsOpen).subscribe( data => {         
+    ln.getLoanBySno(0,FromDate, ToDate,this.globals.LoanStatusAll, this.globals.ApprovalStatusAll, this.globals.CancelStatusAll, this.IsOpen).subscribe( data => {         
       if (data.queryStatus == 0){
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
         this.loanService.LoadedFromDate = FromDate;
         this.loanService.LoadedToDate = ToDate;                
-        this.LoansList = JSON.parse(data.apiData);                       
+        this.LoansList = JSON.parse(data.apiData);          
+                             
         this.LoansList.map(ln=>{
           ln.Customer = JSON.parse(ln.Party_Json)[0];
           if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
           ln.IGroup = JSON.parse(ln.Group_Json)[0];
           ln.Location  = JSON.parse(ln.Location_Json)[0];          
-          ln.Scheme = JSON.parse(ln.Scheme_Json)[0];
+          ln.Scheme = JSON.parse(ln.Scheme_Json)[0];  
         });
         
-        let arrayKeys = this.LoansList.keys();
+        //let arrayKeys = this.LoansList.keys();
 
         // for (let key of arrayKeys) {
         //   console.log(`Index: ${key}, Name: ${this.LoansList[key]}.name` );

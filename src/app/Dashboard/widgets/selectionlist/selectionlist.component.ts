@@ -20,6 +20,8 @@ import { AreaComponent } from '../../Components/Masters/areas/area/area.componen
 import { ClsVoucherSeries } from '../../Classes/ClsVoucherSeries';
 import { VoucherseriesComponent } from '../../Components/Settings/voucherserieslist/voucherseries/voucherseries.component';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ClsAgents } from '../../Classes/ClsAgents';
+import { AgentComponent } from '../../Components/Masters/agents/agent/agent.component';
 
 @Component({
   selector: 'app-selectionlist',
@@ -54,10 +56,10 @@ constructor(private dialog: MatDialog, private dataService: DataService){}
     
   }
   ngOnInit(): void { 
-    
+     
   }
 
-  ngOnChanges(changes: SimpleChanges) {    
+  ngOnChanges(changes: SimpleChanges) {        
     this.SelectionList = this.DataSource;
     this.FilteredData = this.DataSource;         
 }
@@ -188,11 +190,25 @@ OpenMaster()
         });
       break; 
 
+    case 9:
+      let Ag = new ClsAgents(this.dataService);                
+      const dialogRef9 = this.dialog.open(AgentComponent, 
+        {            
+          data: Ag.Initialize(),
+        });      
+        //dialogRef.disableClose = true; 
+        dialogRef9.afterClosed().subscribe(result => {                    
+          if (result) 
+          {             
+              this.newMasterEmit.emit(result);            
+          }        
+        });
+      break; 
   }
     
 }
-
-  DisplayList()
+ 
+  DisplayList() 
   {    
     this.showList = true;         
   }
@@ -235,7 +251,7 @@ OpenMaster()
     }
     else
     {
-      this.DisplayList();
+      this.DisplayList();      
         let filterValue = ($event.target.value).toLowerCase();
         if (filterValue.trim() == "")
         {

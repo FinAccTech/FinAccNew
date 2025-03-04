@@ -22,7 +22,13 @@ import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 @AutoUnsubscribe
 export class GlobalsService 
 {
-  AppName: string = "FinAcc";
+  AppName: string = "FinAccSaas";
+  AppVerionTypeAdvanced = 1;
+  AppVerionTypeProfessional = 2;
+  AppVerionTypeEnterprise = 3;
+
+  SubscriptionExpired: boolean = false;
+
   AppLogoPath: string = "assets/images/finacclogo.png";
   
   constructor(private dialog: MatDialog){      
@@ -108,6 +114,10 @@ export class GlobalsService
     StdLedgerInterestPaid = 10;
     StdLedgerBankCharges = 11;
 
+    // Update the Total here when new form is added//
+    TotalForms = 39
+    //----------------------------------------------------
+
     //Form/Component Ids
      FormIdLoans = 1;
      FormIdReceipts = 2;
@@ -153,6 +163,10 @@ export class GlobalsService
      FormIdIntStatementCustom = 36;
      FormIdRepledgeSummary = 37;
      FormIdRepledgeHistory = 38;
+     FormIdAgents = 39;
+     FormIdRepledgeAuctionHistory = 40;
+     FormIdBusinessRegistere = 41;
+
 
      //Report Component Ids
      RepDayHistory = 1;
@@ -193,7 +207,22 @@ export class GlobalsService
       AlertTransTypeReceipt = 2;
       AlertTransTypeRedemption = 3;
       AlertTransTypeCustomer = 4;
-      
+  
+  setCookie(name: string, value: string) {
+    const maxAgeSeconds = 60 * 60 * 24 * 365 * 1;  //1 Year
+    document.cookie = `${name}=${value}; Max-Age=${maxAgeSeconds}; Path=/; Secure`;
+  }
+  
+  getCookie(name: string): string | null {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find(row => row.startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
+  }
+  
+  deleteCookie(name: string) {
+    document.cookie = `${name}=; Max-Age=0; Path=/; Secure`;
+  }
+
   DateToInt(inputDate: Date)
   {
     let month: string = (inputDate.getMonth() + 1).toString();    
@@ -574,6 +603,9 @@ export class GlobalsService
     this.globals.OpenDialog('500ms', '500ms',3,""); 
   ----------------------------------------------------------------------------------------------------------------------------------*/
 GetUserRight(UserRights: TypeUserRights[], FormSno: number, RightType: number): boolean{
+  const loggedUser = JSON.parse (sessionStorage.getItem("sessionLoggedUser")!);          
+
+  if (loggedUser.UserSno == 1) { return true;}    
   
   if (UserRights.length < 1 ) { return true}
   let FormRight = false;
@@ -655,4 +687,10 @@ GetStandardAlerts(): TypeAlert[] {
   ]
   return alerts
 }
+
+RoundDigitsToNear(num: number) {
+  return num % 1 >= 0.5 ? Math.ceil(num) : Math.floor(num);
+}
+
+
 }

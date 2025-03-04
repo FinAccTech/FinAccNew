@@ -6,6 +6,7 @@ import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 @Component({
   selector: 'app-loansummary',
@@ -18,7 +19,7 @@ export class LoansummaryComponent {
 
   private searchSubject = new Subject<number>();
 
-  constructor(private globals: GlobalsService, private dataService: DataService){
+  constructor(private globals: GlobalsService, private dataService: DataService, private apidataService: ApiDataService,){
     this.searchSubject
                 .pipe(
                   debounceTime(300), // Wait 300ms after user stops typing
@@ -27,7 +28,7 @@ export class LoansummaryComponent {
                 .subscribe((searchText) => {                  
                   if (searchText < 1) { this.BarCode= 0; return;}
                   let ln = new ClsLoans(this.dataService);  
-                  ln.getLoans(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                  ln.getLoanBySno(searchText,0,0,0,0,0,0,).subscribe(data=>{
                     if (data.apiData){
                       let fLn = JSON.parse(data.apiData)[0];
                       fLn.Customer = JSON.parse(fLn.Party_Json)[0];
@@ -60,28 +61,39 @@ export class LoansummaryComponent {
 
   ngOnInit(){
     this.AsOnDate = this.globals.DateToInt( new Date());
-    let ln = new ClsLoans(this.dataService);
     
-    ln.getLoans(0,0,0, this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
-      if (data.queryStatus == 0){
-        this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-        return;
-      }
-      else{
-        this.LoansList = JSON.parse (data.apiData);
-        this.LoansList.map(loan => {        
-        return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
-                  loan.Location   =   JSON.parse (loan.Location_Json)[0],
-                  loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
-                  loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
-                  loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-        })     
-      }
-    },
-    error => {
-      this.globals.ShowAlert(this.globals.DialogTypeError,error);
-      return;             
+    this.apidataService.getData("1").subscribe((data) => {
+      this.LoansList = JSON.parse (data.apiData);
+          this.LoansList.map(loan => {        
+          return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
+                    loan.Location   =   JSON.parse (loan.Location_Json)[0],
+                    loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
+                    loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
+                    loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+          });
     });
+
+    
+    // ln.getLoans(0,0,0, this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
+    //   if (data.queryStatus == 0){
+    //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+    //     return;
+    //   }
+    //   else{
+    //     this.LoansList = JSON.parse (data.apiData);
+    //     this.LoansList.map(loan => {        
+    //     return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
+    //               loan.Location   =   JSON.parse (loan.Location_Json)[0],
+    //               loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
+    //               loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
+    //               loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+    //     })     
+    //   }
+    // },
+    // error => {
+    //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+    //   return;             
+    // });
   }
 
   LoadDetails(){

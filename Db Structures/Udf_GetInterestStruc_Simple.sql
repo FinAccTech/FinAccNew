@@ -5,13 +5,15 @@ GO
 --select * from [dbo].Udf_GetInterestStruc_Simple(1,20240717,0)
 
 				CREATE FUNCTION [dbo].Udf_GetInterestStruc_Simple(
-                        @LoanSno INT ,
+                        @LoanSno INT ,                        
 						@AsOnDate INT,
-						@IsCompound BIT)
+            @IsCompound BIT)
             
-						RETURNS	@Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
+					RETURNS	@Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
                                      TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY,
-                                     AdjPrincipal MONEY,NewPrincipal MONEY)
+                                     AdjPrincipal MONEY,NewPrincipal MONEY) 
+
+                                                 
 
 				
 				
@@ -148,9 +150,8 @@ GO
         
         -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 ---------------------A1
                                  SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
-                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)
-                                 SET @AddedPrincipal = 0
-                                ------------------------------------------------------------------------------A1
+                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
+        ------------------------------------------------------------------------------A1
                         
                          SET @IntAccured = CASE @Calc_Basis WHEN 0 THEN
                                                                  CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays*30)AS DECIMAL(18,2))
@@ -167,6 +168,7 @@ GO
                          INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,@Calc_Basis,@Roi,
                                                      ISNULL(@IntAccured,0),ISNULL(@TotIntAccured,0),
                                                      ISNULL(@IntPaid,0),ISNULL(@PrinPaid,0),ISNULL(@AddedPrincipal,0),0,ISNULL(@NewPrincipal,0))
+                         SET @AddedPrincipal = 0
                          SET @IntPaid = 0
                          SET @PrinPaid = 0
                          SET @FromDate = DATEADD(DAY,1,@ToDate)

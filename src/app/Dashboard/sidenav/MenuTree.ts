@@ -17,7 +17,7 @@ export const menuTree =[
             {   Caption: "Opening Loans", Iconn: "", RouterLink:"loans/1"   },
             {   Caption: "Opening Receipts", Iconn: "", RouterLink:"receipts/1"   },            
         ]
-    },
+    }, 
 
     {
         Caption:"Masters",
@@ -33,6 +33,7 @@ export const menuTree =[
             {   Caption: "Areas", Iconn: "", RouterLink:"areas" },
             {   Caption: "Schemes", Iconn: "", RouterLink:"schemes" },
             {   Caption: "Locations", Iconn: "", RouterLink:"locations" },
+            {   Caption: "Agents", Iconn: "", RouterLink:"agents" },
         ]
     },
 
@@ -52,9 +53,10 @@ export const menuTree =[
             {   Caption: "Opening RpPayments", Iconn: "", RouterLink:"rppayments/1"   },            
 
             {   Caption: "```````````````````", Iconn: "", RouterLink:""},
-            {   Caption: "Repledge Summary", Iconn: "", RouterLink:"repledgesummary"   },   
+            {   Caption: "Repledge Summary", Iconn: "", RouterLink:"repledgesummary/0"   },   
             {   Caption: "Supplier History", Iconn: "", RouterLink:"supplierhistory"   },            
             {   Caption: "Repledge History", Iconn: "", RouterLink:"repledgehistory"   },            
+            {   Caption: "Auction History (Rp)", Iconn: "", RouterLink:"repledgeauctionhistory"   },            
 
         ]
     },
@@ -67,13 +69,14 @@ export const menuTree =[
         [
             {   Caption: "Day History", Iconn: "", RouterLink:"dayhistory"   },
             {   Caption: "Loan Summary", Iconn: "", RouterLink:"loansummary" },
-            {   Caption: "Customer History", Iconn: "", RouterLink:"customerhistory" },
+            {   Caption: "Customer History", Iconn: "", RouterLink:"customerhistory/0" },
             {   Caption: "Loan History", Iconn: "", RouterLink:"loanhistory"   },
             {   Caption: "Auction History", Iconn: "", RouterLink:"auctionhistory"   },
             {   Caption: "Pending Report", Iconn: "", RouterLink:"pendingreport"   },
             {   Caption: "Age Analysis", Iconn: "", RouterLink:"ageanalysis"   },
             {   Caption: "Market Value Analysis", Iconn: "", RouterLink:"marketvalueanalysis"   },
             {   Caption: "Int Statement Custom", Iconn: "", RouterLink:"intstatementcustom"   },
+            {   Caption: "Business Register", Iconn: "", RouterLink:"businessregister"   },
             
         ]
     },
@@ -105,9 +108,10 @@ export const menuTree =[
             {   Caption: "Voucher Series", Iconn: "", RouterLink:"voucherseries"   },
             {   Caption: "App Setup", Iconn: "", RouterLink:"appsetup"   },
             {   Caption: "Users", Iconn: "", RouterLink:"users"   },
+            {   Caption: "Branches / Divisions", Iconn: "", RouterLink:"branchesdivisions"   },
             {   Caption: "Print Setup", Iconn: "", RouterLink:"printsetup"   },
             {   Caption: "Alert Setup", Iconn: "", RouterLink:"alertsetup"   },
-            {   Caption: "Reposting Vouchers", Iconn: "", RouterLink:"voucherposting"   },
+            {   Caption: "Reposting Vouchers", Iconn: "", RouterLink:"voucherposting"},
             // {   Caption: "General Setup", Iconn: "", RouterLink:""   },
             // {   Caption: "Accounts Setup", Iconn: "", RouterLink:""   },
             // {   Caption: "Users and Security", Iconn: "", RouterLink:""   },
