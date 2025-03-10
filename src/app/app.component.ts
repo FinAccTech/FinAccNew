@@ -33,10 +33,14 @@ export class AppComponent {
 
     const baseUrl = window.location.origin; 
     switch (baseUrl) {
-      case 'https://admin.pennygold.in':
+      case 'https://pennygold.in/#/':
         document.body.classList.add('pennyTheme');
         this.title = "PennyGold";
         break;
+        case 'https://pennygold.in':
+          document.body.classList.add('pennyTheme');
+          this.title = "PennyGold";
+          break;
       case 'https://finaccsaas.com':
         document.body.classList.add('finaccTheme');
         this.title = "FinAccSaas";

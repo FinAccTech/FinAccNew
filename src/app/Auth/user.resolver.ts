@@ -14,14 +14,18 @@ export class UserResolver implements Resolve<boolean> {
     console.log(baseUrl);
     
     switch (baseUrl) {
-        case 'https://admin.pennygold.in':
+        case 'https://pennygold.in':
             this.router.navigate(['loginpenny'])    
             break;
+        case 'https://pennygold.in/#/':
+          this.router.navigate(['loginpenny'])    
+          break;
+            
         case 'https://finaccsaas.com':
           this.router.navigate(['logindefault'])    
           break;      
         case 'http://localhost:4200':
-            this.router.navigate(['logindefault'])    
+            this.router.navigate(['loginpenny'])    
             break;        
         case 'http://localhost:4200/#/':
           this.router.navigate(['logindefault'])    
