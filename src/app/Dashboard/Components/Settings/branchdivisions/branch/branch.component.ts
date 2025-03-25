@@ -16,7 +16,7 @@ export class BranchComponent {
 
   // For Validations  
   CodeAutoGen: boolean = false;
-  BranchNameValid: boolean = true;
+  BranchNameValid: boolean = true; 
   
   constructor(
     public dialogRef: MatDialogRef<BranchComponent>,    
@@ -28,9 +28,8 @@ export class BranchComponent {
     this.Branch = data;                
   }
 
-  ngOnInit(): void {    
-            
-      if (this.globals.AppSetup().BranchCode_AutoGen == 1){
+  ngOnInit(): void {        
+      if (this.globals.AppSetup()[0].BranchCode_AutoGen == 1){
         this.CodeAutoGen = true;
         if (this.Branch.BranchSno == 0){     
           let it = new ClsBranches(this.dataService)
@@ -38,8 +37,7 @@ export class BranchComponent {
             this.Branch.Branch_Code = data.apiData;
           })
         }
-      }
-    
+      }    
   }
 
   SaveBranch(){    
@@ -56,7 +54,9 @@ export class BranchComponent {
     if (this.ValidateInputs() == false) {return};    
     let ar = new ClsBranches(this.dataService);
     ar.Branch = this.Branch;
-        
+    
+    console.log(this.Branch);
+    
     ar.saveBranch().subscribe(data => {
         if (data.queryStatus == 0) {
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);

@@ -94,6 +94,14 @@
                 </div>
             </ng-container>
 
+            @if (Loan.Scheme.Calc_Method == 3) {
+                <div class="balInfo" *ngIf="InterestDetails">                                            
+                    <p>Total Dues: <strong> {{InterestDetails.Total_Dues}} </strong> </p>
+                    <p>Paid Dues: <strong> {{InterestDetails.Paid_Dues}} </strong> </p>
+                    <p>Pending Dues: <strong> {{InterestDetails.Pending_Dues}} </strong> </p>
+                    <p>Balance Dues: <strong> {{InterestDetails.Balance_Dues}} </strong> </p>
+                </div>
+            }
         </div>
     </div>
 </div>

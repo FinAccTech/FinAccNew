@@ -18,6 +18,11 @@ export class ClsSchemes{
         return this.dataService.HttpGet(postdata, "/getSchemes");                
     }
 
+    getSchemesforSelectedCompany(SchemeSno: number, CompSno: number): Observable<TypeHttpResponse> {
+        let postdata ={ "SchemeSno" :  SchemeSno, "CompSno" :  CompSno }; 
+        return this.dataService.HttpGet(postdata, "/getSchemes");                
+    }
+
     getSchemeCode(){
         let postdata ={ "BranchSno" :  this.BranchSno }; 
         return this.dataService.HttpGet(postdata, "/getSchemeCode");                

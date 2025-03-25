@@ -108,11 +108,17 @@ GO
                          WHERE   LoanSno=@LoanSno AND Receipt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
                          IF @IntPaid < @IntAccured SET @IntDurDays = @Duration
                          SET @NewPrincipal = @NewPrincipal - ISNULL(@PrinPaid,0)
+
+                         -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 ---------------------A1
+                                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
+        ------------------------------------------------------------------------------A1
+
                 
                 --IF @CalcFrom = @Loan_Date
                   --                  BEGIN
                                         INSERT INTO @Result VALUES(@FromDate,@ToDate,DATEDIFF(DAY,@FromDate,@ToDate),1,@Roi,ISNULL(@IntAccured,0),
-                                                                 ISNULL(@IntAccured,0),ISNULL(@IntPaid,0)+@AdvIntAmt,ISNULL(@PrinPaid,0),0,0,ISNULL(@NewPrincipal,0))
+                                                                 ISNULL(@IntAccured,0),ISNULL(@IntPaid,0)+@AdvIntAmt,ISNULL(@PrinPaid,0),ISNULL(@AddedPrincipal,0),0,ISNULL(@NewPrincipal,0))
                     --                End
                       /*          Else
                                     BEGIN
@@ -218,11 +224,14 @@ GO
                             CASE
                                     WHEN @MinCalcDays = 0 THEN
                                         @Duration * CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays) AS DECIMAL(18,2))                                        
-                                    WHEN @Duration >= @MinCalcDays THEN                                    
+                                    WHEN @Duration >= @MinCalcDays THEN
+                                    
                                         CAST((((@Roi/100)*@NewPrincipal)/@IntCalcinDays*30) AS DECIMAL(18,2))
+
                                     Else                                    
                                         @MinCalcDays * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays) 
                                     End
+
                              IF @IntPaid < @IntAccured
                                 BEGIN
                                  SET @IntDurDays = CASE WHEN @MinCalcDays = 0 THEN @Duration WHEN @Duration >= @MinCalcDays THEN 0 ELSE @MinCalcDays End

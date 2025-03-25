@@ -70,6 +70,7 @@ import { LogindefaultComponent } from './Auth/logindefault/logindefault.componen
 import { BranchdivisionsComponent } from './Dashboard/Components/Settings/branchdivisions/branchdivisions.component';
 import { RepledgeauctionhistoryComponent } from './Dashboard/Components/Reports/repledgeauctionhistory/repledgeauctionhistory.component';
 import { BusinessregisterComponent } from './Dashboard/Components/Reports/businessregister/businessregister.component';
+import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/importdata.component';
 
 
 
@@ -147,7 +148,8 @@ const routes: Routes = [
       { path:'alertsetup', component: AlertssetupComponent, canActivate:[AuthGuard, CompGuard],data:{"admincheck":true}}, 
       { path:'alerthistory', component: AlertHistoryComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true} },              
       { path:'voucherposting', component: VoucherpostingComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
-
+      { path:'importdata', component: ImportdataComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
+      
       { path:'clientprofile', component: ClientprofileComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       
   ]},  

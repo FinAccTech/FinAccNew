@@ -12,6 +12,8 @@ import { ClsVoucherSeries } from 'src/app/Dashboard/Classes/ClsVoucherSeries';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { concatMap, from, Observable } from 'rxjs';
+import { ClsTransactions } from 'src/app/Dashboard/Classes/ClsTransactions';
 
 @Component({
   selector: 'app-loans',
@@ -78,6 +80,29 @@ InitLoansList(){
     this.LoadLoansList(this.loanService.LoadedFromDate,this.loanService.LoadedToDate);
   }
 }
+
+
+// checkapi(){
+//   let items = [24, 25, 26, 27, 28]; 
+  
+//   from(items) // Convert array into observable sequence
+//   .pipe(
+//     concatMap(item => this.makeapicall(item) ) // Ensures sequential execution
+//   )
+//   .subscribe(
+//     response => console.log('API Response:', response),
+//     error => console.error('Error:', error),
+//     () => console.log('All API calls completed!')
+//   );
+// }
+
+// makeapicall(item: number){
+//   console.log(item);
+//   let trans = new ClsTransactions(this.dataService);
+
+//   return trans.getLoans(item,0,0,0,0,0,0)
+  
+// }
 
   LoadLoansList(FromDate: number, ToDate: number){ 
     let ln = new ClsLoans(this.dataService);    

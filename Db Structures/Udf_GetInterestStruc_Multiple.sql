@@ -35,8 +35,9 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         DECLARE @PrinBal MONEY = @Principal
         DECLARE @AdjPrincipal MONEY
         DECLARE @IntBal MONEY = 0
+        DECLARE @AdvIntAmt MONEY = 0
 
-        SELECT  @Loan_Date = [dbo].IntToDate(Loan_Date),@SchemeSno=SchemeSno,@Principal=Principal
+        SELECT  @Loan_Date = [dbo].IntToDate(Loan_Date),@SchemeSno=SchemeSno,@Principal=Principal, @AdvIntAmt=AdvIntAmt
         From	  VW_LOANS
         WHERE   LoanSno=@LoanSno
 
@@ -65,7 +66,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         --STEP 2: GET ROI AS PER DURATION
 						
                         SELECT      @Roi=Roi
-                        From		Scheme_Details
+                        From		    Scheme_Details
                         WHERE       SchemeSno=@SchemeSno
                                     AND (@TotDuration >= FromPeriod) AND (@TotDuration <=ToPeriod or ToPeriod=0)
         
@@ -77,6 +78,9 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                         SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                         SET @AddedPrincipal = 0
+
+                        SET @IntPaid = @IntPaid + @AdvIntAmt
+                        SET @AdvIntAmt = 0
 
                         IF @IntPaid >= @IntAccured
                         BEGIN
@@ -147,6 +151,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                 SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                 SET @AddedPrincipal = 0
 
+                SET @IntPaid = @AdvIntAmt
                 INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured, IntPaid, PrinPaid, AddedPrincipal, AdjPrincipal,NewPrincipal)
                 VALUES             (@FromDate,@AsOn,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal,ISNULL(@AdjPrincipal,0), @PrinBal)
             END

@@ -1,0 +1,83 @@
+<div class="importContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> &nbsp; Import Data</p>        
+        </div>
+
+        <div class="headerRight"> 
+            
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="importSettings">
+            <div class="inputType">
+                <p class="heading">Source - Excel</p>
+                <input type="file" (change)="onExcelFileChange($event)" accept=".xls,.xlsx" />
+            </div>
+            <div class="inputType">
+                <p class="heading">Source - Json</p>
+                <input type="file" (change)="onJsonFileChange($event)" accept=".json" />
+            </div>
+        </div>
+        
+        <div class="tblContainer">
+            <p> {{excelData.length}} records found. Click Start to Import  </p>
+            
+            <br>
+
+            <div class="row"  >
+                <div class="col30">
+                    <div><app-selectionlist [Caption]="'Company'" [DataSource]="CompaniesList" [SelectedItem]="SelectedCompany"  (newItemEvent)="getCompany($event)" ></app-selectionlist></div>
+                </div>
+                <div class="col30">
+                    <div><app-selectionlist [Caption]="'Series'"  [DataSource]="SeriesList" [SelectedItem]="SelectedSeries"  (newItemEvent)="getSeries($event)"  ></app-selectionlist></div>    
+                </div>
+                <div class="col30">
+                    <div><app-selectionlist [Caption]="'Scheme'"  [DataSource]="SchemesList" [SelectedItem]="SelectedScheme"  (newItemEvent)="getScheme($event)"  ></app-selectionlist></div>                        
+                </div>
+            </div>
+            
+            
+
+            <br>
+            <button class="btnDefault" (click)="StartImporing()" >Start Importing</button>
+            <br>
+            <p> Importing {{currLoan}} of {{ excelData.length }} </p>
+            <!-- <table class="stdTable">
+                @for (row of excelData; track $index) {
+                    <tr>
+                        <td> {{row.Loan_No}} </td>
+                        <td> {{row.Loan_Date}} </td>
+                        <td> {{row.Customer_Code}} </td>
+                        <td> {{row.Customer_Name}} </td>
+                        <td> {{row.Rel}} </td>
+                        <td> {{row.RelName}} </td>
+                        <td> {{row.Address1}} </td>
+                        <td> {{row.Address2}} </td>
+                        <td> {{row.Address3}} </td>
+                        <td> {{row.Address4}} </td>
+                        <td> {{row.City}} </td>
+                        <td> {{row.State}} </td>
+                        <td> {{row.Pincode}} </td>
+                        <td> {{row.Area}} </td>
+                        <td> {{row.Mobile}} </td>
+                        <td> {{row.Aadhar}} </td>
+                        <td> {{row.Group}} </td>
+                        <td> {{row.Item_Details}} </td>
+                        <td> {{row.TotQty}} </td>
+                        <td> {{row.TotGrossWt}} </td>
+                        <td> {{row.TotNettWt}} </td>
+                        <td> {{row.Principal}} </td>
+                        <td> {{row.Roi}} </td>
+                        <td> {{row.AdvanceInt}} </td>
+                        <td> {{row.Doc_Charges}} </td>
+                        <td> {{row.Mature_Date}} </td>
+                        <td> {{row.Remarks}} </td>                        
+                    </tr>                
+                }          
+            </table>     -->
+        </div>
+        
+    </div>
+</div>

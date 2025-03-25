@@ -21,7 +21,7 @@ export class ClsBranches{
     }
 
     getBranchCode(){
-        let postdata ={ "BranchSno" :  this.BranchSno }; 
+        let postdata ={ "CompSno": this.CompSno, "BranchSno" :  this.BranchSno }; 
         return this.dataService.HttpGet(postdata, "/getBranchCode");                
     }
 

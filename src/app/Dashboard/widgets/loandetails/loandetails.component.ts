@@ -19,7 +19,7 @@ export class LoandetailsComponent {
   
   @Input() Loan!: TypeLoan;
   @Input() ShowBalInfo: boolean = false;
-  @Input() AsOnDate: number = 0; 
+  @Input() AsOnDate: number = 0;  
 
   InterestDetails!: TypeInterestDetails;
   LoanSno: number = 0
@@ -51,9 +51,7 @@ export class LoandetailsComponent {
     }
   }
 
-  OpenRepledgeSummary(){ 
-    console.log(this.Loan);
-    
+  OpenRepledgeSummary(){         
     this.router.navigate(['dashboard/repledgesummary/'+this.Loan.Loan_RepledgeSno]);
   }
 }

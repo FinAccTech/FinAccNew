@@ -21,6 +21,12 @@ export class ClsParties{
         return this.dataService.HttpGet(postdata, "/getParties");                
     }
 
+    checkPartyExists(CheckValue: string, CheckbyParam: number): Observable<TypeHttpResponse> {
+        //  CheckByParam 1-- By Party Code,  2-- By MobileNumber
+        let postdata ={ "CheckValue" :  CheckValue, "CheckbyParam": CheckbyParam, "CompSno" :  this.CompSno }; 
+        return this.dataService.HttpGet(postdata, "/checkPartyExists");                
+    }
+
     getPartyCode(Party_Type: number){
         let postdata ={ "BranchSno" :  this.BranchSno, "Party_Type" :  Party_Type }; 
         return this.dataService.HttpGet(postdata, "/getPartyCode");                

@@ -32,7 +32,7 @@ export class AgentComponent {
 
   ngOnInit(): void {    
             
-      if (this.globals.AppSetup().AgentCode_AutoGen == 1){
+      if (this.globals.AppSetup()[0].AgentCode_AutoGen == 1){
         this.CodeAutoGen = true;
         if (this.Agent.AgentSno == 0){     
           let it = new ClsAgents(this.dataService)

@@ -23,6 +23,11 @@ export class ClsVoucherSeries{
         return this.dataService.HttpGet(postdata, "/getVoucherSeries");                
     }
 
+    getVoucherSeriesforSelectedCompany(SeriesSno: number, VouTypeSno: number, CompSno: number): Observable<TypeHttpResponse> {
+        let postdata ={ "SeriesSno" :  SeriesSno, "BranchSno": this.BranchSno, "VouTypeSno": VouTypeSno, "CompSno" :  CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getVoucherSeries");                
+    }
+
     saveVoucherSeries(): Observable<TypeHttpResponse> {        
         let postdata = this.Series;
         console.log(postdata);

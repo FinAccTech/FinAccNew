@@ -61,7 +61,6 @@ export class IndexpageComponent {
 
   ngOnInit(){
     
-    console.log("Init Index");
     
     this.apidataService.fetchData("1");
 

@@ -41,7 +41,7 @@ export class PurityComponent implements OnInit {
 
   ngOnInit(): void {    
     
-      if (this.globals.AppSetup().PurityCode_AutoGen== 1){
+      if (this.globals.AppSetup()[0].PurityCode_AutoGen== 1){
         this.CodeAutoGen = true;
         if (this.Purity.PuritySno == 0){      
         let it = new ClsPurities(this.dataService)

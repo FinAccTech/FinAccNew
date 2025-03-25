@@ -34,7 +34,7 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit(): void {    
-      if (this.globals.AppSetup().LocCode_AutoGen == 1){
+      if (this.globals.AppSetup()[0].LocCode_AutoGen == 1){
         this.CodeAutoGen = true;
         if (this.Location.LocationSno == 0){      
           let it = new ClsLocations(this.dataService)

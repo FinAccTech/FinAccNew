@@ -90,6 +90,7 @@ export class CustomerhistoryComponent {
   LoadDetails(){
     let rep = new ClsReports(this.dataService);
     rep.getCustomerDetailed(this.SelectedCustomer.PartySno).subscribe(data =>{
+            
       this.CustomerDetails = JSON.parse (data.apiData)[0];                
       this.LoanData = JSON.parse(this.CustomerDetails.Loans_Json!);   
 

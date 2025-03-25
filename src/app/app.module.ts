@@ -148,8 +148,9 @@ import { DivisionComponent } from './Dashboard/Components/Settings/branchdivisio
 import { BusinessregisterComponent } from './Dashboard/Components/Reports/businessregister/businessregister.component';
 import { IntToMonthYear } from './Dashboard/Pipes/int-to-monthyear.pipe';
 import { DailyRegisterComponent } from './Dashboard/widgets/daily-register/daily-register.component';
+import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/importdata.component';
 
-@NgModule({ declarations: [
+@NgModule({ declarations: [        
         NumberInputDirective,
         AppComponent,
         IntToDatePipe,
@@ -211,9 +212,9 @@ import { DailyRegisterComponent } from './Dashboard/widgets/daily-register/daily
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
         ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
-        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent
+        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,        
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,

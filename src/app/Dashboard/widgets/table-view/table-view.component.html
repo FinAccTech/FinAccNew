@@ -1,3 +1,4 @@
+@if (!EmiTable) {
 <div class="responsiveGrid">
     <table class="responsive-table">
       <caption>Interest Statement</caption>
@@ -31,4 +32,38 @@
         </tr>
       </tbody>
     </table>
-  </div>
+</div>
+}
+@else {
+  <div class="responsiveGrid">
+    <table class="responsive-table">
+      <caption>Interest Statement</caption>
+      <thead>
+        <tr>
+          <th scope="col">Due No</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Due Amt</th>
+          <th scope="col">Paid Date</th>
+          <th scope="col">Paid Amt</th>
+          <th scope="col">Delay Days</th>
+          <th scope="col">Other Credits</th>          
+        </tr>
+      </thead>
+      
+      <tbody>
+        @for (struc of InterestStructure; track $index) {
+          <tr>
+            <td> {{struc.DueNo}} </td>
+            <td> {{struc.DueDate | date:"dd/MM/yyyy" }} </td>
+            <td> {{struc.DueAmt }}</td>
+            <td> {{struc.PaidDate | date:"dd/MM/yyyy"}} </td>
+            <td> {{struc.PaidAmt}} </td>
+            <td> {{struc.Delay_Days}} </td>
+            <td> {{struc.OtherCredits}} </td>            
+          </tr>
+        }
+
+      </tbody>
+    </table>
+</div>
+}

@@ -61,6 +61,8 @@ export class ItemdetailsComponent implements OnInit  {
   errorPurity: boolean[] = [];
   errorValue: boolean[] = [];
 
+  AllowEmptyWeight: boolean = false;
+
   constructor(private dataService: DataService, private globals: GlobalsService, private dialog: MatDialog, private iterableDiffers: IterableDiffers){
     this.iterableDiffer = iterableDiffers.find([]).create();
   }
@@ -73,7 +75,7 @@ export class ItemdetailsComponent implements OnInit  {
 }
 
   ngOnInit(): void {     
-    
+    this.AllowEmptyWeight = this.globals.AppSetup()[0].Enable_EmptyWt == 0 ? false : true;
   }
 
   LoadItems(GrpSno: number){
@@ -189,32 +191,35 @@ export class ItemdetailsComponent implements OnInit  {
         this.errorQty[i]= false;
       }
 
-      if (this.GridList[i].Gross_Wt == 0){        
-        this.globals.SnackBar("error","Invalid Gross Wt...")
-        this.errorGrossWt[i]= true;
-        return;        
-      }
-      else{
-        this.errorGrossWt[i]= false;
-      }
+      if (this.AllowEmptyWeight ==  false )
+       {
+          if (this.GridList[i].Gross_Wt == 0){        
+            this.globals.SnackBar("error","Invalid Gross Wt...")
+            this.errorGrossWt[i]= true;
+            return;        
+          }
+          else{
+            this.errorGrossWt[i]= false;
+          }
 
-      if (this.GridList[i].Nett_Wt == 0){        
-        this.globals.SnackBar("error","Invalid Nett Wt...")
-        this.errorNettWt[i]= true;
-        return;        
-      }
-      else{
-        this.errorNettWt[i]= false;
-      }
+          if (this.GridList[i].Nett_Wt == 0){        
+            this.globals.SnackBar("error","Invalid Nett Wt...")
+            this.errorNettWt[i]= true;
+            return;        
+          }
+          else{
+            this.errorNettWt[i]= false;
+          }
 
-      if (this.GridList[i].Item_Value == 0){        
-        this.globals.SnackBar("error","Invalid Value...")
-        this.errorValue[i]= true;
-        return;        
-      }
-      else{
-        this.errorValue[i]= false;
-      }
+          if (this.GridList[i].Item_Value == 0){        
+            this.globals.SnackBar("error","Invalid Value...")
+            this.errorValue[i]= true;
+            return;        
+          }
+          else{
+            this.errorValue[i]= false;
+          }
+       }
 
     }
  

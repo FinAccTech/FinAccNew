@@ -141,6 +141,10 @@ export interface TypeInterestDetails {
 	Ason_Duration_Days: number;
     Struc_Json: string;
     Statement_Json: string;
+    Total_Dues: number;
+    Paid_Dues: number;
+    Balance_Dues: number;
+    Pending_Dues: number;
 }
 
 export interface TypeInterestStructure{
@@ -156,6 +160,16 @@ export interface TypeInterestStructure{
     AddedPrincipal: number;
     AdjPrincipal: number;
     NewPrincipal: number;
+}
+
+export interface TypeInterestStructureEmi{
+    DueNo: number;
+    DueDate: string;
+    DueAmt: number;
+    PaidDate: string;
+    PaidAmt: number;
+    Delay_Days: number;
+    OtherCredits: number;    
 }
 
 export interface TypeLoanStatement{

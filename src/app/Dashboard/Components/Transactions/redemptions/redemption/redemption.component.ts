@@ -116,7 +116,7 @@ export class RedemptionComponent implements OnInit {
 
  ngOnInit(): void {    
     
-  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+  this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
   
   this.TillDate   = this.globals.DateToInt (new Date());
   let ser = new ClsVoucherSeries(this.dataService);
@@ -150,6 +150,10 @@ export class RedemptionComponent implements OnInit {
   
   this.apidataService.getData("1").subscribe((data) => {
     this.LoansList = JSON.parse (data.apiData);
+    
+    console.log(this.LoansList);
+    
+    
         this.LoansList = this.LoansList.filter(ln =>{
         return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
       }) 
@@ -390,7 +394,7 @@ getCustomer($event: TypeParties){
       dialogRef.afterClosed().subscribe(result => {        
         if (result){                
           this.getLoan(this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0]);
-          // this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
+          //  this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
         }
         
       }); 

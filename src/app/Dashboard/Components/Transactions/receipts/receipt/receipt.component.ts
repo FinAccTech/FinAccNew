@@ -67,6 +67,8 @@ export class ReceiptComponent implements OnInit {
   StdLedgerList:       TypeLedger[] = [];
   IsOpen: number = 0;
   LockPreviousDate: boolean = false;
+
+  IsEmiScheme: boolean = false;
    
   constructor (  
                 private globals: GlobalsService, 
@@ -118,7 +120,7 @@ export class ReceiptComponent implements OnInit {
               }
 
  ngOnInit(): void {             
-  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+  this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
 
   this.TillDate   = this.globals.DateToInt (new Date());
   let ser = new ClsVoucherSeries(this.dataService);
@@ -210,8 +212,7 @@ export class ReceiptComponent implements OnInit {
     this.Receipt.IsOpen = this.IsOpen;      
   }
   else{    
-    this.Receipt.PaymentMode = JSON.parse ( JSON.stringify (this.Receipt.PaymentModes_Json));
-    console.log(this.Receipt.PaymentMode);
+    this.Receipt.PaymentMode = JSON.parse ( JSON.stringify (this.Receipt.PaymentModes_Json));    
     let sln = new ClsLoans(this.dataService);
     sln.getLoanBySno(this.Receipt.Loan.LoanSno,0,0,0,0,0,0).subscribe(data =>{    
       this.SelectedLoan             = JSON.parse(data.apiData)[0];  
@@ -350,8 +351,9 @@ onSearchByBarCode(event: Event): void {
   this.searchSubject.next(+input.value);
 }
 
-getLoan($event: TypeLoan){        
+getLoan($event: TypeLoan){         
   this.SelectedLoan = $event;  
+  this.IsEmiScheme = this.SelectedLoan.Scheme.Calc_Method == 3 ? true : false;
   this.InterestDetails = null!;
   this.InterestStructure = [];
  

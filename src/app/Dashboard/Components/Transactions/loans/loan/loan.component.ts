@@ -149,15 +149,14 @@ export class LoanComponent implements OnInit {
 
  ngOnInit(): void {  
     
-  this.LockPreviousDate = this.globals.AppSetup().Lock_PreviousDate == 1 ? true : false;
+  this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
   
   let ln = new ClsLoans(this.dataService);
   ln.getLoanMasters().subscribe(data=>{
     
     this.VoucherSeriesList    = JSON.parse(data.apiData.SeriesList);
     this.DataSchemesList      = JSON.parse(data.apiData.SchemesList);
-    this.SchemesList          = JSON.parse(data.apiData.SchemesList);
-    
+    this.SchemesList          = JSON.parse(data.apiData.SchemesList);    
     this.GrpList              = JSON.parse(data.apiData.ItemGroupsList);
     this.LocationList         = JSON.parse(data.apiData.LocationList);
     this.AgentList            = JSON.parse(data.apiData.AgentList);
@@ -166,6 +165,7 @@ export class LoanComponent implements OnInit {
     this.StdLedgerList        = JSON.parse(data.apiData.StdLedgerList);
 
     if (this.Loan.LoanSno === 0){
+
       let Trans  = new ClsLoans(this.dataService);
       this.Loan = Trans.Initialize();      
       this.Loan.IsOpen = this.IsOpen;
@@ -183,8 +183,8 @@ export class LoanComponent implements OnInit {
       this.SchemesList = this.DataSchemesList.filter(sch =>{
           return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
         })
-        
-      this.getScheme(this.SchemesList[0]);   
+                
+      //this.getScheme(this.SchemesList[0]);   
       
       //Item Groups
       this.getGroup(this.GrpList[0]);
@@ -225,9 +225,7 @@ export class LoanComponent implements OnInit {
       this.GridTotals = { TotQty: this.Loan.TotQty , TotGrossWt: this.Loan.TotGrossWt, TotNettWt: this.Loan.TotNettWt, TotPureWt: this.Loan.TotPureWt, TotValue: this.Loan.Market_Value};
       this.IntAmtPerMonth = +((this.Loan.Principal * (this.Loan.Roi / 100 )) /12).toFixed(2);  
     }
-  })
-
-     
+  })     
 }
 
 SaveLoan(){      
@@ -380,7 +378,7 @@ ValidateInputs(): boolean{
 
   if (this.Loan.TotQty == 0 || this.Loan.TotGrossWt == 0 || this.Loan.TotNettWt == 0 || this.Loan.TotPureWt == 0 || this.Loan.Market_Value == 0)
   {
-    this.globals.SnackBar("error", "Invalid Item Details");
+    this.globals.SnackBar("error", "Weight Details or Market Values are missing in Item Details.");
     return false;
   }
 
@@ -594,9 +592,11 @@ getNewScheme($event: TypeScheme){
 }
 
 getScheme($event: TypeScheme){    
-  this.SelectedScheme = $event;     
+  this.SelectedScheme = $event;    
   
-  this.StdRoi = !this.SelectedScheme.IsStdRoi;
+     
+  this.StdRoi = this.SelectedScheme.IsStdRoi!;
+  
   if (this.Loan.LoanSno == 0 ){
     this.Loan.Roi = this.SelectedScheme.Roi!;   
     this.Loan.AdvIntDur = this.SelectedScheme.AdvanceMonth!;

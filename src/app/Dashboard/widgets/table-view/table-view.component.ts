@@ -10,7 +10,8 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 
 @AutoUnsubscribe
 export class TableViewComponent {
-  @Input() InterestStructure!: TypeInterestStructure[];
+  @Input() InterestStructure!: any[];
+  @Input() EmiTable: boolean = false;
   
 }
  

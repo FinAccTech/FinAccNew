@@ -66,13 +66,11 @@ export class UserComponent implements OnInit {
             this.CompRightsList.map(right=>{
               right.Comp_Right = false;
             })
-          }   
-                               
+          }                                  
         }
       })    
 
-      if (this.User.UserSno !== 0){
-               
+      if (this.User.UserSno !== 0){               
         if (this.User.Rights_Json && this.User.Rights_Json.length >0){
           this.User.Rights_List = JSON.parse (this.User.Rights_Json);
         }
@@ -97,7 +95,11 @@ export class UserComponent implements OnInit {
     um.User = this.User;    
     um.User.UserRightsXml = this.GetRightsXml();
     um.User.CompRightsXml = this.GetCompRightsXml();
-    if (this.TransImages.Image_Name.length !==0){
+    
+    console.log(this.TransImages);
+    
+
+    if ( !this.TransImages.Image_Name || this.TransImages.Image_Name.length !==0){
       um.User.Profile_Image = this.auth.getUserImagesServerPath() + um.User.UserName + '/' + this.TransImages.Image_Name;
     }
     else{

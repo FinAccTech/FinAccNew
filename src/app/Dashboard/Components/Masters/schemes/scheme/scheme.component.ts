@@ -49,7 +49,7 @@ export class SchemeComponent implements OnInit {
   }
 
   ngOnInit(): void {        
-      if (this.globals.AppSetup().SchemeCode_AutoGen== 1){
+      if (this.globals.AppSetup()[0].SchemeCode_AutoGen== 1){
         this.CodeAutoGen = true;
         if (this.Scheme.SchemeSno == 0){      
           let it = new ClsSchemes(this.dataService)
@@ -59,7 +59,7 @@ export class SchemeComponent implements OnInit {
         }
       } 
     
-    
+      
     let ser = new ClsVoucherSeries(this.dataService);
     ser.getVoucherSeries(0, this.globals.VTypLoanPayment).subscribe(data =>{
       this.SeriesList = JSON.parse(data.apiData);

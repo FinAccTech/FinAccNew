@@ -157,7 +157,8 @@ CREATE TABLE Transaction_Setup
   IntCalcinDays         BIT,
   MobileNumberMandatory         BIT,
   Enable_AutoApproval   BIT,
-  Lock_PreviousDate   BIT
+  Lock_PreviousDate   BIT,
+  Enable_EmptyWt      BIT
 )
 GO
 
@@ -529,9 +530,9 @@ CREATE TABLE Transaction_Details
   TransSno        INT,
   ItemSno         INT,
   Qty             TINYINT,
-  Gross_Wt        DECIMAL(5,2),
-  Stone_Wt        DECIMAL(5,2),
-  Nett_Wt         DECIMAL(5,2),
+  Gross_Wt        DECIMAL(8,3),
+  Stone_Wt        DECIMAL(8,3),
+  Nett_Wt         DECIMAL(8,3),
   PuritySno       INT,
   Item_Value      MONEY,
   Remarks         VARCHAR(30)

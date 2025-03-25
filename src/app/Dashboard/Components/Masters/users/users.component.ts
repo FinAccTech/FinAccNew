@@ -56,8 +56,6 @@ export class UsersComponent {
   }
  
   OpenUser(grp: TypeUser){     
-        console.log(grp);
-        
     const dialogRef = this.dialog.open(UserComponent, 
       {
         data: grp, 

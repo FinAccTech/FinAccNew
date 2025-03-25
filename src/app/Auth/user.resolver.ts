@@ -25,7 +25,7 @@ export class UserResolver implements Resolve<boolean> {
           this.router.navigate(['logindefault'])    
           break;      
         case 'http://localhost:4200':
-            this.router.navigate(['loginpenny'])    
+            this.router.navigate(['logindefault'])    
             break;        
         case 'http://localhost:4200/#/':
           this.router.navigate(['logindefault'])    

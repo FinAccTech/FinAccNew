@@ -56,6 +56,7 @@ export class LoansummaryComponent {
   InterestDetails!: TypeInterestDetails; 
   InterestStructure: TypeInterestStructure[] = [];
   Statement: TypeLoanStatement[] = [];
+  IsEmiScheme: boolean = false;
 
   BarCode: number = 0;
 
@@ -97,11 +98,12 @@ export class LoansummaryComponent {
   }
 
   LoadDetails(){
+    this.IsEmiScheme = this.SelectedLoan.Scheme.Calc_Method == 3 ? true: false;
     let rep = new ClsReports(this.dataService);    
     rep.getLoanDetailed(this.SelectedLoan.LoanSno, this.AsOnDate).subscribe(data => {
       
       this.InterestDetails    = JSON.parse (data.apiData)[0];        
-      this.InterestStructure  = JSON.parse (this.InterestDetails.Struc_Json);    
+      this.InterestStructure  = JSON.parse (this.InterestDetails.Struc_Json);  
       this.Statement          = JSON.parse (this.InterestDetails.Statement_Json);     
     })
   }

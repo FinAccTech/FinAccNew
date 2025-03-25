@@ -70,16 +70,16 @@ export class PartyComponent implements OnInit {
        let AutoGenType = 0;
 
       switch ( +this.Party.Party_Cat!) {
-        case this.globals.PartyTypCustomers:          
-            AutoGenType = this.globals.AppSetup().PartyCode_AutoGen;
-          break;
+        case this.globals.PartyTypCustomers:                          
+        AutoGenType = this.globals.AppSetup()[0].PartyCode_AutoGen;
+        break;
 
         case this.globals.PartyTypSuppliers:
-          AutoGenType = this.globals.AppSetup().SuppCode_AutoGen;
+          AutoGenType = this.globals.AppSetup()[0].SuppCode_AutoGen;
         break;
         
         case this.globals.PartyTypBorrowers:
-          AutoGenType = this.globals.AppSetup().BwrCode_AutoGen;
+          AutoGenType = this.globals.AppSetup()[0].BwrCode_AutoGen;
         break;        
       }
 
@@ -217,7 +217,7 @@ export class PartyComponent implements OnInit {
   ValidateInputs(): boolean{            
     if (!this.Party.Party_Name!.length )  { this.PartyNameValid = false;  return false; }  else  {this.PartyNameValid = true; }      
 
-    if (this.globals.AppSetup().MobileNumberMandatory == 1){
+    if (this.globals.AppSetup()[0].MobileNumberMandatory == 1){
       if (this.Party.Mobile!.length < 10)  { this.MobNumberValid = false;  return false; }  else  {this.MobNumberValid = true; }     
     }    
 

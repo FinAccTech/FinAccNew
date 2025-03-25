@@ -10,8 +10,7 @@ export class ClsAppSetup{
     private BranchSno: number = +sessionStorage.getItem("sessionSelectedBranchSno")!; 
     private UserSno: number =   JSON.parse(sessionStorage.getItem("sessionLoggedUser")!).UserSno; 
     
-    constructor(private dataService: DataService){        
-    	}
+    constructor(private dataService: DataService){}
 
     getAppSetup(SetupSno: number): Observable<TypeHttpResponse> {
         let postdata ={ "SetupSno" :  SetupSno, "CompSno" :  this.CompSno, "BranchSno": this.BranchSno }; 
@@ -20,8 +19,6 @@ export class ClsAppSetup{
 
     saveAppSetup(): Observable<TypeHttpResponse> {        
         let postdata = this.AppSetup;
-        console.log(postdata);
-        
         return this.dataService.HttpPost(postdata, "/saveAppSetup");                        
     }
 
@@ -95,6 +92,7 @@ export class ClsAppSetup{
             MobileNumberMandatory: 0,        
             Enable_AutoApproval: 0,     
             Lock_PreviousDate: 0,       
+            Enable_EmptyWt:0
             
         }
         return AppSetup
@@ -170,6 +168,7 @@ export interface TypeAppSetup{
     MobileNumberMandatory: number;    
     Enable_AutoApproval: number;
     Lock_PreviousDate: number;
+    Enable_EmptyWt: number;
 }
 
 

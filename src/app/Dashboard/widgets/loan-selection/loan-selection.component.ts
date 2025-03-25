@@ -36,7 +36,7 @@ export class LoanSelectionComponent {
     //   })
   }
 
-  SelectLoan(loan: any){
+  SelectLoan(loan: any){        
     this.dialogRef.close(loan);
   }
 }

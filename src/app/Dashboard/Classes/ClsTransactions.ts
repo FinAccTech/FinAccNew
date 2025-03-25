@@ -5,6 +5,7 @@ import { FileHandle } from "../Types/file-handle";
 import { TypeParties } from "./ClsParties";
 import { TypePayMode } from "../Types/TypePayMode";
 import { AutoUnsubscribe } from "src/app/auto-unsubscribe.decorator";
+import { TypeFileImport } from "../Types/TypeFileImport";
 
 @AutoUnsubscribe
 export class ClsTransactions{ 
@@ -134,6 +135,11 @@ export class ClsTransactions{
 	repostVouchers(): Observable<TypeHttpResponse> {
         let postdata ={ "CompSno" :  this.CompSno}; 
         return this.dataService.HttpPost(postdata, "/repostVouchers");                
+    }
+
+	importLoan(importData: TypeFileImport): Observable<TypeHttpResponse> {        
+		let postdata = importData;		
+        return this.dataService.HttpPost(postdata, "/importLoan");                        
     }
 
 	// getLoansList(): Observable<TypeHttpResponse> {

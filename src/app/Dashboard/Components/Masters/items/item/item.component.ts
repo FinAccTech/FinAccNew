@@ -44,7 +44,7 @@ export class ItemComponent implements OnInit {
 
   ngOnInit(): void {        
 
-      if (this.globals.AppSetup().ItemCode_AutoGen == 1){ 
+      if (this.globals.AppSetup()[0].ItemCode_AutoGen == 1){ 
         this.CodeAutoGen = true;
         if (this.Item.ItemSno == 0){      
           let it = new ClsItems(this.dataService)

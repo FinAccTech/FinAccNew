@@ -136,17 +136,17 @@
             </div>
     
             <div class="formGroup">
-                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotGrossWt" readonly/>
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotGrossWt" [readOnly]="!AllowEmptyWeight" />
                 <label for="" class="formLabelreadonly">GrossWt </label>
             </div>
     
             <div class="formGroup">
-                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotNettWt" readonly/>
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotNettWt" [readonly]="!AllowEmptyWeight"/>
                 <label for="" class="formLabelreadonly">NettWt </label>
             </div>
     
             <div class="formGroup">
-                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotValue" readonly/>
+                <input type="text" class="formControlreadonly" required [(ngModel)] = "GridTotals.TotValue" [readonly]="!AllowEmptyWeight"/>
                 <label for="" class="formLabelreadonly">Value </label>
             </div>
         </div>

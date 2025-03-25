@@ -35,7 +35,7 @@ export class AreaComponent implements OnInit {
 
   ngOnInit(): void {    
             
-      if (this.globals.AppSetup().AreaCode_AutoGen == 1){
+      if (this.globals.AppSetup()[0].AreaCode_AutoGen == 1){
         this.CodeAutoGen = true;
         if (this.Area.AreaSno == 0){     
           let it = new ClsAreas(this.dataService)

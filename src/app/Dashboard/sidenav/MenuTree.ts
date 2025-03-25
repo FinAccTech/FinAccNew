@@ -112,6 +112,7 @@ export const menuTree =[
             {   Caption: "Print Setup", Iconn: "", RouterLink:"printsetup"   },
             {   Caption: "Alert Setup", Iconn: "", RouterLink:"alertsetup"   },
             {   Caption: "Reposting Vouchers", Iconn: "", RouterLink:"voucherposting"},
+            {   Caption: "Import Data", Iconn: "", RouterLink:"importdata"},
             // {   Caption: "General Setup", Iconn: "", RouterLink:""   },
             // {   Caption: "Accounts Setup", Iconn: "", RouterLink:""   },
             // {   Caption: "Users and Security", Iconn: "", RouterLink:""   },

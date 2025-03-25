@@ -34,8 +34,8 @@ export class GlobalsService
   constructor(private dialog: MatDialog){      
   }
   
-  AppSetup(): TypeAppSetup {
-    return JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!)[0];
+  AppSetup(): TypeAppSetup[] {    
+    return JSON.parse (sessionStorage.getItem("sessionTransactionSetup")!);
   }
 
     //Party Types
