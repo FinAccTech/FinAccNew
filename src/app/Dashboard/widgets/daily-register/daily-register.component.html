@@ -20,18 +20,25 @@
                     <th>Loans Value</th>                        
                     <th>Red Count</th>                        
                     <th>Red Value</th>                        
-                    <th>Interest</th>                     
+                    <th>Interest</th>           
+                    <th>DocCharges</th>
                 </thead>
                 <tbody>
-                    @for (item of data; track $index) {
-                        <tr>
-                            <td>{{item.DayStart}}</td>
-                            <td>{{item.DayStart}}</td>
-                            <td>{{item.DayStart}}</td>
-                            <td>{{item.DayStart}}</td>
-                            <td>{{item.DayStart}}</td>
-                            <td>{{item.DayStart}}</td>
-                        </tr>
+                    @if (data){
+                        @for (item of data; track $index) {
+                            @if ( item.LoansCount > 0 || item.RedCount > 0 || item.Interest > 0 ) {
+                                <tr>
+                                    <td> {{$index + 1}} </td>
+                                    <td> {{item.DayStart | intToDate | date:"dd/MM/YYYY" }} </td>                                
+                                    <td> {{item.LoansCount}} </td>
+                                    <td> {{item.LoansValue}} </td>
+                                    <td> {{item.RedCount}} </td>
+                                    <td> {{item.RedValue}} </td>
+                                    <td> {{item.Interest}} </td>
+                                    <td> {{item.DocCharges}} </td>
+                                </tr>
+                            }
+                        }
                     }
                 </tbody>
             </table>

@@ -46,10 +46,10 @@ export class CustomerhistoryComponent {
     });
   }
   
-  AsOnDate: number = 0;
+  AsOnDate:             number = 0;
   CustomersList!:       TypeParties[];
   SelectedCustomer!:    TypeParties; 
-  SelectedLoan!: TypeLoan;
+  SelectedLoan!:        TypeLoan;
   
   CustomerDetails!: TypeCustomerDetailed;
   LoanData: any[] = [];
@@ -92,6 +92,7 @@ export class CustomerhistoryComponent {
     rep.getCustomerDetailed(this.SelectedCustomer.PartySno).subscribe(data =>{
             
       this.CustomerDetails = JSON.parse (data.apiData)[0];                
+       
       this.LoanData = JSON.parse(this.CustomerDetails.Loans_Json!);   
 
       this.PrincipalTotal  = 0;
@@ -101,8 +102,12 @@ export class CustomerhistoryComponent {
       this.LoanData.forEach(ln => {
         this.PrincipalTotal += +ln.Principal,
         this.MarketValueTotal += +ln.Market_Value;
-        this.NettPayableTotal += (+ln.Interest_Balance + +ln.Principal_Balance);        
+
+        if (ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured) {
+          this.NettPayableTotal += (+ln.Interest_Balance + +ln.Principal_Balance);         
+        }
       });
+
     })
   }
 
@@ -126,7 +131,7 @@ export class CustomerhistoryComponent {
     return ln.Loan_Status == this.globals.LoanStatusOpen ? 'green' :  ln.Loan_Status == this.globals.LoanStatusClosed ? '#6e6c6c' : ln.Loan_Status == this.globals.LoanStatusMatured ? 'red' : 'black';
   }
 
-  GoBack(){
+  GoBack(){ 
     this.location.back();
   }
 

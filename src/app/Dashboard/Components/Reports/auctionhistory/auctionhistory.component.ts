@@ -6,8 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ClsLoans, TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
-import { ClsReports, TypeInterestDetails, TypeInterestStructure, TypeLoanHistory, TypeLoanStatement } from 'src/app/Dashboard/Classes/ClsReports';
+import { ClsReports,TypeAuctionHistory} from 'src/app/Dashboard/Classes/ClsReports';
 import { ReportpropertiesComponent } from 'src/app/Dashboard/widgets/reportproperties/reportproperties.component';
+import { AucprintService, TypeAuctionNoticeInfo } from 'src/app/Services/aucprint.service';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
@@ -27,11 +28,11 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class AuctionhistoryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog){}
+  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog, private aucPrintService: AucprintService){}
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date'];
+  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date', 'Print'];
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
   expandedElement!: TypeLoan | null;
 
@@ -39,8 +40,8 @@ export class AuctionhistoryComponent {
   @ViewChild(MatSort) sort!: MatSort;  
   
   AsOnDate: number = 0;
-  LoansList:       TypeLoanHistory[] = [];
-  SelectedLoan!:    TypeLoanHistory;
+  LoansList:       TypeAuctionHistory[] = [];
+  SelectedLoan!:    TypeAuctionHistory;
   StatusCount!: any[];
   SelectedLoanStatus: number = 0;
   
@@ -58,6 +59,7 @@ export class AuctionhistoryComponent {
       }
       else{                
         this.LoansList = JSON.parse (data.apiData);
+        
         this.LoansList.map(ln=>{
           ln.Customer = JSON.parse(ln.Party_Json)[0];
           if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
@@ -87,7 +89,7 @@ export class AuctionhistoryComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
+    if (this.dataSource.paginator) { 
       this.dataSource.paginator.firstPage();
     }
   }
@@ -96,17 +98,44 @@ export class AuctionhistoryComponent {
     return this.globals.DateToInt( new Date ($event.target.value));
   }
 
+  PrintNotice(ln: TypeLoan){
+    const dialogRef = this.dialog.open(ReportpropertiesComponent, 
+      { 
+        data:  this.globals.RepAuctionHistory,
+      });        
+      dialogRef.disableClose = true;    
+      dialogRef.afterClosed().subscribe(result => {         
+        if (result){                        
+          
+              let prnLoans = [];
+              prnLoans.push(ln);
+
+              let AucPrintList: TypeAuctionNoticeInfo[] = [];
+              //this.LoansList.forEach(ln=>{                
+                  AucPrintList.push({"Customer": ln.Customer, "Loan": ln, "LoansList" : prnLoans, Auction_DueDate : ""});
+              //})
+
+              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList, result);          
+        }          
+      }); 
+  }
+
   PrintReport(){
     const dialogRef = this.dialog.open(ReportpropertiesComponent, 
       { 
         data:  this.globals.RepAuctionHistory,
       });        
       dialogRef.disableClose = true;    
-      dialogRef.afterClosed().subscribe(result => {        
+      dialogRef.afterClosed().subscribe(result => {         
         if (result){                        
           if (result && result.length !==0){
-              console.log(result);
-              
+                            
+              let AucPrintList: TypeAuctionNoticeInfo[] = [];
+              this.LoansList.forEach(ln=>{                
+                  AucPrintList.push({"Customer": ln.Customer, "Loan": ln, "LoansList" : JSON.parse (ln.OtherLoans_Json), Auction_DueDate : ""});
+              })
+
+              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList, result);
               //this.StartPrinting(Trans, VouType, result);
           }
         }          

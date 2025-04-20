@@ -62,11 +62,10 @@
                             <label for="" class="formLabelreadonly"> Customer Code  </label>
                         </div>
                     </div>
-                    <div class="col50" style="text-align: center;" (click)="SetFavorite()" >                        
-                        <i *ngIf="Party.IsFavorite == true" class='bx bxs-error bx-tada' ></i>
-                        <i *ngIf="Party.IsFavorite == false" class='bx bxs-error ' ></i>
-                        <p *ngIf="Party.IsFavorite == false">BlackList Now</p>
-                        <p *ngIf="Party.IsFavorite == true">BlackListed</p>
+
+                    <div class="col50" style="text-align: center;" >                        
+                        <i *ngIf="Party.BlackListed == true" class='bx bxs-error bx-tada' style="color: red;" ></i>                        
+                        <p style="color: red; font-size: 1.2rem;" *ngIf="Party.BlackListed == true">BlackListed</p>
                     </div>
                 </div>
 
@@ -161,8 +160,10 @@
                 </div>
             </div>
         </div>
+
         <div class="detailedInfo">
             <mat-tab-group style="height: 100%;">
+
                 <mat-tab label="Address Information"> 
                     <ng-template mat-tab-label>                                        
                         Address Information                  
@@ -204,6 +205,16 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Phone maxlength="20"/>
+                                        <label for="" class="formLabel"> Phone </label>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="col50">
                             <div class="row" style="margin-top: 15px;" >
@@ -238,6 +249,16 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Email maxlength="50"/>
+                                        <label for="" class="formLabel"> Email </label>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </mat-tab>
@@ -248,35 +269,7 @@
                     </ng-template>
                     <div class="row" style="margin-top: 15px;" >
                         <div class="col50">
-                            <div class="row" style="margin-top: 15px;" >
-                                <div class="col100">
-                                    <div class="formGroup">
-                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Mobile maxlength="10"/>
-                                        <label for="" class="formLabel"> Mobile </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row" style="margin-top: 15px;" >
-                                <div class="col100">
-                                    <div class="formGroup">
-                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Phone maxlength="20"/>
-                                        <label for="" class="formLabel"> Phone </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row" style="margin-top: 15px;" >
-                                <div class="col100">
-                                    <div class="formGroup">
-                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Email maxlength="50"/>
-                                        <label for="" class="formLabel"> Email </label>
-                                    </div>
-                                </div>
-                            </div>
-                      
-                        </div>
-                        <div class="col50">
+                           
                             <div class="row" style="margin-top: 15px;" >
                                 <div class="col100">
                                     <div class="formGroup">
@@ -289,12 +282,53 @@
                             <div class="row" style="margin-top: 15px;" >
                                 <div class="col100">
                                     <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Smartcard_No maxlength="20"/>
+                                        <label for="" class="formLabel"> SmartCard No </label>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
                                         <input type="text" class="formControl" required  [(ngModel)] = Party.Occupation maxlength="20"/>
                                         <label for="" class="formLabel"> Occupation </label>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Nominee_Rel maxlength="50"/>
+                                        <label for="" class="formLabel"> Nominee Relation</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Pancard_No maxlength="20"/>
+                                        <label for="" class="formLabel"> Pancard No </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Voterid_No maxlength="20"/>
+                                        <label for="" class="formLabel"> VoterId No </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                           
                             <div class="row" style="margin-top: 15px;" >
                                 <div class="col100">
                                     <div class="formGroup">
@@ -305,6 +339,15 @@
                             </div>
 
                             
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Nominee_Aadhar maxlength="50"/>
+                                        <label for="" class="formLabel"> Nominee Aadhar </label>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </mat-tab>
@@ -412,11 +455,75 @@
                         </div>
                     </div>
                 </mat-tab>
+
+                <mat-tab label="Bank Details"> 
+                    <ng-template mat-tab-label>                                        
+                        Bank Details                 
+                    </ng-template>
+                    <div class="row" style="margin-top: 15px;" >
+                        <div class="col50">
+                           
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Bank_AccName maxlength="50"/>
+                                        <label for="" class="formLabel"> Account Name </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Bank_Branch_Name maxlength="20"/>
+                                        <label for="" class="formLabel"> Branch Name </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Bank_Ifsc maxlength="20"/>
+                                        <label for="" class="formLabel"> IFSC Code </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col50">
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Bank_Name maxlength="50"/>
+                                        <label for="" class="formLabel"> Bank Name </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 15px;" >
+                                <div class="col100">
+                                    <div class="formGroup">
+                                        <input type="text" class="formControl" required  [(ngModel)] = Party.Bank_AccountNo maxlength="50"/>
+                                        <label for="" class="formLabel"> Account No</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </mat-tab>
+
             </mat-tab-group>
         </div>
-        <div class="footer">
-            <button (click)="SaveParty()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
-            <button (click)="DeleteParty()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+        <div class="footer"> 
+            <div class="footerLeft">
+                <button (click)="BlackList()" class="black" > <i class="bx bxs-error"></i> &nbsp; BlackList</button>
+            </div>
+            <div class="footerRight">
+                <button (click)="SaveParty()" > <i class="fa-solid fa-floppy-disk"></i> &nbsp; Save</button>
+                <button (click)="DeleteParty()" class="red"> <i class="fa-solid fa-trash"></i> &nbsp; Delete</button>
+            </div>            
         </div>
     </div>
 

@@ -48,7 +48,7 @@ export class AgentComponent {
     if (this.ValidateInputs() == false) {return};    
     let ar = new ClsAgents(this.dataService);
     ar.Agent = this.Agent;
-    ar.Agent.BranchSno =this.auth.SelectedBranchSno;
+    ar.Agent.BranchSno =this.auth.SelectedBranchSno();
     
     ar.saveAgent().subscribe(data => {
         if (data.queryStatus == 0) {

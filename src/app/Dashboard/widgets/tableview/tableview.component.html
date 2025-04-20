@@ -1,0 +1,177 @@
+<div class="tableContainer">
+    <div class="tableHeader">
+        <div class="searchBox">
+            <div class="generalSearchBox">
+                <input type="text" required  placeholder="Type here to Search for Loan" (keyup)="testfilter($event)" />                    
+                <div class="iconRight">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div> 
+            </div>
+        </div> 
+
+        <div class="rightControls">
+            @if (EnableDateSelection) {
+                <p>From Date</p>                
+                <input type="date" [ngModel]="FromDate | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate = DateToInt($event) " />                                   
+                <p>To Date</p>
+                <input type="date" [ngModel]="ToDate | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate = DateToInt($event) " />                                                               
+                <button (click)="FilterRecords()" >
+                    Filter
+                </button>
+            }
+            @if (EnableCheckbox) {
+                <button class="btnDefault" (click)="AddMultiItems()" style="margin-right: 2rem; display: flex;align-items: center; " > <i class='bx bx-add-to-queue'></i> &nbsp; Add Items </button>
+            }
+            <i class='bx bxs-download' style="color: purple;" ></i>
+        </div>
+    </div>
+
+    <div class="tableBody">
+        <table>
+            <thead>
+                @if (EnableCheckbox) { <th></th> }
+                @for (element of FieldNames(); track $index) {                    
+                    <th  (click)="SortTable(element.Field_Name, $index)" [style.textAlign]="element.Data_Type == 'string' ? 'left' :  element.Data_Type == 'number' ? 'right' : element.Data_Type == 'date' ? 'left': 'center'  " >                        
+                        {{ element.Field_Name.replace("_"," ") }} {{ArrayColsSort[$index] == true ?  (element.Data_Type == "string" || element.Data_Type == "number"  ? '&nbsp;↓' :'')   : (element.Data_Type == "string" || element.Data_Type == "number"  ? '&nbsp;↑' :'')   }}
+                    </th>
+                }
+            </thead>
+
+            <tbody>
+                @if (PagedDataList && PagedDataList.length > 0 ) {
+                    @for (row of PagedDataList[CurrentPage].PageData| search: searchText ; track row; let i=$index ){
+                        @if (i < RowsPerPage+1 ) {  
+
+                            <tr  [ngClass]="row[FieldNames()[0].Field_Name] == '{#Total#}' ? 'totalRow' :''" (click)="SelectRecord(row)"  >                            
+
+                                @if (EnableCheckbox){
+                                    <td>                                        
+                                        @if (row[0]){
+                                            <input type="checkbox" (change)="MultiSelectRecord( row['BarCodeSno'], $event)" [checked]="GetFindStatus(row['BarCodeSno'])"  >                                         
+                                        }
+                                    </td>
+                                    <!-- <td> <input type="checkbox" [checked]="true" > </td> -->
+                                }
+                                @for (element of FieldNames(); track $index) {                                    
+                                    @switch (element.Field_Name) {                                    
+                                        @case ("#") {
+                                            @if (row[element.Field_Name] == "{#Total#}") {
+                                                <td></td>
+                                            }
+                                            @else {
+                                                <td> {{  CurrentPage*RowsPerPage + i +1  }} </td>
+                                            }
+                                        }
+                                        @case ("Actions") {
+                                            @if (row[element.Field_Name] == "{#Total#}") {
+                                                <td></td>}
+                                            @else{ 
+                                                <td class="actions" >                                    
+                                                    <i (click)="EditRecord(row)" class='bx bx-edit edit' ></i>
+                                                    <i (click)="DeleteRecord(row,i)" class='bx bx-trash-alt delete' ></i>                                                    
+                                                    @if (EnablePrint) { <i (click)="PrintRecord(row,i)" class='fa fa-print print'></i> }
+                                                    @if (EnableMail) { <i (click)="MailRecord(row,i)" class='bx bx-envelope mail'></i> }
+                                                </td>
+                                            }
+                                        }                                
+                                        @default{
+                                            @switch (element.Data_Type) {
+                                                @case ("date") {
+                                                    @if (row[element.Field_Name] == "{#Total#}") {
+                                                        <td></td>
+                                                    }
+                                                    @else{
+                                                        <td> {{row[element.Field_Name] | intToDate | date:'dd-MM-yyyy'}} </td>
+                                                    }
+                                                }
+                                                @case ("number") {
+                                                    @if (row[element.Field_Name] == "{#Total#}") {
+                                                        <td></td>} 
+                                                        @else {
+                                                            @if ( isNumeric(row[element.Field_Name]) ) {
+                                                                @switch (element.Decimals) {                                                        
+                                                                    @case (2) {
+                                                                        <td style="text-align: right; padding-right: 1rem;" > {{ row[element.Field_Name] | number:'1.2-2' }} </td>
+                                                                    }
+                                                                    @case (3) {
+                                                                        <td style="text-align: right; padding-right: 1rem;" > {{ row[element.Field_Name] | number:'1.3-3' }} </td>
+                                                                    }
+                                                                    @default {
+                                                                        <td style="text-align: right; padding-right: 1rem;" > {{row[element.Field_Name] | number }} </td>
+                                                                    }
+                                                            }
+                                                        }          
+                                                    }                                                                                              
+                                                }
+                                                @case ("boolean") {
+                                                    <td style="text-align: center;" >
+                                                        <label class="toggle" style="pointer-events: none;">
+                                                            <input class="toggle-checkbox" type="checkbox" [checked]="row[element.Field_Name]"> 
+                                                            <div class="toggle-switch"></div>
+                                                            <!-- <span class="toggle-label"> {{row[element.Field_Name] == (1 || true)  ? 'Active' : 'InActive' }}  </span> -->
+                                                        </label>
+                                                    </td>
+                                                }
+
+                                                @case ("image") {
+                                                    <td style="text-align: center;" >
+                                                        @if ( row[element.Field_Name] && row[element.Field_Name].length > 0 ) {                                                        
+                                                            <img style="border-radius: 50%; filter: drop-shadow(8px 10px 8px #D3AC67); " [src]="row[element.Field_Name]"  width="70" height="70" />
+                                                        }
+                                                    </td>
+                                                }
+                                                @case ("nested") {
+                                                    @if (row[element.Field_Name] == "{#Total#}") {
+                                                        <td></td>
+                                                    } @else {
+                                                        <td> {{row[element.Field_Name][element.NestedField!]}} </td>
+                                                    }    
+                                                }
+                                                @default {
+                                                    @if (row[element.Field_Name] == "{#Total#}") {
+                                                        <td></td>
+                                                    } @else {
+                                                        <td> {{row[element.Field_Name]}} </td>
+                                                    }                                                    
+                                                }
+                                            }
+                                         
+                                        }
+                                    }                
+                                }        
+                            </tr>
+                        }
+                    }        
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tableFooter">
+        <div class="footerLeft">
+            <div class="matGroup" >
+                <div class="matSelect"> 
+                    <mat-select [(value)]="RowsPerPage" (selectionChange)="DoPagination()" >
+                        <mat-option [value]="5">5</mat-option>
+                        <mat-option [value]="10">10</mat-option>                                    
+                        <mat-option [value]="25">25</mat-option>                                    
+                        <mat-option [value]="100">100</mat-option>                                    
+                    </mat-select>
+                </div>
+                <div class="matLabel" >
+                    &nbsp;&nbsp; Rows  
+                </div>                
+            </div>
+        </div>
+
+        <div class="footerRight">
+            <p> Page {{CurrentPage+1}} of {{FilteredDataList.length-1}}</p>
+            <div class="navButtons">
+                <i class='bx bx-first-page bx-flip-vertical' (click)="SetCurrentPage(1)" ></i>
+                <i class='bx bxs-chevron-left bx-flip-vertical' (click)="SetCurrentPage(2)"></i>
+                <i class='bx bxs-chevron-right bx-flip-vertical' (click)="SetCurrentPage(3)"></i>
+                <i class='bx bx-last-page bx-flip-vertical' (click)="SetCurrentPage(4)"></i>
+            </div>
+        </div>
+    </div>
+</div>

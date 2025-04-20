@@ -213,6 +213,9 @@ UnSelectAll(){
 
 ChangeSelectValue(right: TypeUserRights, $event: any, RightType: number){
 
+  console.log($event.target);
+  console.log($event.target.checked);
+  
   switch (RightType) {
     case this.globals.UserRightView:
       right.View_Right =   $event.target.checked;

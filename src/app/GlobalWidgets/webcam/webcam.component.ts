@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
+import { GlobalsService } from 'src/app/Services/globals.service';
 
 @Component({
   selector: 'app-webcam',
@@ -13,7 +14,7 @@ import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
 @AutoUnsubscribe
 export class WebcamComponent  implements AfterViewInit {
 
-  constructor(private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<WebcamComponent>, @Inject(MAT_DIALOG_DATA) public data: FileHandle,    ){
+  constructor(private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<WebcamComponent>, @Inject(MAT_DIALOG_DATA) public data: FileHandle, private globals: GlobalsService    ){
 
   }
 
@@ -59,7 +60,7 @@ export class WebcamComponent  implements AfterViewInit {
     this.capturedImages.push(this.canvas.nativeElement.toDataURL("image/png"));
 
     const fileHandle: FileHandle ={ 
-      Image_Name: "WebCam1",
+      Image_Name: this.globals.getRandomCharacters() + (+this.TransImages.length+1)+ ".jpeg",
       Image_File: this.canvas.nativeElement.toDataURL("image/png"), 
       Image_Url: "",
       SrcType:0,
@@ -94,4 +95,6 @@ export class WebcamComponent  implements AfterViewInit {
   CloseDialog()  {
     this.dialogRef.close(this.TransImages); 
   }
+
+  
 }

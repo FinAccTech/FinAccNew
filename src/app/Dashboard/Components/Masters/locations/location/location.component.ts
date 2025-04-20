@@ -50,7 +50,7 @@ export class LocationComponent implements OnInit {
     if (this.ValidateInputs() == false) {return};    
     let loc = new ClsLocations(this.dataService);
     loc.Location = this.Location;
-    loc.Location.BranchSno = this.auth.SelectedBranchSno;
+    loc.Location.BranchSno = this.auth.SelectedBranchSno();
     
     loc.saveLocation().subscribe(data => {
         if (data.queryStatus == 0) {

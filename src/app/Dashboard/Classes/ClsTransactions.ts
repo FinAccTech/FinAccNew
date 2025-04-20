@@ -62,8 +62,8 @@ export class ClsTransactions{
         return this.dataService.HttpGet(postdata, "/getTransactionNumber");                
     }
 
-	getLoans(LoanSno: number, FromDate: number, ToDate: number, Loan_Status: number, Approval_Status: number, Cancel_Status: number, Open_Status: number ): Observable<TypeHttpResponse> {
-        let postdata ={ "LoanSno" :  LoanSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "Loan_Status": Loan_Status, "Approval_Status": Approval_Status, "Cancel_Status": Cancel_Status, "Open_Status" : Open_Status }; 
+	getLoans(LoanSno: number, FromDate: number, ToDate: number, Loan_Status: number, Approval_Status: number, Cancel_Status: number, Open_Status: number): Observable<TypeHttpResponse> {
+        let postdata ={ "BranchSno": this.BranchSno, "LoanSno" :  LoanSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "Loan_Status": Loan_Status, "Approval_Status": Approval_Status, "Cancel_Status": Cancel_Status, "Open_Status" : Open_Status }; 
         return this.dataService.HttpGet(postdata, "/getLoans");                
     }
 
@@ -73,12 +73,12 @@ export class ClsTransactions{
 	}
 	
 	getLoansforRepledge(): Observable<TypeHttpResponse> {
-		let postdata ={ CompSno: this.CompSno  }; 
+		let postdata ={ CompSno: this.CompSno, BranchSno: this.BranchSno  }; 
         return this.dataService.HttpGet(postdata, "/getLoansforRepledge");  
 	}
 
 	getRepledgeMasters(): Observable<TypeHttpResponse> {
-		let postdata ={ CompSno: this.CompSno  }; 
+		let postdata ={ BranchSno:this.BranchSno, CompSno: this.CompSno  }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeMasters");  
 	}
 
@@ -88,47 +88,47 @@ export class ClsTransactions{
     }
 
 	getReceipts(ReceiptSno: number, FromDate: number, ToDate: number, Open_Status: number): Observable<TypeHttpResponse> {
-        let postdata ={ "ReceiptSno" :  ReceiptSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate , "Open_Status" : Open_Status }; 
+        let postdata ={ BranchSno:this.BranchSno, "ReceiptSno" :  ReceiptSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate , "Open_Status" : Open_Status }; 
         return this.dataService.HttpGet(postdata, "/getReceipts");                
     }
 
 	getRedemptions(RedemptionSno: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "RedemptionSno" :  RedemptionSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate  }; 
+        let postdata ={BranchSno:this.BranchSno, "RedemptionSno" :  RedemptionSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate  }; 
         return this.dataService.HttpGet(postdata, "/getRedemptions");                
     }
 	
 	getAuctionEntries(AuctionSno: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "AuctionSno" :  AuctionSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate  }; 
+        let postdata ={BranchSno:this.BranchSno, "AuctionSno" :  AuctionSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate  }; 
         return this.dataService.HttpGet(postdata, "/getAuctionEntries");                
     }
 
 	getRepledges(RepledgeSno: number, FromDate: number, ToDate: number, Repledge_Status: number, Cancel_Status: number, Open_Status: number ): Observable<TypeHttpResponse> {
-        let postdata ={ "RepledgeSno" :  RepledgeSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "Repledge_Status": Repledge_Status, "Cancel_Status": Cancel_Status, "Open_Status" : Open_Status }; 
+        let postdata ={BranchSno:this.BranchSno, "RepledgeSno" :  RepledgeSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "Repledge_Status": Repledge_Status, "Cancel_Status": Cancel_Status, "Open_Status" : Open_Status }; 
         return this.dataService.HttpGet(postdata, "/getRepledges");                
     }
 
 	getRpPayments(RpPaymentSno: number, FromDate: number, ToDate: number, Open_Status: number ): Observable<TypeHttpResponse> {
-        let postdata ={ "RpPaymentSno" :  RpPaymentSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate,"Open_Status" : Open_Status }; 
+        let postdata ={BranchSno:this.BranchSno, "RpPaymentSno" :  RpPaymentSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate,"Open_Status" : Open_Status }; 
         return this.dataService.HttpGet(postdata, "/getRpPayments");                
     }
 
 	getRpClosures(RpClosureSno: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "RpClosureSno" :  RpClosureSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        let postdata ={BranchSno:this.BranchSno, "RpClosureSno" :  RpClosureSno, "CompSno" : this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
         return this.dataService.HttpGet(postdata, "/getRpClosures");                
     }
 
 	getStatusCard(StatusType: number): Observable<TypeHttpResponse> {
-        let postdata ={ "StatusType" :  StatusType, "CompSno" : this.CompSno}; 
+        let postdata ={BranchSno:this.BranchSno, "StatusType" :  StatusType, "CompSno" : this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getStatusCard");                
     }
 
 	getRecentTransactions(): Observable<TypeHttpResponse> {
-        let postdata ={ "CompSno" : this.CompSno}; 
+        let postdata ={BranchSno:this.BranchSno, "CompSno" : this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getRecentTransactions");                
     }
 
 	getSummedMonthlyLoanAmount(Period: number): Observable<TypeHttpResponse> {
-		let postdata ={ "Period": Period, "CompSno" : this.CompSno }; 
+		let postdata ={BranchSno:this.BranchSno, "Period": Period, "CompSno" : this.CompSno }; 
         return this.dataService.HttpGet(postdata, "/getSummedMonthlyLoanAmount");                
     }
 

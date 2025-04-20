@@ -30,8 +30,6 @@ export class DataService {
     //window.alert("Network Error. Check your Internet Connection or Contact FinAcc for support")
   }
 
-  
-
   HttpPost(PostData: any, ApiSuffix: string)
   {       
       //this.progressService.sendUpdate("start","Progress...");
@@ -105,7 +103,7 @@ export class DataService {
     return data;
   }
 
-HttpSavePrintStyle(StyleName: string, JsonContent: string, savetype:string)
+  HttpSavePrintStyle(StyleName: string, JsonContent: string, savetype:string)
   {       
       //this.progressService.sendUpdate("start","Progress...");
       
@@ -200,5 +198,9 @@ HttpSavePrintStyle(StyleName: string, JsonContent: string, savetype:string)
         }),                
         );        
     return data;
+  }
+
+  GetLocalIp(){
+     return this.http.get('https://api.ipify.org?format=json');
   }
 }

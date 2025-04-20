@@ -29,15 +29,17 @@ export class BranchComponent {
   }
 
   ngOnInit(): void {        
-      if (this.globals.AppSetup()[0].BranchCode_AutoGen == 1){
-        this.CodeAutoGen = true;
-        if (this.Branch.BranchSno == 0){     
-          let it = new ClsBranches(this.dataService)
-          it.getBranchCode().subscribe(data => {
-            this.Branch.Branch_Code = data.apiData;
-          })
-        }
-      }    
+    
+    
+      // if (this.globals.AppSetup()[0].BranchCode_AutoGen == 1){
+      //   this.CodeAutoGen = true;
+      //   if (this.Branch.BranchSno == 0){     
+      //     let it = new ClsBranches(this.dataService)
+      //     it.getBranchCode().subscribe(data => {
+      //       this.Branch.Branch_Code = data.apiData;
+      //     })
+      //   }
+      // }    
   }
 
   SaveBranch(){    
@@ -54,8 +56,6 @@ export class BranchComponent {
     if (this.ValidateInputs() == false) {return};    
     let ar = new ClsBranches(this.dataService);
     ar.Branch = this.Branch;
-    
-    console.log(this.Branch);
     
     ar.saveBranch().subscribe(data => {
         if (data.queryStatus == 0) {

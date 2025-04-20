@@ -280,7 +280,7 @@ SaveReceipt(){
   Rec.Receipt.ImageDetailXML  = StrImageXml;
   Rec.Receipt.PaymentModesXML = this.globals.GetPaymentModeXml(this.Receipt.PaymentMode, this.globals.VTypLoanReceipt);
   Rec.Receipt.fileSource      = this.Receipt.fileSource;
-  Rec.Receipt.BranchSno       = this.auth.SelectedBranchSno;
+  Rec.Receipt.BranchSno       = this.auth.SelectedBranchSno();
   //Rec.Receipt.VouDetailXML = this.globals.GetReceiptVoucherXml(Rec.Receipt, this.StdLedgerList);
 
   Rec.saveReceipt().subscribe(data => {

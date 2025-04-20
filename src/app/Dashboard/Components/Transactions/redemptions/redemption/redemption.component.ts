@@ -149,14 +149,10 @@ export class RedemptionComponent implements OnInit {
   });
   
   this.apidataService.getData("1").subscribe((data) => {
-    this.LoansList = JSON.parse (data.apiData);
-    
-    console.log(this.LoansList);
-    
-    
-        this.LoansList = this.LoansList.filter(ln =>{
-        return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
-      }) 
+    this.LoansList = JSON.parse (data.apiData);    
+    this.LoansList = this.LoansList.filter(ln =>{
+    return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
+  }) 
         this.LoansList.map(loan => {        
           return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
                   loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
@@ -278,7 +274,7 @@ SaveRedemption(){
   Rec.Redemption.ImageDetailXML  = StrImageXml;
   Rec.Redemption.PaymentModesXML = this.globals.GetPaymentModeXml(this.Redemption.PaymentMode, this.globals.VTypLoanRedemption);
   Rec.Redemption.fileSource      = this.Redemption.fileSource;
-  Rec.Redemption.BranchSno = this.auth.SelectedBranchSno;
+  Rec.Redemption.BranchSno = this.auth.SelectedBranchSno();
   //Rec.Redemption.VouDetailXML = this.globals.GetRedemptionVoucherXml(Rec.Redemption,this.StdLedgerList)
   
   Rec.saveRedemption().subscribe(data => {

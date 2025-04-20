@@ -7,11 +7,12 @@ import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material
   imports: [MatDialogClose],
   templateUrl: './selectprintstyle.component.html',
   styleUrl: './selectprintstyle.component.scss'
-})
+}) 
+
 export class SelectprintstyleComponent {
   constructor(
     public dialogRef: MatDialogRef<SelectprintstyleComponent>,    
-    @Inject(MAT_DIALOG_DATA) public data: any,            
+    @Inject(MAT_DIALOG_DATA) public data: any,             
   )  {}
 
   StyleList: string[] = [];

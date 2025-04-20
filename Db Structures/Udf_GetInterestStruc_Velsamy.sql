@@ -13,9 +13,7 @@ GO
 						RETURNS	@Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
                                      TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY,
                                      AdjPrincipal MONEY,NewPrincipal MONEY)
-
-				
-				
+                                     								
 
   /*      DECLARE  @Result TABLE(FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
                                      TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY,
@@ -26,6 +24,7 @@ GO
 				
 				 
 				
+
 		/*		DECLARE @LoanSno INT = 3
 				DECLARE @AsOnDate INT = 20240719
 				DECLARE @IsCompound BIT = 0   */
@@ -52,12 +51,11 @@ GO
                  DECLARE @IntDurMonths		INT
                  DECLARE @IntDurDays        INT
                  DECLARE @AddedPrincipal MONEY
-        
-        IF @Ason < @Loan_Date GOTO ENDS_HERE
 
+                  DECLARE @BranchSno INT = (SELECT BranchSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
                  
-			DECLARE @SchemeSno INT = (SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
-				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup
+			  DECLARE @SchemeSno INT = (SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
+				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup WHERE BranchSno=@BranchSno
         
         
 				
@@ -70,7 +68,9 @@ GO
 
                  From		VW_LOANS
                  WHERE       LoanSno=@LoanSno
-                 
+
+                 IF @AsOn < @Loan_Date GOTO ENDS_HERE
+
                  IF @IsCompound=1 SET @AdvIntAmt=0
                  
                 --IF (@CalcFrom = 0) OR (@CalcFrom < @Loan_Date) SET @CalcFrom = @Loan_Date

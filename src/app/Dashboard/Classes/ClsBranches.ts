@@ -15,8 +15,8 @@ export class ClsBranches{
         
         }
 
-    getBranches(BranchSno: number, DivSno: number): Observable<TypeHttpResponse> {
-        let postdata ={ "BranchSno" :  BranchSno, "CompSno" :  this.CompSno, "DivSno": DivSno }; 
+    getBranches(BranchSno: number, CompSno: number, DivSno: number): Observable<TypeHttpResponse> {
+        let postdata ={ "BranchSno" :  BranchSno, "CompSno" :  CompSno, "DivSno": DivSno }; 
         return this.dataService.HttpGet(postdata, "/getBranches");                
     }
 
@@ -65,6 +65,10 @@ export interface TypeBranch{
     CompSno?: number;    
     Name?: string;
     Details?: string;
+}
+
+export interface TypeBranchRights extends TypeBranch{    
+    Branch_Right: boolean;
 }
 
 

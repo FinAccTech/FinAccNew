@@ -14,7 +14,8 @@ export class CompGuard  {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):boolean {
     let isCompanySelected = this.authService.CompSelected;
-    if (isCompanySelected){
+    let isBranchSelected = this.authService.BranchSelected;
+    if (isCompanySelected && isBranchSelected ){
       return true
     } else {            
       return false;

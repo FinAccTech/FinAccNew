@@ -15,7 +15,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 
 @AutoUnsubscribe
 export class LedgerComponent implements OnInit {  
-  Ledger!:          TypeLedger;  
+  Ledger!:          TypeLedger;   
   DataChanged:    boolean = false;
   GrpsList: TypeLedger[] = [];
 //  SelectedGroupUnder!: TypeLedger;
@@ -97,8 +97,8 @@ export class LedgerComponent implements OnInit {
     this.dialogRef.close(this.DataChanged);
   }
 
-  DateToInt($event: any): number{    
-    return this.globals.DateToInt( new Date ($event));
+  DateToInt($event: any): number{        
+    return this.globals.DateToInt( new Date ($event.target.value));
   }
 
   ValidateInputs(): boolean{            

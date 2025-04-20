@@ -74,7 +74,7 @@ export class VoucherseriesComponent implements OnInit {
     let ser = new ClsVoucherSeries(this.dataService);
     ser.Series = this.Series; 
         
-    ser.Series.BranchSno = this.auth.SelectedBranchSno;
+    ser.Series.BranchSno = this.auth.SelectedBranchSno();
     if (!this.SelectedScheme || this.SelectedScheme == undefined){
       this.SelectedScheme = {"SchemeSno":0, "Scheme_Code":"", "Scheme_Name":""}
     }    

@@ -51,12 +51,12 @@ GO
                  DECLARE @IntDurMonths		INT
                  DECLARE @IntDurDays        INT
                  DECLARE @AddedPrincipal MONEY
-        
-        IF @Ason < @Repledge_Date GOTO ENDS_HERE
+
+                 DECLARE @BranchSno INT = (SELECT BranchSno FROM VW_REPLEDGES WHERE RepledgeSno=@RepledgeSno)
 
                  
 			DECLARE @SchemeSno INT = (SELECT SchemeSno FROM VW_REPLEDGES WHERE RepledgeSno=@RepledgeSno)
-				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup 
+				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup WHERE BranchSno=@BranchSno
 				
 				SELECT		@Calc_Basis=Calc_Basis, @PreCloseDays=PreClosure_Days,@GraceDays=Grace_Days,@MinCalcDays=Min_CalcDays
 				FROM		Schemes 
@@ -68,7 +68,7 @@ GO
                  From		     VW_REPLEDGES
                  WHERE       RepledgeSno=@RepledgeSno
                  
-                 
+                 IF @AsOnDate < @Repledge_Date GOTO ENDS_HERE
                  
                 --IF (@CalcFrom = 0) OR (@CalcFrom < @Repledge_Date) SET @CalcFrom = @Repledge_Date
 				 SET @CalcFrom = @Repledge_Date

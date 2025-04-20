@@ -12,7 +12,7 @@ export class ClsAccReports{
     constructor(private dataService: DataService){}
 
     getDayBook(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "FromDate" :  FromDate, "ToDate": ToDate, "CompSno" :  this.CompSno }; 
+        let postdata ={ BranchSno: this.BranchSno, "FromDate" :  FromDate, "ToDate": ToDate, "CompSno" :  this.CompSno }; 
         return this.dataService.HttpGet(postdata, "/getDayBook");                
     }
     

@@ -27,6 +27,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { TypeAgent } from 'src/app/Dashboard/Classes/ClsAgents';
 import { EmitableComponent } from 'src/app/Dashboard/widgets/emitable/emitable.component';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 
 @Component({
@@ -104,6 +105,8 @@ export class LoanComponent implements OnInit {
   LockPreviousDate: boolean = false;
   StdRoi: boolean = false;
 
+  DocChargesTax: number = 0;
+
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
@@ -113,7 +116,8 @@ export class LoanComponent implements OnInit {
                 private location: Location,
                 private dialog: MatDialog,
                 private vouprint: VoucherprintService,
-                private alertService: AlertsService
+                private alertService: AlertsService, 
+                private apidataService: ApiDataService,
               )
               {           
                 this.Loan = loanService.getLoan();                  
@@ -149,6 +153,8 @@ export class LoanComponent implements OnInit {
 
  ngOnInit(): void {  
     
+  
+  
   this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
   
   let ln = new ClsLoans(this.dataService);
@@ -180,11 +186,11 @@ export class LoanComponent implements OnInit {
         this.getSeries(this.DefaultSeries[0]);   
 
       //Schemes
-      this.SchemesList = this.DataSchemesList.filter(sch =>{
-          return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
-        })
+      // this.SchemesList = this.DataSchemesList.filter(sch =>{
+      //     return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
+      //   })
                 
-      //this.getScheme(this.SchemesList[0]);   
+      this.getScheme(this.SchemesList[0]);   
       
       //Item Groups
       this.getGroup(this.GrpList[0]);
@@ -284,7 +290,7 @@ SaveLoan(){
   Ln.Loan.PaymentModesXML = this.globals.GetPaymentModeXml(this.Loan.PaymentMode, this.globals.VTypLoanPayment);
   
   Ln.Loan.fileSource      = this.Loan.fileSource;
-  Ln.Loan.BranchSno = this.auth.SelectedBranchSno;
+  Ln.Loan.BranchSno = this.auth.SelectedBranchSno();
   
   if (this.SelectedScheme.Calc_Method == 3){
     const OriginalEmi           = (+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!;
@@ -302,7 +308,8 @@ SaveLoan(){
           
           if (this.Loan.LoanSno == 0) {this.alertService.CreateLoanAlert(this.globals.AlertTypeNewLoan, this.Loan);}
 
-          this.globals.SnackBar("info", this.Loan.LoanSno == 0 ? "Loan Created successfully" : "Loan updated successfully");     
+          this.globals.SnackBar("info", this.Loan.LoanSno == 0 ? "Loan Created successfully" : "Loan updated successfully");   
+          this.apidataService.fetchData("1");  
           this.router.navigate(['dashboard/loans/' + this.IsOpen]);  
         }
     }, 
@@ -416,7 +423,11 @@ CalculateLoanValues(){
   this.Loan.AdvIntAmt = this.IntAmtPerMonth * this.Loan.AdvIntDur;  
   if (this.Loan.DocChargesPer && this.Loan.DocChargesPer !== 0){
     this.Loan.DocChargesAmt =  Math.round(this.Loan.Principal * (this.Loan.DocChargesPer / 100));  
+    if (this.DocChargesTax !== 0) {
+      this.Loan.DocChargesAmt += (this.Loan.DocChargesAmt * (this.DocChargesTax/100))
+    }
   }  
+
   this.Loan.Nett_Payable = +(this.Loan.Principal - this.Loan.AdvIntAmt - this.Loan.DocChargesAmt).toFixed(2);
 
   if (this.SelectedScheme.Calc_Method == 3){    
@@ -528,8 +539,7 @@ getCustomer($event: TypeParties){
         this.CustomerDetails = JSON.parse (data.apiData)[0];   
         this.LoanDataAll = JSON.parse(this.CustomerDetails.Loans_Json!);     
         this.LoanData = JSON.parse(this.CustomerDetails.Loans_Json!);     
-                
-
+        
         if(this.LoanData)
         {
           this.LoanData = this.LoanData.filter(ln =>{
@@ -562,9 +572,14 @@ getSeries($event: TypeVoucherSeries){
     // }    
   }
 
-  this.SchemesList = this.DataSchemesList.filter(sch =>{
-    return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
-  })
+  const BranchesList = JSON.parse (sessionStorage.getItem("sessionBranchesList")!);     
+    
+  if  (BranchesList.length < 2){
+    this.SchemesList = this.DataSchemesList.filter(sch =>{
+      return sch.Series!.SeriesSno == this.SelectedSeries.SeriesSno;
+    })
+  }
+
   if (this.Loan.LoanSno === 0)
   {
     this.getScheme(this.SchemesList[0]);        
@@ -592,8 +607,8 @@ getNewScheme($event: TypeScheme){
 }
 
 getScheme($event: TypeScheme){    
+    
   this.SelectedScheme = $event;    
-  
      
   this.StdRoi = this.SelectedScheme.IsStdRoi!;
   
@@ -601,12 +616,16 @@ getScheme($event: TypeScheme){
     this.Loan.Roi = this.SelectedScheme.Roi!;   
     this.Loan.AdvIntDur = this.SelectedScheme.AdvanceMonth!;
     this.Loan.DocChargesPer = parseFloat(this.SelectedScheme.ProcessingFeePer!.toString());      
+    this.Loan.DocChargesAmt = this.SelectedScheme.Doc_Charges!;      
+    this.DocChargesTax = this.SelectedScheme.Tax_Per!;
   }  
   else{
     if (this.FirstTimeLoaded == false){
       this.Loan.Roi = this.SelectedScheme.Roi!;   
       this.Loan.AdvIntDur = this.SelectedScheme.AdvanceMonth!;
       this.Loan.DocChargesPer = parseFloat(this.SelectedScheme.ProcessingFeePer!.toString());              
+      this.Loan.DocChargesAmt = this.SelectedScheme.Doc_Charges!;      
+      this.DocChargesTax = this.SelectedScheme.Tax_Per!;
     }
     this.FirstTimeLoaded = false;
   }
@@ -662,6 +681,7 @@ SetMatureDate(){
 GetRoi($event: any){
   const amt =  $event.target.value;    
   if (this.CheckMinMaxLoanValues(amt) == false) { $event.target.value = 0; return; }
+  
   if (this.SelectedScheme.Enable_AmtSlab == false && this.SelectedScheme.Enable_FeeSlab == false ) { return;}
 
     let sch = new ClsSchemes(this.dataService);    

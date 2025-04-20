@@ -12,16 +12,12 @@ GO
 					RETURNS	@Result	TABLE (FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
                                      TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY,
                                      AdjPrincipal MONEY,NewPrincipal MONEY) 
-
-                                                 
-
-				
-				
+                                     
 
   /*      DECLARE  @Result TABLE(FromDate DATETIME,ToDate DATETIME,Duration INTEGER,DurType BIT,Roi MONEY, IntAccured MONEY,
                                      TotIntAccured MONEY,IntPaid MONEY,PrinPaid MONEY,AddedPrincipal MONEY,
                                     AdjPrincipal MONEY,NewPrincipal MONEY)  */
-                WITH ENCRYPTION AS
+          WITH ENCRYPTION AS
                 
 				BEGIN  
 				
@@ -53,12 +49,14 @@ GO
                  DECLARE @IntDurMonths		INT
                  DECLARE @IntDurDays        INT
                  DECLARE @AddedPrincipal MONEY
-        
-        IF @Ason < @Loan_Date GOTO ENDS_HERE
+                 DECLARE @BranchSno INT = (SELECT BranchSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
+                         
+			
+			  IF @Ason < @Loan_Date GOTO ENDS_HERE
 
                  
 			DECLARE @SchemeSno INT = (SELECT SchemeSno FROM VW_LOANS WHERE LoanSno=@LoanSno)
-				SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup 
+			SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup WHERE BranchSno=@BranchSno
 				
 				SELECT		@Calc_Basis=Calc_Basis, @PreCloseDays=PreClosure_Days,@GraceDays=Grace_Days,@MinCalcDays=Min_CalcDays
 				FROM		  Schemes 
@@ -117,6 +115,9 @@ GO
                 
                 --IF @CalcFrom = @Loan_Date
                   --                  BEGIN
+                  /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
+                  SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
+
                                         INSERT INTO @Result VALUES(@FromDate,@ToDate,DATEDIFF(DAY,@FromDate,@ToDate),1,@Roi,ISNULL(@IntAccured,0),
                                                                  ISNULL(@IntAccured,0),ISNULL(@IntPaid,0)+@AdvIntAmt,ISNULL(@PrinPaid,0),ISNULL(@AddedPrincipal,0),0,ISNULL(@NewPrincipal,0))
                     --                End
@@ -143,7 +144,7 @@ GO
                          
                          --CHECKING FOR ANY PRINCIPAL OR INTEREST PAID DURING THIS PERIOD------
                          SELECT      @IntPaid=SUM(Rec_Interest),@PrinPaid=SUM(Rec_Principal)
-                         From			VW_RECEIPTS
+                         From			   VW_RECEIPTS
                          WHERE       LoanSno=@LoanSno AND Receipt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate)
                      
                          SET @Intpaid = ISNULL(@IntPaid,0) + @AdvIntAmt
@@ -169,7 +170,12 @@ GO
      
         
                          SET @NewPrincipal = @NewPrincipal - ISNULL(@PrinPaid,0)
-						            SET @TotIntAccured = @TotIntAccured + @IntAccured
+						             
+
+                         /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
+                        SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
+
+                        SET @TotIntAccured = @TotIntAccured + @IntAccured
 
                          INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,@Calc_Basis,@Roi,
                                                      ISNULL(@IntAccured,0),ISNULL(@TotIntAccured,0),
@@ -207,11 +213,7 @@ GO
                                  SET @AdvIntAmt = 0
                             End
         
-        -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 --------------------A1
-                                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
-                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)
-                                 SET @AddedPrincipal = 0
-                                 -----------------------------------------------------------------------------A1
+       
                          
 /*                     IF @Calc_Basis = 1
                          BEGIN
@@ -220,6 +222,7 @@ GO
                          End
                      Else
                          BEGIN */
+                         
                             SET @IntAccured =
                             CASE
                                     WHEN @MinCalcDays = 0 THEN
@@ -240,7 +243,17 @@ GO
                                 SET @IntAccured = CAST(@IntAccured as decimal(18,2))
 /*                         End  */
 
-						        SET @TotIntAccured = @TotIntAccured + @IntAccured
+						        
+                     -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 --------------------A1
+                                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
+                                 -----------------------------------------------------------------------------A1
+
+                                  /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
+                                SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
+
+                                 SET @TotIntAccured = @TotIntAccured + @IntAccured
+
                      INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,1,@Roi,@IntAccured,@TotIntAccured,@IntPaid,@PrinPaid,ISNULL(@AddedPrincipal,0),0,@NewPrincipal-@PrinPaid)
         ENDS_HERE:
                    Return 

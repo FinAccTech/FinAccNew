@@ -1,4 +1,4 @@
-<div class="modalForm">
+<div class="modalForm" style="width: 100%;">
     <div class="header">
         <div class="headerLeft">
             <span class="bar"></span>
@@ -77,12 +77,19 @@
                 </div>
 
                 <div class="row" style="margin-top: 1.2rem;" >
-                    <div class="col100">
+                    <div class="col50">
                         <label class="toggle">                    
                             <input class="toggle-checkbox" type="checkbox" [checked]="User.Enable_WorkingHours" [(ngModel)]="User.Enable_WorkingHours"> <!-- (change)="SetActiveStatus($event)"  -->
                             <div class="toggle-switch"></div>
                             <span class="toggle-label"> {{User.Enable_WorkingHours == 1? 'Working Hours Enabled' : 'Working Hours Disabled' }}  </span>
                         </label>
+                    </div>
+                    <div class="col50">
+                        <div class="formGroup">
+                            <input type="text" class="formControl" required [(ngModel)] = User.Ip_Restrict  />
+                            <label for="" class="formLabel"> Restrict with Ip </label>                                 
+                            <i class='bx bx-current-location rightIcon' (click)="getIpAddress()" ></i>               
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 1.2rem;" >
@@ -107,7 +114,7 @@
         
 
         <p style="margin: 1rem;" >***Tick the Companies below you want to give access</p>
-        <table class="compTable">
+        <table class="compTable" >
             <thead>
                 <th> # </th>
                 <th>Company Name</th>
@@ -121,7 +128,21 @@
             </tbody>
         </table>
 
-        
+        <div style="height: 20rem; overflow-y: auto; " >
+            <table class="compTable">
+                <thead>
+                    <th> # </th>
+                    <th>Branches</th>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let brch of BranchRightsList; let i = index;" >                                        
+                        <td style="text-align: center;" > <mat-checkbox (click)="ChangeSelectValueBranch(brch,$event)"  [checked]=brch.Branch_Right >  </mat-checkbox></td>
+                        <td> {{brch.Branch_Name}}  </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 

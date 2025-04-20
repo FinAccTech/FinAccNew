@@ -20,10 +20,8 @@
                         <i class='bx bx-printer' style='color:gray' ></i>
                         <span>Print Summary</span>
                     </div>
-                </button>
-                  
-            </mat-menu>
-            
+                </button>                  
+            </mat-menu>            
         </div>
     </div>
 
@@ -49,9 +47,7 @@
                 <input type="date" class="formControl" [ngModel]="AsOnDate! | intToDate | date:'yyyy-MM-dd'" (blur)="AsOnDate= DateToInt($event)" />                                                                                                            
                 <label for="" class="formLabel date"> As On </label>            
             </div>
-
-            <button class="btn" (click)="LoadDetails()">Load Details</button>
-            
+            <button class="btn" (click)="LoadDetails()">Load Details</button>            
         </div>
     </div>
 
@@ -115,6 +111,7 @@
                         <th>Principal</th>                      -->
                         <th>Nett Payable</th>                     
                     </thead>
+                    
                     <tr *ngFor="let ln of LoanData; let i = index" (click)="SelectedLoan = ln"  >
                         <td [style.color]="GetStatusColor(ln)" > {{ln.Loan_No}} </td>
                         <td [style.color]="GetStatusColor(ln)"> {{ln.Loan_Date | intToDate | date:'dd/MM/yyyy'}} </td>
@@ -139,6 +136,7 @@
                         <td [style.color]="GetStatusColor(ln)" > {{ln.Item_Details_With_Qty}} </td>                        
                         <td [style.color]="GetStatusColor(ln)" class="tdRight"> {{ln.Interest_Balance + ln.Principal_Balance | number}} </td>                        
                     </tr>
+
                     <tfoot>
                         <td colspan="7"> Total </td>
                         <td> {{PrincipalTotal.toFixed(2) }} </td>

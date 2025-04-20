@@ -6,21 +6,20 @@
         </div>
 
         <div class="headerRight">
-            <div class="searchBox">
-                <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />
-                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+            <!-- <div class="searchBox">
+                <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />                
                 <div class="iconRight">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div> 
-            </div>
-    
+            </div> -->
+     
             
             <button class="newBtn" (click)="AddNewGroup()">
                 <i class='bx bx-plus bx-tada' ></i>Create New
             </button>
-            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+            <!-- <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i>  -->
 
-            <mat-menu #menu="matMenu" style="padding: 1rem;">
+            <!-- <mat-menu #menu="matMenu" style="padding: 1rem;">
                 <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
                     <div class="menuClass">
                         <i class="fas fa-file-excel" style="color: green;" ></i>
@@ -45,13 +44,23 @@
                         <span> &nbsp; Text</span>
                     </div>                    
                 </button>                    
-            </mat-menu>
+            </mat-menu> -->
         </div>
     </div>
 
    
     <div class="tableBody">
-        <div class="tableContainer" #TABLE>
+        @defer (when ItemGroupList.length >0) {
+            <app-tableview [DataSource]="ItemGroupList" [FieldNames]="FieldNames" [RemoveSignal]="RemoveSignal" (actionEvent)="handleActionFromTable($event)" >      </app-tableview>                        
+        }
+        @placeholder {
+            <p>Groups list Here</p>
+        }
+        @loading {
+            <p>Loading in Progress</p>
+        }
+
+        <!-- <div class="tableContainer" #TABLE>
             <table class="table" mat-table [dataSource]="dataSource" matSort  matTableExporter #exporter="matTableExporter" >
 
               <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
@@ -96,7 +105,7 @@
               
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 5 aria-label="Select page of users"></mat-paginator> 
-          </div>
+        </div> -->
     </div>
 </div>
 <!-- <div class="mastersList">

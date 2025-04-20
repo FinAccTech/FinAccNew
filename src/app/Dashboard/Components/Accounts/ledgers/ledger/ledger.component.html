@@ -69,8 +69,8 @@
             <div class="col50">
                 <div class="row">
                     <div class="col50">
-                        <div class="formGroup">
-                            <input type="date" class="formControl" [ngModel]="Ledger.Created_Date! | intToDate | date:'yyyy-MM-dd'" (ngModelChange)="Ledger.Created_Date = DateToInt($event) " />                    
+                        <div class="formGroup">                            
+                            <input type="date" class="formControl" [ngModel]="Ledger.Created_Date! | intToDate | date:'yyyy-MM-dd'" (blur)="Ledger.Created_Date= DateToInt($event);"/>                                                               
                             <label for="" class="formLabel date"> Create Date </label>
                         </div>
                     </div>

@@ -211,7 +211,7 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
     Rec.Auction.ItemDetailXML  = null!;
     Rec.Auction.ImageDetailXML  = StrImageXml;
     Rec.Auction.fileSource      = this.Auction.fileSource;
-    Rec.Auction.BranchSno = this.auth.SelectedBranchSno;
+    Rec.Auction.BranchSno = this.auth.SelectedBranchSno();
   
     Rec.saveAuction().subscribe(data => {
           if (data.queryStatus == 0) {

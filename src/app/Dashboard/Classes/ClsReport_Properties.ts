@@ -42,7 +42,7 @@ export class ClsReportProperties{
 export interface TypeReportPropertie{
     ReportSno: number;    
     Report_Name: string;
-    Report_Style: string;
-    CompSno: number;    
+    CompSno: number;        
+    Report_Style: string;    
 }
 

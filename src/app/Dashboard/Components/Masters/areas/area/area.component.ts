@@ -51,7 +51,7 @@ export class AreaComponent implements OnInit {
     if (this.ValidateInputs() == false) {return};    
     let ar = new ClsAreas(this.dataService);
     ar.Area = this.Area;
-    ar.Area.BranchSno =this.auth.SelectedBranchSno;
+    ar.Area.BranchSno =this.auth.SelectedBranchSno();
     
     ar.saveArea().subscribe(data => {
         if (data.queryStatus == 0) {

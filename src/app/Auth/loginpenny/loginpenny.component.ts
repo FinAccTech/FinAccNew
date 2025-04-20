@@ -20,9 +20,13 @@ constructor(private auth: AuthService, private router: Router, private dataServi
   Password: string = ""
   InvalidUser: boolean = false;
   errText: string = "";
- 
+  LocalIp: string = "";
+
   ngOnInit(){        
     this.ClientCode = "FS2025030143";    
+    this.dataService.GetLocalIp().subscribe((data: any)=>{
+      this.LocalIp = data.ip;
+    })
   }
 
   CheckLogin(){
@@ -52,7 +56,7 @@ constructor(private auth: AuthService, private router: Router, private dataServi
           this.auth.LoggedClient = data.apiData.ClientInfo[0];                                
           sessionStorage.setItem("sessionLoggedClient", JSON.stringify (data.apiData.ClientInfo[0]))!;  
           
-            this.auth.CheckLogin(this.UserName, this.Password).subscribe(data =>{      
+            this.auth.CheckLogin(this.UserName, this.Password, this.LocalIp).subscribe(data =>{      
         
               if (data.queryStatus == 0){
                 this.InvalidUser = true;
@@ -79,32 +83,39 @@ constructor(private auth: AuthService, private router: Router, private dataServi
                     this.auth.CompSelected = 1;
                     this.auth.SelectedCompany  = data.apiData.CompInfo[0];        
         
-                    this.auth.SelectedBranchSno = data.apiData.CompInfo[0].CompSno;  // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database
+                    //this.auth.SelectedBranchSno = data.apiData.CompInfo[0].CompSno;  // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database
             
                     sessionStorage.setItem("sessionCompSelected","1")!;
                     sessionStorage.setItem("sessionSelectedCompany",JSON.stringify(data.apiData.CompInfo[0]));
                     sessionStorage.setItem("sessionSelectedCompSno",JSON.stringify(data.apiData.CompInfo[0].CompSno));            
-                    sessionStorage.setItem("sessionSelectedBranchSno",this.auth.SelectedBranchSno.toString())!;                                            
+                    //sessionStorage.setItem("sessionSelectedBranchSno",this.auth.SelectedBranchSno.toString())!;                                            
         
-                    let tset = new ClsAppSetup(this.dataService);
-                    tset.getAppSetup(0).subscribe(data => {
-                      if (data.queryStatus == 0){
-                        alert ("Error getting Transaction Setup details");
-                        return;
-                      }
-                      else{
-                        sessionStorage.setItem("sessionTransactionSetup",data.apiData);
-                      }        
-                    });
+                    // let tset = new ClsAppSetup(this.dataService);
+                    // tset.getAppSetup(0).subscribe(data => {
+                    //   if (data.queryStatus == 0){
+                    //     alert ("Error getting Transaction Setup details");
+                    //     return;
+                    //   }
+                    //   else{
+                    //     sessionStorage.setItem("sessionTransactionSetup",data.apiData);
+                    //   }        
+                    // });
                   }
                 else{
                     this.auth.CompSelected = 0;
                     this.auth.SelectedCompany = null!;
-                    this.auth.SelectedBranchSno = 0;  // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database
+                    //this.auth.SelectedBranchSno = 0;  // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database
             
                     sessionStorage.setItem("sessionSelectedCompany","")!;            
                     sessionStorage.setItem("sessionSelectedBranchSno","0")!;                                                                 
                 }
+
+                if (data.apiData.BranchInfo) {
+                  sessionStorage.setItem("sessionBranchesList", JSON.stringify (data.apiData.BranchInfo))!;        
+                }
+
+                this.auth.BranchSelected = 0;
+                sessionStorage.setItem("sessionBranchSelected","0")!;
                 this.router.navigate(['dashboard']);      
               }
             })

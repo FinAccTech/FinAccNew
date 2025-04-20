@@ -46,7 +46,7 @@ export class LoansComponent{
         this.InitLoansList();
       });  
   }
-  
+   
   @ViewChild('TABLE')  table!: ElementRef;
  
   FromDate: number = 0;
@@ -102,7 +102,7 @@ InitLoansList(){
 
 //   return trans.getLoans(item,0,0,0,0,0,0)
   
-// }
+// } 
 
   LoadLoansList(FromDate: number, ToDate: number){ 
     let ln = new ClsLoans(this.dataService);    
@@ -112,11 +112,12 @@ InitLoansList(){
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
+
         this.loanService.LoadedFromDate = FromDate;
         this.loanService.LoadedToDate = ToDate;                
         this.LoansList = JSON.parse(data.apiData);          
-                             
-        this.LoansList.map(ln=>{
+        
+        this.LoansList.map(ln=>{ 
           ln.Customer = JSON.parse(ln.Party_Json)[0];
           if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
           ln.IGroup = JSON.parse(ln.Group_Json)[0];
@@ -223,8 +224,8 @@ InitLoansList(){
       this.dataSource.paginator.firstPage();
     }
   }
-  DateToInt($event: any): number{        
-    return this.globals.DateToInt( new Date ($event.target.value));
+  DateToInt($event: any): number{            
+      return this.globals.DateToInt( new Date ($event.target.value));
   }
 
 }

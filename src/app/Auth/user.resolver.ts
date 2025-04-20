@@ -11,8 +11,7 @@ export class UserResolver implements Resolve<boolean> {
   resolve(): Observable<boolean> {
     // const userRole = localStorage.getItem('role');
     const baseUrl = window.location.origin;
-    console.log(baseUrl);
-    
+        
     switch (baseUrl) {
         case 'https://pennygold.in':
             this.router.navigate(['loginpenny'])    
@@ -26,6 +25,7 @@ export class UserResolver implements Resolve<boolean> {
           break;      
         case 'http://localhost:4200':
             this.router.navigate(['logindefault'])    
+            // this.router.navigate(['loginpenny'])    
             break;        
         case 'http://localhost:4200/#/':
           this.router.navigate(['logindefault'])    

@@ -7,13 +7,13 @@ import { AutoUnsubscribe } from "src/app/auto-unsubscribe.decorator";
 export class ClsAppSetup{
     public AppSetup!: TypeAppSetup;
     private CompSno: number = +sessionStorage.getItem("sessionSelectedCompSno")!;     
-    private BranchSno: number = +sessionStorage.getItem("sessionSelectedBranchSno")!; 
+    
     private UserSno: number =   JSON.parse(sessionStorage.getItem("sessionLoggedUser")!).UserSno; 
     
     constructor(private dataService: DataService){}
 
-    getAppSetup(SetupSno: number): Observable<TypeHttpResponse> {
-        let postdata ={ "SetupSno" :  SetupSno, "CompSno" :  this.CompSno, "BranchSno": this.BranchSno }; 
+    getAppSetup(SetupSno: number, BranchSno: number): Observable<TypeHttpResponse> {
+        let postdata ={ "SetupSno" :  SetupSno, "CompSno" :  this.CompSno, "BranchSno": BranchSno }; 
         return this.dataService.HttpGet(postdata, "/getTransactionSetup");                
     }
 
@@ -26,7 +26,7 @@ export class ClsAppSetup{
         let AppSetup: TypeAppSetup = {
             SetupSno: 0,
             CompSno: this.CompSno,
-            BranchSno: this.BranchSno,            
+            BranchSno: 0,            
             AreaCode_AutoGen : 0,
             AreaCode_Prefix: "",
             AreaCode_CurrentNo   : 0,

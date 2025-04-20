@@ -141,7 +141,7 @@ export class SchemeComponent implements OnInit {
 
     let sch = new ClsSchemes(this.dataService);
     sch.Scheme = this.Scheme;    
-    sch.Scheme.BranchSno = this.auth.SelectedBranchSno;
+    sch.Scheme.BranchSno = this.auth.SelectedBranchSno();
     sch.Scheme.MultiIntXml = StrSlabXml;
     sch.Scheme.AmtIntXml = StrAmtSlabXml;
     sch.Scheme.FeeSlabXml = StrFeeSlabXml;
@@ -211,7 +211,7 @@ export class SchemeComponent implements OnInit {
     if (this.Scheme.Enable_AmtSlab && this.AmtSlab.length < 2) { this.globals.SnackBar("error","Invalid Amout Slab Details"); return false }
     if (this.Scheme.Calc_Method == 1 && this.SchemeSlab.length < 2) { this.globals.SnackBar("error","Invalid Multiple Scheme Slab Details"); return false }
     if (this.Scheme.Enable_FeeSlab && this.FeeSlab.length < 2) { this.globals.SnackBar("error","Invalid Fee Slab Details"); return false }
-    
+    if (this.Scheme.Doc_Charges! > 0 && this.Scheme.Doc_Charges_Per! > 0) { this.globals.SnackBar("error","Doc Charges should be either Amount or %ge"); return false }
     return true;
   }
   

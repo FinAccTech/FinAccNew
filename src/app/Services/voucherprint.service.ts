@@ -10,6 +10,7 @@ import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 import { AuthService } from './auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectprintstyleComponent } from '../Dashboard/widgets/selectprintstyle/selectprintstyle.component';
+import { TypeParties } from '../Dashboard/Classes/ClsParties';
 
 
 @Injectable({
@@ -99,9 +100,10 @@ StartPrinting(Trans: any, VouType: number, PrintStyle: string){
                 </html>`
           );
           popupWin!.document.close();        
-    });
-  
+    });  
 }
+
+
 
 GetHtmlFromFieldSet(FldList: [], FieldSet: TypePrintFields, LeftMargin: number, TopMargin: number, IsCopy: boolean): string{
 
@@ -503,8 +505,8 @@ GetPrintFields(Trans: any, VouType: number){
                 let itemList = JSON.parse(Trans.Items_Json);
                 itemList.forEach((it:any)=>{
                     PrintFields.ItemDetails.push({"ItemSno": it.ItemSno, "Item_Name": it.Item.Item_Name, "Qty" : it.Qty, "Gross_Wt" : it.Gross_Wt.toFixed(3), "Nett_Wt": it.Nett_Wt.toFixed(3) , "Stone_Wt":  (it.Gross_Wt - it.Nett_Wt).toFixed(3), "Purity_Name": it.Purity.Purity_Name, "Purity": it.Purity.Purity, "Value": it.Item_Value, "Remarks" : it.Remarks});
-                    PrintFields.ItemDetails_In_Line += it.Item_Name + ', ';
-                    PrintFields.ItemDetails_With_Qty += it.Item_Name + '('+ it.Qty + ')' + ', ';
+                    PrintFields.ItemDetails_In_Line += it.Item.Item_Name + ', ';
+                    PrintFields.ItemDetails_With_Qty += it.Item.Item_Name + '('+ it.Qty + ')' + ', ';
                 })                
             }
 
@@ -611,11 +613,13 @@ GetPrintFields(Trans: any, VouType: number){
             PrintFields.Receipt_Loan_Image = Trans.Loan.Loan_Image;
             PrintFields.Receipt_Loan_Mature_Date = this.globals.IntToDateString (Trans.Loan.Mature_Date);
             break;            
-    }
+              
+
+        }
     return PrintFields;
    }
 
-   IntializePrintFields(){
+IntializePrintFields(){
     let PrintFields: TypePrintFields = {
         LoanSno: 0,
         Loan_No: "",
@@ -830,3 +834,4 @@ interface TypePrintSetup{
     CopyLeftMargin: number;
     CopyTopMargin: number;    
 }
+

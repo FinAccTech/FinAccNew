@@ -6,19 +6,18 @@
         </div>
 
         <div class="headerRight">
-            <div class="searchBox">
-                <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />
-                <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+            <!-- <div class="searchBox">
+                <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />                
                 <div class="iconRight">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div> 
-            </div>
+            </div> -->
     
             
             <button class="newBtn" (click)="AddNewItem()">
                 <i class='bx bx-plus bx-tada' ></i>Create New
             </button>
-            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+            <!-- <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
 
             <mat-menu #menu="matMenu" style="padding: 1rem;">
                 <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
@@ -45,13 +44,22 @@
                         <span> &nbsp; Text</span>
                     </div>                    
                 </button>                    
-            </mat-menu>
+            </mat-menu> -->
         </div>
     </div> 
 
    
     <div class="tableBody">
-        <div class="tableContainer" #TABLE>
+        @defer (when ItemList.length >0) {
+            <app-tableview [DataSource]="ItemList" [RowsPerPage]="10" [FieldNames]="FieldNames" [RemoveSignal]="RemoveSignal" (actionEvent)="handleActionFromTable($event)" >      </app-tableview>                        
+        }
+        @placeholder {
+            <p>Items list Here</p>
+        }
+        @loading {
+            <p>Loading in Progress</p>
+        }
+        <!-- <div class="tableContainer" #TABLE>
             <table class="table" mat-table [dataSource]="dataSource" matSort  matTableExporter #exporter="matTableExporter" >
 
               <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
@@ -82,7 +90,7 @@
                             <i class="fa-solid fa-trash" style="color: rgb(196, 63, 63);" (click)="DeleteItem(element)"  ></i>
                         </div>
                         
-                      </ng-container>
+                    </ng-container>
                   </td>            
                   
               </ng-container>
@@ -96,7 +104,7 @@
               
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 10 aria-label="Select page of users"></mat-paginator> 
-          </div>
+        </div> -->
     </div>
 </div>
 

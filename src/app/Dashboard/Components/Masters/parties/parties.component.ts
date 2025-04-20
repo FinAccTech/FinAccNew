@@ -10,6 +10,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PartyComponent } from './party/party.component';
 import { AuthService } from 'src/app/Services/auth.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 
 interface TypePreviewStatus {
   Index: number;
@@ -29,7 +30,9 @@ export class PartiesComponent {
   PartyCaption: string = "";
  ShowPreview: TypePreviewStatus[] = [];
   
-  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService, private auth: AuthService, private globals: GlobalsService, private dialog: MatDialog ){
+  constructor(private route: ActivatedRoute, private router: Router, private dataService: DataService, private auth: AuthService, private globals: GlobalsService, 
+    private dialog: MatDialog, private apidataService: ApiDataService ){
+
     this.route.params.subscribe(             
       (params: Params) => 
       {                      
@@ -62,24 +65,18 @@ export class PartiesComponent {
   LoadPartiesList(){        
     this.PartiesList = [];
     this.LoadDataIntoMatTable();
-    let pty = new ClsParties(this.dataService);     
+    // let pty = new ClsParties(this.dataService);     
     
-    pty.getParties(0,this.Party_Cat,0,0,0).subscribe ( data => {       
-      if (data.queryStatus == 0){
-        this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
-      }
-      else{              
+    this.apidataService.getData("2").subscribe((data) => {
+      console.log(data);
+      
         this.PartiesList = JSON.parse(data.apiData);         
-
         if (!this.PartiesList) {
           this.PartiesList = [];
         }        
         this.LoadDataIntoMatTable();
-      }
-    },
-    error => {
-      this.globals.ShowAlert(this.globals.DialogTypeError, error);      
-    });
+      
+    }); 
   }
 
   AddNewParty(){

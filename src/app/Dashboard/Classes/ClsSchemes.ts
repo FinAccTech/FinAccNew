@@ -52,8 +52,14 @@ export class ClsSchemes{
             EmiDues:0,
             OrgRoi: 0,
             IsStdRoi: false,
+
+            Doc_Charges_Per: 0,
+            Doc_Charges: 0,
+            Tax_Per: 0,
+
             Calc_Basis: 0,
             Calc_Method: 0,
+            Compound_Period: 0,
             Custom_Style: 0,
             Payment_Frequency: 0,
             Enable_AmtSlab: false,
@@ -98,8 +104,14 @@ export interface TypeScheme {
     EmiDues?: number;
     OrgRoi?: number;
     IsStdRoi?: boolean;
+
+    Doc_Charges_Per?: number,
+    Doc_Charges?: number,
+    Tax_Per?: number,
+
     Calc_Basis?: number;
     Calc_Method?: number;
+    Compound_Period?: number;
     Custom_Style?: number;
     Payment_Frequency?: number;
     Enable_AmtSlab?: boolean;

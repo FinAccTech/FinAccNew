@@ -24,7 +24,7 @@
                     <input type="text" class="formControl" required [(ngModel)] = Scheme.Scheme_Name  />
                     <label for="" class="formLabel"> Scheme Name </label>
                     <div class="errorHint" *ngIf="!SchemeNameValid" > Invalid Name </div>
-                </div>
+                </div> 
             </div>
         </div> 
         
@@ -80,7 +80,7 @@
 
                 <!-- <ng-container *ngIf="(Scheme.Calc_Method != 1)" > -->
                     <div class="formGroup" style="width: 50%;">                    
-                        <input type="text" class="formControl"  required [(ngModel)] = Scheme.Roi   />
+                        <input type="text" class="formControl" NumberInput required [(ngModel)] = Scheme.Roi   />
                         <label for="" class="formLabel"> Roi </label>
                     </div>
                 <!-- </ng-container> -->
@@ -106,6 +106,13 @@
                     </div>     
                 }
                 @else {                    
+                    @if (Scheme.Calc_Method == 2) {
+                        <div class="formGroup" style="width: 50%;">                    
+                            <input type="number" NumberInput class="formControl"  required [(ngModel)] = Scheme.Compound_Period   />
+                            <label for="" class="formLabel"> Compound Period </label>
+                        </div>
+                    }
+
                     <button class="btn" [disabled]="Scheme.Calc_Method !== 1" (click)="OpenSlab(0)" >Open Slab</button>                   
                 }
                 
@@ -130,10 +137,31 @@
             </div>
         </div>
 
+        <div class="row" style="margin-top: 15px;">
+            <div class="col30">
+                <div class="formGroup">                    
+                    <input type="text" class="formControl" NumberInput required [(ngModel)] = Scheme.ProcessingFeePer   />
+                    <label for="" class="formLabel"> Processing Fee % </label>
+                </div>
+            </div>
+            <div class="col30">
+                <div class="formGroup">                    
+                    <input type="number" class="formControl"  NumberInput required [(ngModel)] = Scheme.Doc_Charges   />
+                    <label for="" class="formLabel"> Doc Charges (Amt)  </label>
+                </div>
+            </div>
+            <div class="col30">
+                <div class="formGroup">                    
+                    <input type="number" class="formControl" NumberInput MaxValue="25" required [(ngModel)] = Scheme.Tax_Per   />
+                    <label for="" class="formLabel"> Tax % </label>
+                </div>
+            </div>
+        </div>
+
         <div class="row" style="margin-top: 15px;display: flex; align-items: center;" >
             <div class="col30">
                 <div class="matGroup">
-                    <div class="matSelect">
+                    <div class="matSelect"> 
                         <mat-select [(value)]="Scheme.Enable_AmtSlab"  >
                             <mat-option [value]="false">No</mat-option>
                             <mat-option [value]="true">Yes</mat-option>                            
@@ -214,15 +242,15 @@
         <div class="row" style="margin-top: 15px;">            
             <div class="col100" style="display: flex; flex-direction: row; column-gap: 10px; align-items: center;" >                
                 <div class="formGroup">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpYear   />
+                    <input type="text" class="formControl" NumberInput  required [(ngModel)] = Scheme.LpYear   />
                     <label for="" class="formLabel"> Year </label>
                 </div>
                 <div class="formGroup">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpMonth   />
+                    <input type="text" class="formControl"  NumberInput required [(ngModel)] = Scheme.LpMonth   />
                     <label for="" class="formLabel"> Month </label>
                 </div>
                 <div class="formGroup">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.LpDays   />
+                    <input type="text" class="formControl" NumberInput  required [(ngModel)] = Scheme.LpDays   />
                     <label for="" class="formLabel"> Days </label>
                 </div>
             </div>
@@ -231,17 +259,17 @@
         <div class="row" style="margin-top: 15px;">   
             <div class="col50">
                 <div class="formGroup">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.AdvanceMonth   />
+                    <input type="text" class="formControl" NumberInput required [(ngModel)] = Scheme.AdvanceMonth   />
                     <label for="" class="formLabel"> Advance Month </label>
                 </div>
             </div>
 
-            <div class="col50">
+            <!-- <div class="col50">
                 <div class="formGroup">                    
-                    <input type="text" class="formControl"  required [(ngModel)] = Scheme.ProcessingFeePer   />
+                    <input type="text" class="formControl" NumberInput required [(ngModel)] = Scheme.ProcessingFeePer   />
                     <label for="" class="formLabel"> Processing Fee % </label>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="row" style="margin-top: 25px;" >

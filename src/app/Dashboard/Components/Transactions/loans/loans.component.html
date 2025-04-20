@@ -127,12 +127,18 @@
                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                     
                        <div class="expandDetails" >
-                            <div style="width: 100%;" > 
-                                <app-partycard [Party]="element.Customer" [HideStatusCount]="true"  > </app-partycard>                            
-                            </div>
-                            <div style="width: 100%;" > 
-                                <app-loandetails [Loan]="element" [AsOnDate]="ToDate" > </app-loandetails>                             
-                            </div>
+                            
+                                <div style="width: 100%;" > 
+                                    <app-partycard  *appLazyLoadOnVisible [Party]="element.Customer" [HideStatusCount]="true"  > </app-partycard>                            
+                                </div>
+                            
+                            
+                            
+                                <div style="width: 100%;" > 
+                                    <app-loandetails *appLazyLoadOnVisible [Loan]="element" [AsOnDate]="ToDate" > </app-loandetails>                             
+                                </div>
+                            
+                            
                        </div>
                   </div>
                 </td>

@@ -216,7 +216,7 @@ SaveRepledge(){
   
   // Ln.Repledge.PaymentMode = this.PaymentModesList;
   Rp.Repledge.fileSource      = this.Repledge.fileSource;
-  Rp.Repledge.BranchSno = this.auth.SelectedBranchSno;
+  Rp.Repledge.BranchSno = this.auth.SelectedBranchSno();
   //Ln.Repledge.VouDetailXML = this.globals.GetRepledgeVoucherXml(Ln.Repledge, this.StdLedgerList);
     
   Rp.saveRepledge().subscribe(data => {

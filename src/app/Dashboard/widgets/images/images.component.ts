@@ -1,11 +1,15 @@
- import { Component, OnInit, Inject} from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { Component, OnInit, Inject} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import { Subscription} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AutoUnsubscribe } from '../../../auto-unsubscribe.decorator';
+
+import { CommonModule } from '@angular/common';
 import { FileHandle } from '../../Types/file-handle';
-import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
-import { WebcamComponent } from '../../../GlobalWidgets/webcam/webcam.component';
 import { GlobalsService } from 'src/app/Services/globals.service';
+// import { WebcamComponent } from 'ngx-webcam';
+import { WebcamComponent } from '../../../GlobalWidgets/webcam/webcam.component';
+
 
 export interface ImageFile {
   ImageName: string,
@@ -14,15 +18,14 @@ export interface ImageFile {
 
 @AutoUnsubscribe
 @Component({
-  selector: 'app-images',
-  templateUrl: './images.component.html',
-  styleUrls: ['./images.component.scss']
+    selector: 'app-images',    
+    templateUrl: './images.component.html',
+    styleUrls: ['./images.component.scss'],    
 })
-
 
 export class ImagesComponent implements OnInit {
 
-  TransImages: FileHandle[] = []; 
+  ImageSource: FileHandle[] = []; 
   imageObject: any [] = [] ;
 
   uploadProgress:number = 0;
@@ -42,97 +45,105 @@ export class ImagesComponent implements OnInit {
      
   selectFiles($event: any)
   {     
+    let largefileSelected: boolean = false;
     if ($event.target.files)
     {
       for (var i=0; i < $event.target.files.length; i++)
       {        
         const file = $event?.target.files[i];
-        if (file.type.slice(0,5) !== 'image') {
-          this.globals.SnackBar("error","Only Image Files are allowed");
-          return;
+        if (file.size < 1000000) {                  
+          var reader = new FileReader();
+          reader.readAsDataURL($event.target.files[i]);
+          reader.onload = (event: any) => {
+            const fileHandle: FileHandle ={ 
+              Image_Name: file.name.substring(0,10),
+              Image_File: event.target.result, 
+              Image_Url: this.sanitizer.bypassSecurityTrustUrl(
+                window.URL.createObjectURL(file),              
+              ),
+              SrcType:0,
+              DelStatus:0,            
+            };          
+            this.ImageSource.push (fileHandle);          
+          }
         }
-
-        var reader = new FileReader();
-        reader.readAsDataURL($event.target.files[i]);
-        reader.onload = (event: any) => {
-          const fileHandle: FileHandle ={ 
-            Image_Name: file.name,
-            Image_File: event.target.result, 
-            Image_Url: this.sanitizer.bypassSecurityTrustUrl(
-              window.URL.createObjectURL(file),              
-            ),
-            SrcType:0,
-            DelStatus:0,
-            // Favorite: false,
-          };          
-          
-          this.TransImages.push (fileHandle);
-          //this.TransImages[0].Favorite = true;
+        else{
+          this.globals.SnackBar("error", "Files greater than 1MB are not allowed. Larger files are ignored") ;
         }
       }     
     }        
   }
 
-  // SetFavorite(img:any){
-  //   for (var i=0; i < this.TransImages.length;i++){
-  //     if (this.TransImages[i] == img )
-  //     {
-  //       this.TransImages[i].Favorite = true;
-  //     }
-  //     else{
-  //       this.TransImages[i].Favorite = false;
-  //     }
-      
-  //   }
-  // }
-
-  UnSetFavorite(img:any){
-
-  }
-
+  
   ClearallImages()
   {
-    this.TransImages = [];    
+    this.ImageSource = [];    
   }
 
   RemoveImage(i: number){      
-    if (this.TransImages[i].SrcType == 1)
+    if (this.ImageSource[i].SrcType == 1)
     {
-      this.TransImages[i].DelStatus = 1;
+      this.ImageSource[i].DelStatus = 1;
     }
     else
     {
-      this.TransImages.splice(i,1);    
+      this.ImageSource.splice(i,1);    
     }    
   }
 
   LoadImage(i: number){    
-    if (this.TransImages[i].SrcType == 0)
+    if (this.ImageSource[i].SrcType == 0)
     {
-      this.SelectedImage = this.TransImages[i].Image_File;
+      this.SelectedImage = this.ImageSource[i].Image_File;
     }
     else
     {
-      this.SelectedImage = this.TransImages[i].Image_Url;
+      this.SelectedImage = this.ImageSource[i].Image_Url;
     }
    
   }
 
-  ngOnInit(): void {
-  //  this.ClearallImages();    
-    this.TransImages = this.data.img;            
-    this.TransImages.forEach((image) => {
-      let tImg = [];
-      let newData = {} as any;
+  ngOnInit(): void {  
+    this.ImageSource = this.data.img;          
+    if (this.ImageSource){
+      this.ImageSource.forEach((image) => {
+        let tImg = [];
+        let newData = {} as any;
 
-      newData.image = image.Image_Name;
-      newData.thumbImage = image.Image_Name;
-      newData.title = image.Image_Name;      
-    });
-  }
+        newData.image = image.Image_Name;
+        newData.thumbImage = image.Image_Name;
+        newData.title = image.Image_Name;      
+      });
+    }
+  } 
+
+  OpenWebCam(){        
+    const dialogRef = this.dialog.open(WebcamComponent, 
+      {
+        // width:"45vw",
+        // height:"100vh",
+        // position:{"right":"0","top":"0" },
+        data: "",
+      });      
+      dialogRef.disableClose = true; 
+      dialogRef.afterClosed().subscribe(result => {        
+        
+        if (result) 
+        { 
+          result.forEach((img: FileHandle)=>{
+            this.ImageSource.push(img);
+          })
+          //this.ImageSource.push(result[0])
+        }        
+        
+      });      
+  } 
+
+
+
 
   CloseDialog(): void {
-    this.dialogRef.close(this.TransImages);
+    this.dialogRef.close(this.ImageSource);
 
     // this.http.post('http://184.168.125.210/CheersApp/data/upload.php', this.myForm.value)
     // .subscribe(res => {
@@ -157,27 +168,6 @@ export class ImagesComponent implements OnInit {
     //   })
   }
 
-  OpenWebCam(){        
-    const dialogRef = this.dialog.open(WebcamComponent, 
-      {
-        // width:"45vw",
-        // height:"100vh",
-        // position:{"right":"0","top":"0" },
-        data: "",
-      });      
-      dialogRef.disableClose = true; 
-      dialogRef.afterClosed().subscribe(result => {        
-        
-        if (result) 
-        { 
-          
-          result.map((img: any) =>{
-            this.TransImages.push(img);
-          });          
-          
-        }        
-      });      
-  } 
   reset() {
     this.uploadProgress = 0;
     this.uploadSub = new Subscription;

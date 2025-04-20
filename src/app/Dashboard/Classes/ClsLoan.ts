@@ -232,6 +232,7 @@ export class ClsLoans{
         Roi: number;
         AdvIntDur: number;
         AdvIntAmt: number;
+        
         DocChargesPer: number;
         DocChargesAmt: number;
         Emi_Due_Amt: number;

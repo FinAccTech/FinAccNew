@@ -8,6 +8,7 @@ import { EChartsOption } from 'echarts';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ApiDataService } from 'src/app/Services/api-data.service';
+import { BranchesComponent } from '../branches/branches.component';
 
 interface TypeStatusCard{
   FreshCount: number;
@@ -59,10 +60,10 @@ export class IndexpageComponent {
   ChartType: number = 0;
   ChartPeriod: number = 1;
 
-  ngOnInit(){
-    
+  ngOnInit(){    
     
     this.apidataService.fetchData("1");
+    this.apidataService.fetchData("2");
 
     this.LoggedUser = this.auth.LoggedUser.UserName!;      
     if (this.auth.CompSelected == 0){      
@@ -74,19 +75,43 @@ export class IndexpageComponent {
         });
   
         dialogRef.disableClose = false;  
-        dialogRef.afterClosed().subscribe(result => {             
+        dialogRef.afterClosed().subscribe(result => {         
+          const dialogRef = this.dialog.open(BranchesComponent,  
+            {
+              data: "", 
+              height: '50%',  
+              width: '50%',                  
+            });
+      
+            dialogRef.disableClose = false;  
+            dialogRef.afterClosed().subscribe(result => {         
+                  
+            }); 
         }); 
     }    
     
-    this.LoadCard(0);
-    let trans  = new ClsTransactions(this.dataService);
-    trans.getRecentTransactions().subscribe(data=>{      
-      this.TransactionList = JSON.parse (data.apiData);      
-    })
-    this.LoadChart();
+    if (this.auth.CompSelected == 1){
+      if (this.auth.BranchSelected == 0){
+        const dialogRef = this.dialog.open(BranchesComponent,  
+          {
+            data: "", 
+            height: '50%',  
+            width: '50%',                  
+          });
 
-   
-
+          dialogRef.disableClose = false;  
+          dialogRef.afterClosed().subscribe(result => {         
+                
+          }); 
+      }
+    
+      this.LoadCard(0);
+      let trans  = new ClsTransactions(this.dataService);
+      trans.getRecentTransactions().subscribe(data=>{      
+        this.TransactionList = JSON.parse (data.apiData);      
+      })
+      this.LoadChart();
+    }
   }
 
   

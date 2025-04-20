@@ -71,7 +71,13 @@ export class BranchdivisionsComponent {
         if (result) 
         {           
             this.BranchesList.push(result);
-            this.globals.SnackBar("info", "Branch Created Successfully")
+            this.globals.SnackBar("info", "Branch Created Successfully");
+            
+            let brh = new ClsBranches(this.dataService);
+            brh.getBranches(0,0,0).subscribe(data=>{
+            sessionStorage.setItem("sessionBranchesList", JSON.stringify (data.apiData))!;        
+            });
+
         }        
       }); 
   }
@@ -107,12 +113,19 @@ export class BranchdivisionsComponent {
 
   LoadBranches(div: TypeDivision){
     let brh = new ClsBranches(this.dataService);
-    brh.getBranches(0,div.DivSno).subscribe(data=>{
+    brh.getBranches(0,0, div.DivSno).subscribe(data=>{
       this.BranchesList = JSON.parse(data.apiData);
     })
   }
 
   OpenBranch(brh: TypeBranch){
+    if (!this.SelectedDivision || this.SelectedDivision.DivSno == 0){
+      this.globals.SnackBar("error", "Select a Division to create a Branch");
+      return;
+    } 
+
+    brh.Division = this.SelectedDivision;
+
     const dialogRef = this.dialog.open(BranchComponent, 
       {
         data: brh,
@@ -126,7 +139,7 @@ export class BranchdivisionsComponent {
         }        
       }); 
   }
-
+ 
   DeleteBranch(Brh: TypeBranch, index: number){
     let brh = new ClsBranches(this.dataService);
     brh.Branch = Brh;

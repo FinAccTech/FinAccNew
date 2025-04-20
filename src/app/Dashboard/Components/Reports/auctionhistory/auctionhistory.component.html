@@ -86,6 +86,10 @@
                           : element[column]                         
                         }}                     
     
+                        <ng-container *ngIf="column=='Print'" >
+                            <button (click)="PrintNotice(element)" >Print</button>
+                            
+                        </ng-container>
                       </td>            
                       
                   </ng-container>
@@ -111,7 +115,7 @@
                                 </div>
                                 <div style="width: 100%;" > 
                                     <app-loandetails [Loan]="element" > </app-loandetails>                            
-                                </div>
+                                </div>                                
                            </div>
                       </div>
                     </td>

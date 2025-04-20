@@ -64,7 +64,7 @@ export class ItemComponent implements OnInit {
     if (this.ValidateInputs() == false) {return};    
     let itm = new ClsItems(this.dataService);
     itm.Item = this.Item; 
-    itm.Item.BranchSno = this.auth.SelectedBranchSno;
+    itm.Item.BranchSno = this.auth.SelectedBranchSno();
     itm.saveItem().subscribe(data => {
         if (data.queryStatus == 0) {
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);

@@ -1,0 +1,29 @@
+<div class="branchesContainer"> 
+
+    <div class="header">
+        <div class="leftSide">
+            <p> <i class="fa-regular fa-building"></i> Branches List  </p>                
+        </div>
+        
+    </div>
+    
+    <table>
+        <thead>
+            <th> No </th>
+            <th>Branch Name </th>                        
+        </thead>
+
+        <tbody>            
+            @for (brh of BranchesList; track $index) {
+                <tr (click)="SelectBranch(brh)" >
+                    <td> {{brh.BranchSno}} </td>
+                    <td> {{brh.Branch_Name}} </td>                
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+    
+    
+</div>
+

@@ -216,7 +216,7 @@ SaveRpPayment(){
   Rpp.RpPayment.ImageDetailXML  = StrImageXml;
   Rpp.RpPayment.PaymentModesXML = this.globals.GetPaymentModeXml(this.RpPayment.PaymentMode, this.globals.VTypRepledgePayment);
   Rpp.RpPayment.fileSource      = this.RpPayment.fileSource;
-  Rpp.RpPayment.BranchSno       = this.auth.SelectedBranchSno;
+  Rpp.RpPayment.BranchSno       = this.auth.SelectedBranchSno();
   
   Rpp.saveRpPayment().subscribe(data => {
         if (data.queryStatus == 0) {

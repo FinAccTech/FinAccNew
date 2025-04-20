@@ -40,8 +40,6 @@ export class UsersComponent {
       }
       else{              
         this.UserList = JSON.parse(data.apiData);
-        console.log(this.UserList);
-        
         this.LoadDataIntoMatTable();
       }
     },
@@ -51,14 +49,17 @@ export class UsersComponent {
   } 
 
   AddNewUser(){
-    var grp = new ClsUser(this.dataService);    
-    this.OpenUser(grp.Initialize());    
+    var usr = new ClsUser(this.dataService);    
+    this.OpenUser(usr.Initialize());    
   }
  
-  OpenUser(grp: TypeUser){     
+  OpenUser(usr: TypeUser){     
     const dialogRef = this.dialog.open(UserComponent, 
       {
-        data: grp, 
+        data: usr, 
+        width:"45vw", 
+        height:"100%",
+        position:{"right":"0","top":"0" },
       });       
       dialogRef.disableClose = true; 
       dialogRef.afterClosed().subscribe(result => {        

@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
-import { ClsReports, TypeBusinessRegister, TypeBusinessRegisterDaily, TypeDayHistyory, TypeIntStatementCustom } from 'src/app/Dashboard/Classes/ClsReports';
+import { ClsReports, TypeBusinessRegister } from 'src/app/Dashboard/Classes/ClsReports';
 import { DailyRegisterComponent } from 'src/app/Dashboard/widgets/daily-register/daily-register.component';
 import { AuthService } from 'src/app/Services/auth.service';
 import { DataService } from 'src/app/Services/data.service';
@@ -15,7 +15,7 @@ import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-businessregister',  
-  templateUrl: './businessregister.component.html',
+  templateUrl: './businessregister.component.html', 
   styleUrl: './businessregister.component.scss',
   animations: [
     trigger('detailExpand', [
@@ -25,13 +25,14 @@ import * as XLSX from 'xlsx';
     ]),
   ],
 })
+
 @AutoUnsubscribe
 export class BusinessregisterComponent {
 constructor(private globals: GlobalsService, private dataService: DataService, private auth: AuthService, private dialog: MatDialog){}
   @ViewChild('TABLE')  table!: ElementRef;
     
   dataSource!: MatTableDataSource<TypeBusinessRegister>;  
-  columnsToDisplay: string[] = [ '#', 'MonthStart', 'LoansCount','LoansValue', 'RedCount', 'RedValue','Interest'];  
+  columnsToDisplay: string[] = [ '#', 'MonthStart', 'LoansCount','LoansValue', 'RedCount', 'RedValue','Interest','DocCharges'];  
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
   expandedElement!: TypeLoan | null;
 
@@ -40,11 +41,9 @@ constructor(private globals: GlobalsService, private dataService: DataService, p
 
   FromDate: number = 0;
   ToDate: number = 0;
-  DailyDetails: TypeBusinessRegisterDaily[]= [];
-
-  RegisterList:       TypeBusinessRegister[] = [];
   
-      
+  RegisterList:       TypeBusinessRegister[] = [];
+        
   ngOnInit(){
     this.FromDate = this.auth.SelectedCompany.Fin_From;
     this.ToDate = this.auth.SelectedCompany.Fin_To;
@@ -53,14 +52,19 @@ constructor(private globals: GlobalsService, private dataService: DataService, p
 
   LoadBusinessRegister(){
     let ln = new ClsReports(this.dataService);    
-    ln.getBusinessRegisterMonthly(this.FromDate, this.ToDate).subscribe(data=> { 
-      
+    ln.getBusinessRegisterMonthly(this.FromDate, this.ToDate).subscribe(data=> {       
       if (data.queryStatus == 0){
         this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
         return;
       }
       else{                
-        this.RegisterList = JSON.parse (data.apiData);                
+        let tmpRegisterList =  JSON.parse (data.apiData);                
+        
+        tmpRegisterList.forEach((row:any)=>{
+          if ( row.LoansCount > 0 || row.RedCount > 0 || row.Interest > 0 ) {            
+            this.RegisterList.push(row);            
+          }
+        })
         this.LoadDataIntoMatTable();
       }
     },
@@ -70,29 +74,27 @@ constructor(private globals: GlobalsService, private dataService: DataService, p
     });
   }
 
-  LoadDailyRegister(data: TypeBusinessRegister){
-    console.log(data);
-    const dialogRef = this.dialog.open(DailyRegisterComponent, 
-        {
-          data: data,
-        });      
-        dialogRef.disableClose = true;         
-
-    // let ln = new ClsReports(this.dataService);    
-    // ln.getBusinessRegisterDaily(this.FromDate, this.ToDate).subscribe(data=> { 
+  LoadDailyRegister(data: TypeBusinessRegister){            
+    let ln = new ClsReports(this.dataService);    
+    ln.getBusinessRegisterDaily(data.MonthStart, data.MonthEnd).subscribe(data=> { 
       
-    //   if (data.queryStatus == 0){
-    //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-    //     return;
-    //   }
-    //   else{                        
-    //     this.DailyDetails = JSON.parse (data.apiData);                
-    //   }
-    // },
-    // error => {
-    //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
-    //   return;             
-    // });    
+      if (data.queryStatus == 0){
+        this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+        return;
+      }
+      else{                        
+        let DailyDetails = JSON.parse (data.apiData);                
+        const dialogRef = this.dialog.open(DailyRegisterComponent, 
+          {
+            data: DailyDetails,
+          });      
+          dialogRef.disableClose = true;         
+      }
+    },
+    error => {
+      this.globals.ShowAlert(this.globals.DialogTypeError,error);
+      return;             
+    });    
   }
 
   LoadDataIntoMatTable(){

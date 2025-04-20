@@ -229,7 +229,7 @@ SaveReLoan(){
   Rec.ReLoan = this.ReLoan;    
   Rec.ReLoan.ItemDetailXML  = null!;
   Rec.ReLoan.ImageDetailXML  = null!;    
-  Rec.ReLoan.BranchSno = this.auth.SelectedBranchSno;
+  Rec.ReLoan.BranchSno = this.auth.SelectedBranchSno();
 
   Rec.saveReLoan().subscribe(data => {
         if (data.queryStatus == 0) {

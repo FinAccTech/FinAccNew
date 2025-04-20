@@ -60,7 +60,17 @@ export class SidenavComponent {
   ngOnInit(){
     const baseUrl = window.location.origin;
     switch (baseUrl) {
-      case 'https://admin.pennygold.in':
+      case 'https://pennygold.in':
+        this.LogoPath = "assets/images/pennygold.png";
+        this.LogoName = "";
+        break;
+
+      case 'https://pennygold.in/admin':
+        this.LogoPath = "assets/images/pennygold.png";
+        this.LogoName = "";
+        break;
+
+      case 'https://pennygold.in/admin/#':
         this.LogoPath = "assets/images/pennygold.png";
         this.LogoName = "";
         break;

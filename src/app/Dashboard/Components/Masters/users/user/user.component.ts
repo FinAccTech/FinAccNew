@@ -10,6 +10,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 import { UserrightsComponent } from '../userrights/userrights.component';
 import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ClsBranches, TypeBranch, TypeBranchRights } from 'src/app/Dashboard/Classes/ClsBranches';
 
 @AutoUnsubscribe
 @Component({
@@ -24,6 +25,9 @@ export class UserComponent implements OnInit {
   DataChanged: boolean = false;
   CompaniesList: TypeCompanies[] = [];
   CompRightsList: TypeCompRights[] = [];
+
+  BranchesList: TypeBranch[] =[];
+  BranchRightsList: TypeBranchRights[] = [];
 
   TransImages!: FileHandle;
 
@@ -44,8 +48,9 @@ export class UserComponent implements OnInit {
   {    
     this.User = data;            
   }
- 
+  
   ngOnInit(): void {        
+    this.LoadBranches();
     let comp = new ClsCompanies(this.dataService)
       comp.getCompanies(this.auth.LoggedUser.UserSno).subscribe(data =>{       
         if (this.User.UserSno == 0){
@@ -57,7 +62,7 @@ export class UserComponent implements OnInit {
         else{          
           if (this.User.Comp_Rights_Json && this.User.Comp_Rights_Json.length >0){
             this.CompRightsList = JSON.parse(this.User.Comp_Rights_Json);
-          }
+          } 
           else{
             this.CompRightsList = [];
           }
@@ -85,8 +90,32 @@ export class UserComponent implements OnInit {
         this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;
         this.User.fileSource =  {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""};  
       }
-      
-      
+  }
+
+  LoadBranches(){
+    let brch  = new ClsBranches(this.dataService);
+    brch.getBranches(0,0,0).subscribe(data=>{
+      if (this.User.UserSno == 0){
+        this.BranchRightsList = JSON.parse (data.apiData);
+        this.BranchRightsList.map(right=>{
+          right.Branch_Right = false;
+        })          
+      }
+      else{          
+        if (this.User.Branch_Rights_Json && this.User.Branch_Rights_Json.length >0){
+          this.BranchRightsList = JSON.parse(this.User.Branch_Rights_Json);
+        }
+        else{
+          this.BranchRightsList = [];
+        }
+        if (this.BranchRightsList.length < 1){
+          this.BranchRightsList = JSON.parse (data.apiData);
+          this.BranchRightsList.map(right=>{
+            right.Branch_Right = false;
+          })
+        }                                  
+      }
+    })
   }
 
   SaveUser(){        
@@ -95,9 +124,7 @@ export class UserComponent implements OnInit {
     um.User = this.User;    
     um.User.UserRightsXml = this.GetRightsXml();
     um.User.CompRightsXml = this.GetCompRightsXml();
-    
-    console.log(this.TransImages);
-    
+    um.User.BranchRightsXml = this.GetBranchRightsXml();
 
     if ( !this.TransImages.Image_Name || this.TransImages.Image_Name.length !==0){
       um.User.Profile_Image = this.auth.getUserImagesServerPath() + um.User.UserName + '/' + this.TransImages.Image_Name;
@@ -185,7 +212,13 @@ export class UserComponent implements OnInit {
     comp.Comp_Right = $event.target.checked;
   }
   
+  ChangeSelectValueBranch(brch: TypeBranchRights, $event: any){
+    brch.Branch_Right = $event.target.checked;
+  }
+
   GetRightsXml(){
+    console.log(this.User.Rights_List);
+    
     let StrXml = '<ROOT>';
     StrXml += '<Users>';
     this.User.Rights_List.forEach(right=>{
@@ -212,6 +245,21 @@ export class UserComponent implements OnInit {
     
     return StrXml;
   }
+
+  GetBranchRightsXml(){
+    let StrXml = '<ROOT>';
+    StrXml += '<Branches>';
+    this.BranchRightsList.forEach(right=>{
+      StrXml += '<Branch_Rights ';  
+        StrXml += 'BranchSno="' + right.BranchSno + '" Branch_Right="' + right.Branch_Right + '"';  
+      StrXml += '/>';  
+    })
+    StrXml += '</Branches>';
+    StrXml += '</ROOT>';
+    
+    return StrXml;
+  }
+
   selectFile($event: any)
   {     
     if ($event.target.files)
@@ -238,6 +286,12 @@ export class UserComponent implements OnInit {
       // }        
     }    
     
+  }
+
+  getIpAddress(){
+      this.dataService.GetLocalIp().subscribe((data: any)=>{
+        this.User.Ip_Restrict = data.ip;
+      })
   }
 }
 

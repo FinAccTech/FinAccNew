@@ -61,7 +61,7 @@ export class PurityComponent implements OnInit {
     if (this.ValidateInputs() == false) {return};    
     let pur = new ClsPurities(this.dataService);    
     pur.Purity = this.Purity;
-    pur.Purity.BranchSno = this.auth.SelectedBranchSno;
+    pur.Purity.BranchSno = this.auth.SelectedBranchSno();
     pur.savePurity().subscribe(data => {
         if (data.queryStatus == 0) {
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);

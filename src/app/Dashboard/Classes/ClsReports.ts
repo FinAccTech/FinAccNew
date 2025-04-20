@@ -47,47 +47,47 @@ export class ClsReports{
     }
 
     getLoanHistory(LoanStatus: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "LoanStatus" :  LoanStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
+        let postdata ={ BranchSno: this.BranchSno,  "LoanStatus" :  LoanStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
         return this.dataService.HttpGet(postdata, "/getLoanHistory");                
     }
     
     getRepledgeHistory(RpStatus: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={ "RpStatus" :  RpStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
+        let postdata = { BranchSno: this.BranchSno,  "RpStatus" :  RpStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeHistory");                
     }
 
     getLoanStatusCount(AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={ "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getLoanStatusCount");                
     }
 
     getRepledgeStatusCount(AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={ "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeStatusCount");                
     }
     
     getRepledgeAuctionHistory(AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeAuctionHistory");                
     }
 
     getAuctionHistory(AsOn: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "AsOn" :  AsOn }; 
         return this.dataService.HttpGet(postdata, "/getAuctionHistory");                
     }
 
     getPendingReport(AsOn: number, DueDays: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno,  "AsOn" :  AsOn, "DueDays": DueDays }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "AsOn" :  AsOn, "DueDays": DueDays }; 
         return this.dataService.HttpGet(postdata, "/getPendingReport");                
     }
 
     getDayHistory(HistFromDate: number, HistToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno,  "HistFromDate" :  HistFromDate, "HistToDate": HistToDate }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno,  "HistFromDate" :  HistFromDate, "HistToDate": HistToDate }; 
         return this.dataService.HttpGet(postdata, "/getDayHistory");                
     }
 
     getAgeAnalysis(): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno}; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getAgeAnalysis");                
     }
 
@@ -97,22 +97,22 @@ export class ClsReports{
     }
 
     getMarketvalueAnalysis(): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno}; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno}; 
         return this.dataService.HttpGet(postdata, "/getMarketvalueAnalysis");                
     }
 
     getIntStatementCustom(FromDate: number, ToDate: number, SubmitInt: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "SubmitInt": SubmitInt }; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate, "SubmitInt": SubmitInt }; 
         return this.dataService.HttpGet(postdata, "/get1percentIntStatement");                
     }
 
     getBusinessRegisterMonthly(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        let postdata ={ BranchSno: this.BranchSno,"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
         return this.dataService.HttpGet(postdata, "/getBusinessRegisterMonthly");                
     }
     
     getBusinessRegisterDaily(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
-        let postdata ={"CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
         return this.dataService.HttpGet(postdata, "/getBusinessRegisterDaily");                
     }
     
@@ -187,6 +187,11 @@ export interface TypeLoanHistory extends TypeLoan{
     StatusCount_Json: string;
 }
 
+export interface TypeAuctionHistory extends TypeLoan{
+    OtherLoans_Json: string;
+}
+
+
 export interface TypeRepledgeHistory extends TypeRepledge{
     StatusCount_Json: string;
 }
@@ -229,13 +234,13 @@ export interface TypeBusinessRegister{
 }
 
 export interface TypeBusinessRegisterDaily{
-    DayStart: number;
-    DayEnd: number;    
+    DayStart: number;    
     LoansCount: number;    
     LoansValue: number;    
     RedCount: number;    
     RedValue: number;    
     Interest: number;    
+    DocCharges: number;    
 }
 
 export interface TypeDayHistyory {

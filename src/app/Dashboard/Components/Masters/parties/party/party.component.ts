@@ -8,6 +8,7 @@ import { ClsParties, TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
 import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
 import { ImagesComponent } from 'src/app/Dashboard/widgets/images/images.component';
 import { WebcamComponent } from 'src/app/GlobalWidgets/webcam/webcam.component';
+import { ApiDataService } from 'src/app/Services/api-data.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
@@ -43,7 +44,8 @@ export class PartyComponent implements OnInit {
     private dataService: DataService,    
     private globals: GlobalsService,
     private progressService: ProgressbroadcastService,
-    private auth: AuthService
+    private auth: AuthService,
+    private apidataService: ApiDataService
   ) 
   {
     this.Party = data;      
@@ -53,8 +55,7 @@ export class PartyComponent implements OnInit {
     // this.dialogRef.updateSize("30vw");        
   }
 
-  ngOnInit(): void {            
-        
+  ngOnInit(): void {        
     switch ( parseInt (this.Party.Party_Cat!.toString())) {
       case 1:
         this.PartyCaption = "Customers";
@@ -151,7 +152,7 @@ export class PartyComponent implements OnInit {
     
     let pty = new ClsParties(this.dataService);
     pty.Party = this.Party;    
-    pty.Party.BranchSno = this.auth.SelectedBranchSno;
+    pty.Party.BranchSno = this.auth.SelectedBranchSno();
     pty.Party.ImageDetailXML = StrImageXml;
     pty.Party.fileSource = this.TransImages;
 
@@ -171,6 +172,7 @@ export class PartyComponent implements OnInit {
           pty.Party.Name = pty.Party.Party_Name;
           pty.Party.Details = 'Code: ' + pty.Party.Party_Code;
           this.globals.SnackBar("info", this.Party.PartySno == 0 ? "Party Created successfully" : "Party updated successfully");          
+          this.apidataService.fetchData("2");
           this.CloseDialog(pty.Party);
         }
     },  
@@ -272,9 +274,13 @@ export class PartyComponent implements OnInit {
       
       dialogRef.disableClose = true;
 
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe(result => {        
+        if (result){
+          this.TransImages = result;
+        }
+
+        console.log(this.TransImages);
         
-        this.TransImages = result;
         // this.urls = [];
         // this.urls.push  (result);     
         // console.log (this.urls);
@@ -283,7 +289,16 @@ export class PartyComponent implements OnInit {
   }
 
   SetFavorite() {
-    this.Party.IsFavorite = !this.Party.IsFavorite; 
+    this.Party.IsFavorite = !this.Party.IsFavorite;  
+  }
+
+  BlackList(){
+    this.globals.QuestionAlert("Are you sure you wanto to Blacklist this Party?").subscribe(Response => {      
+      if (Response == 1){
+        this.Party.BlackListed = true;
+        this.SaveParty();        
+      }
+    })
   }
 
   selectFile($event: any)

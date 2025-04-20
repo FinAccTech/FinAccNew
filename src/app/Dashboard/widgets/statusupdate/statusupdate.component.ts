@@ -5,11 +5,12 @@ import { ClsTransactions } from '../../Classes/ClsTransactions';
 import { DataService } from 'src/app/Services/data.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { IntToDatePipe } from '../../Pipes/int-to-date.pipe';
 
 @Component({
   selector: 'app-statusupdate',
   templateUrl: './statusupdate.component.html',
-  styleUrls: ['./statusupdate.component.scss']
+  styleUrls: ['./statusupdate.component.scss'],  
 })
 
 @AutoUnsubscribe

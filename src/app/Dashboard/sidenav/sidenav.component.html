@@ -1,8 +1,8 @@
 <!-- <ng-container *ngIf="!MinimalView">  -->
   <div  [ngClass]="ShowCompact ? 'navCompact' : 'navContainer'"  (mouseover)="SlideNav=true; toggleSlide()" (mouseleave)="SlideNav=false;toggleSlide()">    
-    <div class="logoSection" >
+    <div class="logoSection">
        
-        <img src="{{LogoPath}}" /> 
+        <img style="text-align: center;" src="{{LogoPath}}" /> 
         <p>{{LogoName}}</p>
         
     </div>

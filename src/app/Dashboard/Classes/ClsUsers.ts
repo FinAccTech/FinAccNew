@@ -4,6 +4,7 @@ import { DataService } from "src/app/Services/data.service";
 import { TypeCompanies } from "./ClsCompanies";
 import { FileHandle } from "../Types/file-handle";
 import { AutoUnsubscribe } from "src/app/auto-unsubscribe.decorator";
+import { TypeBranchRights } from "./ClsBranches";
 
 @AutoUnsubscribe
 export class ClsUser{
@@ -37,16 +38,23 @@ export class ClsUser{
             Rights_Json: "",
             Rights_List: [],
             UserRightsXml: "",            
+            
             Comp_Rights_Json: "",
             Comp_Rights_List: [],
             CompRightsXml: "",
+
+            Branch_Rights_Json: "",
+            Branch_Rights_List: [],
+            BranchRightsXml: "",
+
             Profile_Image: "",   
             Image_Name: "",  
             fileSource: {"Image_File":null!, "Image_Name":"", "Image_Url":"","DelStatus":0,"SrcType":0},
             ClientSno : this.ClientSno,
             Enable_WorkingHours: 0,
             FromTime: "",
-            ToTime: ""
+            ToTime: "",
+            Ip_Restrict: ""
         }
         return User
     }
@@ -117,16 +125,23 @@ export interface TypeUser {
     Rights_Json: string;
     Rights_List: TypeUserRights[];
     UserRightsXml: string;
+
     Comp_Rights_Json: string;
     Comp_Rights_List: TypeCompRights[],
     CompRightsXml: string;          
+
+    Branch_Rights_Json: string;
+    Branch_Rights_List: TypeBranchRights[],
+    BranchRightsXml: string;          
+
     Profile_Image: string;
     Image_Name: string;
     fileSource: FileHandle;
     ClientSno: number;
     Enable_WorkingHours: number;
     FromTime: string;
-    ToTime: string
+    ToTime: string;
+    Ip_Restrict: string;
 }
 
 export interface TypeCompRights extends TypeCompanies{    

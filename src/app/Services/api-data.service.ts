@@ -37,7 +37,7 @@ export class ApiDataService {
           if (!subject1.value) {
             let pty = new ClsParties(this.dataService);
             pty.getParties(0,0,0,0,0) .pipe(
-              tap((data) => subject.next(data)) // Cache the response
+              tap((data) => subject1.next(data)) // Cache the response
             ).subscribe();      
           }
       break;
@@ -59,8 +59,17 @@ export class ApiDataService {
   // Force refresh for a specific URL
   refreshData(ObjectId: string): void {
     if (this.cache.has(ObjectId)) {
-       let trans = new ClsTransactions(this.dataService);
-      trans.getLoans(0,0,0, this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe();
+      switch (ObjectId) {
+        case "1":
+          let trans = new ClsTransactions(this.dataService);
+          trans.getLoans(0,0,0, this.globals.LoanStatusAll, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe();   
+          break;
+        case "2":
+          let pty = new ClsParties(this.dataService);
+          pty.getParties(0,0,0,0,0).subscribe();      
+        break;        
+      }
+       
     }
   }
 

@@ -70,7 +70,15 @@ export class ClsParties{
             Reference: "",
             Dob: 0,
             Sex: 1,
+
             Aadhar_No: "",
+            Pancard_No:"",
+            Smartcard_No:"",
+            Voterid_No:"",
+            Nominee: "",    
+            Nominee_Rel:"",
+            Nominee_Aadhar:"",
+            
             Remarks: "",
             Occupation: "",
             Monthly_Income: 0,
@@ -81,13 +89,20 @@ export class ClsParties{
             Fp_Status: 0,
             Active_Status: 1,
             IsFavorite: false, 
-            Nominee: "",                        
+            BlackListed: false,      
             Create_Date: DateToInt(new Date()),            
             UserSno:this.UserSno,            
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
             ImageDetailXML: "",
             LedSno: 0,
+
+            Bank_AccName: "",
+            Bank_Name: "",
+            Bank_Branch_Name: "",
+            Bank_AccountNo: "",
+            Bank_Ifsc: "",
+
             ProfileImage:"",
             fileSource: [],
             Name: "",
@@ -121,7 +136,15 @@ export interface TypeParties{
     Reference?: string;
     Dob?: number;
     Sex?: number;
+
     Aadhar_No?: string;
+    Pancard_No?:string;
+    Smartcard_No?:string;
+    Voterid_No?:string;
+    Nominee?: string;
+    Nominee_Rel?:string;
+    Nominee_Aadhar?:string;
+
     Remarks?: string; 
     Occupation?: string;
     Monthly_Income?: number;
@@ -131,14 +154,21 @@ export interface TypeParties{
     Verify_Status?: number;
     Fp_Status?: number;
     Active_Status?: number;
-    IsFavorite?: boolean;
-    Nominee?: string;
+    IsFavorite?: boolean;    
+    BlackListed?: boolean;    
     Create_Date?: number;    
     UserSno?: number;
     CompSno?: number;
     BranchSno?: number;
     ImageDetailXML?: string;
     LedSno?: number;
+
+    Bank_AccName?: string,
+    Bank_Name?: string,
+    Bank_Branch_Name?: string,
+    Bank_AccountNo?: string,
+    Bank_Ifsc?: string,  
+
     ProfileImage?:string;
     fileSource?: FileHandle[];
     Name?: string;

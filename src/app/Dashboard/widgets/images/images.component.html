@@ -1,56 +1,53 @@
-<div class="container">
+<div class="container" >
     <div class="header">
         <div class="caption">
             <i class="fa fa-picture-o" aria-hidden="true"></i>
             <p>&nbsp; Images </p>
-        </div>
-        
+        </div>        
 
         <p class="close" mat-dialog-close="" >&times;</p>
     </div>
-<br> 
+<br>
     <hr>
 
     <br>
 
     <div class="body">
-        <input type="file" class="file-input" multiple accept="image/*" (change)="selectFiles($event)" #fileUpload>
-        
-        <div style="display: flex; align-items: center; justify-content: space-between; " >
-            <div class="file-upload">
-                <button class="btn" (click)="fileUpload.click()">
-                    <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; Attach Files
-                </button>            
-            </div>
+        <input type="file" class="file-input" multiple (change)="selectFiles($event)" #fileUpload>
+            
+        <div class="file-upload">
+            <button class="btn" (click)="fileUpload.click()">
+                <i class="fa fa-paperclip" aria-hidden="true"></i> &nbsp; Attach Files
+            </button>
+            &nbsp;&nbsp;&nbsp;
             <button class="btn" (click)="OpenWebCam()">
-                <i class='bx bxs-webcam' ></i>&nbsp; Webcam
-            </button>   
+                <i class="fa fa-camera" aria-hidden="true"></i> &nbsp; Open Webcam
+            </button>
         </div>
         <br>
         
-        <ng-container *ngIf="TransImages.length == 0">
+        @if (!ImageSource || ImageSource.length == 0) {
             <p style="font-size: 20px;font-style: italic;padding: 10px;">No Images added</p>
-        </ng-container>
-
-        
+        }
+                
         <!-- <img *ngIf="SelectedImage" [src]="SelectedImage" width="285px" height="300px" />
         <img *ngIf="!SelectedImage" src="assets/images/nullimage.png" width="285px" height="300px" /> -->
 
         <div class="imagesList"> 
-            <div class="images" *ngFor="let img of TransImages; let i = index">   
-                <ng-container *ngIf="img.DelStatus == 0">                                                         
-                    <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url " width="200px" height="200px" (click)="LoadImage(i)" />
-                    <input type="text"  style="font-size: 14px; padding: 0px;padding: .5rem;" class="form-control" value="{{img.Image_Name}}" />                                    
-                    <span class="btn-remove-image" (click)="RemoveImage(i)" >X</span>
 
-                    <!-- <span *ngIf="img.Favorite == false" (click)="SetFavorite(img)" class="fa fa-star-o preview" aria-hidden="true"></span>
-                    <span *ngIf="img.Favorite == true" (click)="UnSetFavorite(img)"class="fa fa-star preview" aria-hidden="true"></span> -->
-                </ng-container>
-            </div>
+            @for (img of ImageSource; track $index) {
+                <div class="images">
+                    @if (img.DelStatus == 0) {
+                        <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url " width="200px" height="200px" (click)="LoadImage($index)" />
+                        <input type="text"  style="font-size: 14px; padding: 0px;padding: .5rem;" class="form-control" value="{{img.Image_Name}}" />                                    
+                        <span class="btn-remove-image" (click)="RemoveImage($index)" >X</span>
+                    }
+                </div>    
+            }            
         </div>
 
         <!-- <mat-grid-list cols="2" rowHeight="1:1">
-            <mat-grid-tile *ngFor="let img of TransImages; let i = index"  >                    
+            <mat-grid-tile *ngFor="let img of ImageSource; let i = index"  >                    
                 <div *ngIf="img.DelStatus == 0" style="position: relative;" >                                                
                     <span class="btn-remove-image" (click)="RemoveImage(i)" >X</span>
                     <img [src]="img.SrcType == 0  ? img.Image_File : img.Image_Url " width="200px" height="200px" (click)="LoadImage(i)" />

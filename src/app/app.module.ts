@@ -62,7 +62,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { NumberInputDirective } from './Dashboard/Directives/NumberInput';
 import { ReceiptsComponent } from './Dashboard/Components/Transactions/receipts/receipts.component';
 import { ReceiptComponent } from './Dashboard/Components/Transactions/receipts/receipt/receipt.component';
-import { TableViewComponent } from './Dashboard/widgets/table-view/table-view.component';
+
 import { SlabsComponent } from './Dashboard/widgets/slabs/slabs.component';
 import { AddPrincipalComponent } from './Dashboard/Components/add-principal/add-principal.component';
 import { LoanSelectionComponent } from './Dashboard/widgets/loan-selection/loan-selection.component';
@@ -149,8 +149,12 @@ import { BusinessregisterComponent } from './Dashboard/Components/Reports/busine
 import { IntToMonthYear } from './Dashboard/Pipes/int-to-monthyear.pipe';
 import { DailyRegisterComponent } from './Dashboard/widgets/daily-register/daily-register.component';
 import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/importdata.component';
+import { LazyLoadOnVisibleDirective } from './Dashboard/Directives/lazy-load-on-visible.directive';
+import { IntstatementViewComponent } from './Dashboard/widgets/intstatement-view/intstatement-view.component';
+import { TableviewComponent } from './Dashboard/widgets/tableview/tableview.component';
 
-@NgModule({ declarations: [        
+@NgModule({ declarations: [                
+        LazyLoadOnVisibleDirective,
         NumberInputDirective,
         AppComponent,
         IntToDatePipe,
@@ -192,7 +196,7 @@ import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/
         ItemdetailsComponent,
         ReceiptsComponent,
         ReceiptComponent,
-        TableViewComponent,
+        IntstatementViewComponent,
         SlabsComponent,
         AddPrincipalComponent,
         LoanSelectionComponent,
@@ -212,7 +216,7 @@ import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
         ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
-        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent
+        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent, TableviewComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,        
     AppRoutingModule,

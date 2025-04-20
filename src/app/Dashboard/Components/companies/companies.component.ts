@@ -8,6 +8,7 @@ import { DataService } from 'src/app/Services/data.service';
 import { ClsAppSetup } from '../../Classes/ClsAppSetup';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ClsBranches } from '../../Classes/ClsBranches';
 
 @Component({
   selector: 'app-companies',
@@ -37,27 +38,21 @@ export class CompaniesComponent {
   SelectCompany(comp: TypeCompanies){ 
     if (comp){
       this.auth.CompSelected = 1;
-      this.auth.SelectedCompany  = comp;      
-      this.auth.SelectedBranchSno = comp.CompSno; // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database    
+      this.auth.BranchSelected = 0;
+      this.auth.SelectedCompany  = comp;     
+
+      //this.auth.SelectedBranchSno = comp.CompSno; // Branch option to be worked later. as of now just keeping BranchSno as 1 throught the app including database    
+
+      sessionStorage.setItem("sessionBranchSelected","0")!;
 
       sessionStorage.setItem("sessionCompSelected","1")!;
       sessionStorage.setItem("sessionSelectedCompany",JSON.stringify(comp));
-      sessionStorage.setItem("sessionSelectedCompSno",JSON.stringify(comp.CompSno));            
-      sessionStorage.setItem("sessionSelectedBranchSno",this.auth.SelectedBranchSno.toString())!;                   
+      sessionStorage.setItem("sessionSelectedCompSno",JSON.stringify(comp.CompSno));         
 
-      let tset = new ClsAppSetup(this.dataService);
-      tset.getAppSetup(0).subscribe(data => {
-        if (data.queryStatus == 0){
-          this.globals.SnackBar("error","Error getting Transaction Setup details");
-          return;
-        }
-        else{
-          sessionStorage.setItem("sessionTransactionSetup",data.apiData);
-        }        
-      });
-      
+      //sessionStorage.setItem("sessionSelectedBranchSno",this.auth.SelectedBranchSno.toString())!;                   
+
       this.auth.sendCompUpdate(comp.Comp_Name);
-      
+        
       this.router.navigate(['dashboard']);  
       this.dialogRef.close();           
     }
@@ -85,7 +80,7 @@ export class CompaniesComponent {
         { 
           if (result == true)
           {
-            this.LoadCompaniesList();
+            this.LoadCompaniesList();            
           }          
         }        
       });  

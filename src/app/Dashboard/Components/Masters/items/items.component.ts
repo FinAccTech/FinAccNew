@@ -9,6 +9,7 @@ import { ClsItems, TypeItem } from 'src/app/Dashboard/Classes/ClsItems';
 import { ItemComponent } from './item/item.component';
 import { AuthService } from 'src/app/Services/auth.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { TypeFieldInfo } from 'src/app/Dashboard/Types/TypeFieldInfo';
 
 @Component({
   selector: 'app-items',
@@ -23,9 +24,22 @@ export class ItemsComponent {
   
   @ViewChild('TABLE')  table!: ElementRef;
  
-  ItemList!: TypeItem[];
-  dataSource!: MatTableDataSource<TypeItem>;  
-  columnsToDisplay: string[] = [ '#', 'Item_Code', 'Item_Name','IGroup', 'Active_Status','crud'];
+  ItemList: TypeItem[] = [];
+  
+
+  FieldNames: TypeFieldInfo[] = [
+      {Field_Name:"#", Data_Type:"string" }, 
+      {Field_Name:"Item_Code", Data_Type:"string" }, 
+      {Field_Name:"Item_Name", Data_Type:"string" }, 
+      {Field_Name:"IGroup", Data_Type:"nested", "NestedField":"Grp_Name" },       
+      {Field_Name:"Active_Status", Data_Type:"boolean"}, 
+      {Field_Name:"Actions", Data_Type:"object" },     
+    ]
+  
+    RemoveSignal: number = 0;
+
+  // dataSource!: MatTableDataSource<TypeItem>;  
+  // columnsToDisplay: string[] = [ '#', 'Item_Code', 'Item_Name','IGroup', 'Active_Status','crud'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
@@ -45,10 +59,11 @@ export class ItemsComponent {
       }
       else{              
         this.ItemList = JSON.parse(data.apiData);           
+        console.log(this.ItemList);  
         if (!this.ItemList){
           this.ItemList = [];
         }
-        this.LoadDataIntoMatTable();
+        // this.LoadDataIntoMatTable();
       }
     },
     error => {
@@ -78,7 +93,7 @@ export class ItemsComponent {
         {           
           if (Sno !== 0) { return; }
           this.ItemList.push(result);
-          this.LoadDataIntoMatTable();
+          // this.LoadDataIntoMatTable();
         }        
       });  
   } 
@@ -99,29 +114,45 @@ export class ItemsComponent {
             this.globals.SnackBar("info","Group deleted successfully");
             const index =  this.ItemList.indexOf(group);
             this.ItemList.splice(index,1);
-            this.LoadDataIntoMatTable();
+            // this.LoadDataIntoMatTable();
           }
         })        
       }
     })
   }
 
-  LoadDataIntoMatTable(){
-    this.dataSource = new MatTableDataSource<TypeItem> (this.ItemList);       
-    if (this.dataSource.filteredData)
-    {  
-      setTimeout(() => this.dataSource.paginator = this.paginator);
-      setTimeout(() => this.dataSource.sort = this.sort);      
+  // LoadDataIntoMatTable(){
+  //   this.dataSource = new MatTableDataSource<TypeItem> (this.ItemList);       
+  //   if (this.dataSource.filteredData)
+  //   {  
+  //     setTimeout(() => this.dataSource.paginator = this.paginator);
+  //     setTimeout(() => this.dataSource.sort = this.sort);      
+  //   }
+  // }
+
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
+ 
+  handleActionFromTable($event: any){ 
+    //Open Group   
+    if ($event.Action == 1){
+      this.OpenItem($event.Data);
+    }
+    else if ($event.Action == 2){
+      //Delete Group
+      this.globals.QuestionAlert("Are you sure you want to delete this Record").subscribe(data=>{
+        if (data == 1){
+          this.DeleteItem($event.Data);
+        }
+      });
+      
     }
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-  
 }

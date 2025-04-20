@@ -239,7 +239,7 @@
             <div class="contentRight">                                
                  <ng-container *ngIf="SelectedLoan && SelectedLoan.Customer && SelectedLoan !== undefined" >
                     <div class="detailSection">                        
-                        <div class="partyDetails">
+                        <div class="partyDetails"> 
                             <app-customerdetails [Customer]="SelectedLoan.Customer" />
                         </div>
 
@@ -251,8 +251,8 @@
             </div>
         </div>
 
-        <div class="contentBottom">
-            <app-table-view [InterestStructure]="InterestStructure" [EmiTable]="IsEmiScheme" />
+        <div class="contentBottom">            
+            <app-intstatement-view [InterestStructure]="InterestStructure" [EmiTable]="IsEmiScheme"></app-intstatement-view>
         </div>
    </div>
 </div>

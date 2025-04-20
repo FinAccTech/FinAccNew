@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ClsAppSetup, TypeAppSetup } from 'src/app/Dashboard/Classes/ClsAppSetup';
+import { AuthService } from 'src/app/Services/auth.service';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
@@ -13,13 +14,13 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class AppsetupComponent {
 
-  constructor(private dataService: DataService, private globals: GlobalsService) {}
+  constructor(private dataService: DataService, private globals: GlobalsService, private auth: AuthService) {}
 
   AppSetup!: TypeAppSetup;
 
   ngOnInit(){
     let as = new ClsAppSetup(this.dataService);
-    as.getAppSetup(0).subscribe(data =>{
+    as.getAppSetup(0, this.auth.SelectedBranchSno()).subscribe(data =>{
       this.AppSetup = JSON.parse (data.apiData)[0];      
     })
   }

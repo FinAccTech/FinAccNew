@@ -1,0 +1,205 @@
+.tableContainer{
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+    color: rgb(87, 86, 86);
+    
+    .tableHeader{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 1rem;
+        padding-right: 1rem;
+
+        .searchBox{        
+            width: 50%;            
+        }
+
+        .rightControls{
+            display: flex;
+            align-items: center;
+            column-gap: .5rem;
+
+            input[type="date"]{
+                padding: .5rem;
+                border: 1px solid #ddd;
+                text-align: center;
+            }
+
+            button{
+                border: none;
+                background-color: #fff;
+                border: 1px solid var(--ColorPrimary);
+                padding: 0.6rem;
+                min-width: 6rem;
+                border-radius: .2rem;
+                font-weight: 500;
+                color: var(--ColorPrimary);
+            }
+
+            button:hover{
+                background-color: var(--ColorPrimary);
+                color: #fff;
+                cursor: pointer;
+                transition: background-color .4s;
+            }
+
+            i{
+                font-size: 1.5rem;                
+            }
+            i:hover{
+                transform: scale(1.5);
+                cursor: pointer;
+            }
+        }
+    }
+    
+    .tableBody{
+        table{
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        
+            th,td{
+                padding: 1rem;
+                //border-bottom: .5px solid #ddd;        
+                text-align: left;
+            }
+        
+            th{
+                background-color: #FBFBFD;
+                font-weight: 500;
+                
+            }
+        
+            tr{
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+            }
+            tr:hover{
+                background-color: #FBFBFD;
+                cursor: pointer;
+            }
+        
+            .actions{ 
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                
+        
+                i{            
+                    padding: .7rem;
+                    border-radius: 50%;            
+                }
+        
+                i.edit{
+                    color: green;
+                    background-color: #e9f7e6;            
+                }
+        
+                i.edit:hover{            
+                    background-color: green;
+                    color: #fff;
+                }
+        
+                i.delete{
+                    background-color: #FFE9E3;
+                    color: red;
+                }
+        
+                i.delete:hover{            
+                    background-color: red;
+                    color: #fff;
+                }
+                
+                i.print{
+                    background-color: rgb(248, 231, 248);
+                    color: purple;
+                }
+        
+                i.print:hover{            
+                    background-color: purple;
+                    color: #fff;
+                }
+
+                i.mail{
+                    font-size: 1.2rem;
+                    background-color: rgb(250, 214, 180);
+                    color: orangered;
+                }
+        
+                i.mail:hover{            
+                    background-color: orangered;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .tableFooter{
+        margin-top: -.5rem;
+        padding: 1rem;
+        display: flex;
+        //border-top: 2px solid var(--ColorPrimary);
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background-color: #fff;
+
+        .footerLeft{
+            width: 5%;    
+        }
+
+        .footerRight{
+            width: 50%;    
+            display: flex;
+            justify-content: flex-end;
+            column-gap: 2rem;
+            align-items: center;
+
+            p{
+                font-weight: 500;
+            }
+
+            .navButtons{
+                display: flex;
+                column-gap: .5rem;
+                i{
+                    font-size: 2rem;
+                }
+                i:hover{
+                    cursor: pointer;
+                    transition: transform 0.25s 0s; 
+                    transform: scale(1.5); 
+                }
+            }
+        }        
+    }
+
+    .totalRow{
+        font-weight: 600;
+        background-color: #ddd;
+        border-spacing: none;        
+        td{
+            font-size: 1.3rem;
+            padding: .2rem !important;
+            text-align: right;            
+            border-top: 1px solid var(--ColorPrimary);
+            border-bottom: 1px solid var(--ColorPrimary);
+        }
+    }
+
+    .rightAlign{
+        text-align: right !important;
+        margin: 1rem !important;
+    }
+}
+
+input[type="checkbox"] {
+    width: 1.75rem;
+    height: 1.75rem;    
+    accent-color: var(--ColorPrimary);        
+  }
+  
+
+  

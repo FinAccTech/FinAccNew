@@ -12,13 +12,14 @@ import { GlobalsService } from 'src/app/Services/globals.service';
   templateUrl: './reportproperties.component.html',
   styleUrl: './reportproperties.component.scss'
 })
+
 export class ReportpropertiesComponent {
 constructor(
     public dialogRef: MatDialogRef<ReportpropertiesComponent>,    
     @Inject(MAT_DIALOG_DATA) public data: number,            
     private dataService: DataService,
     private globals: GlobalsService
-  )  {}
+  )  {} 
 
   RepProps!: TypeReportPropertie;
   StyleList: string[] = [];
@@ -27,9 +28,15 @@ constructor(
   ngOnInit(){
     let rep = new ClsReportProperties(this.dataService);
     rep.getReportProperties(this.data,).subscribe(data=>{
+      console.log(this.RepProps);
+      
       this.RepProps = JSON.parse(data.apiData)[0];            
       if (this.RepProps.Report_Style !== ''){
-        this.StyleList = this.RepProps.Report_Style.split(";");
+        this.RepProps.Report_Style.trim().trimStart().trimEnd().split(";").forEach(rep=>{
+          if (rep !== ''){
+            this.StyleList.push(rep);
+          }
+        })          
       }
     })    
     //this.StyleList = this.data.result;    
@@ -39,11 +46,9 @@ constructor(
     if (this.NewStyleName.trim() == ''){ this.globals.SnackBar("error","StyleName cannot be empty, 1000"); return; }      
     this.StyleList.push(  this.NewStyleName);
     let rep = new ClsReportProperties(this.dataService);  
-    rep.ReportPropertie = this.RepProps;
-
     console.log(this.RepProps);
     
-    console.log(rep.ReportPropertie);
+    rep.ReportPropertie = this.RepProps;    
     
     rep.saveReportProperties().subscribe(data=>{
       if (data.queryStatus == 1){

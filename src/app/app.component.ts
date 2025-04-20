@@ -32,6 +32,7 @@ export class AppComponent {
     }
 
     const baseUrl = window.location.origin; 
+    
     switch (baseUrl) {
       case 'https://pennygold.in/#/':
         document.body.classList.add('pennyTheme');

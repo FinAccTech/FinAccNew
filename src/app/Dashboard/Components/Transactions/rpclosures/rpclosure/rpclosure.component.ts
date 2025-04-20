@@ -212,7 +212,7 @@ SaveRpClosure(){
   Rpp.RpClosure.ImageDetailXML  = StrImageXml;
   Rpp.RpClosure.PaymentModesXML = this.globals.GetPaymentModeXml(this.RpClosure.PaymentMode, this.globals.VTypRepledgeClosure);
   Rpp.RpClosure.fileSource      = this.RpClosure.fileSource;
-  Rpp.RpClosure.BranchSno       = this.auth.SelectedBranchSno;
+  Rpp.RpClosure.BranchSno       = this.auth.SelectedBranchSno();
   
   Rpp.saveRpClosure().subscribe(data => {
         if (data.queryStatus == 0) {

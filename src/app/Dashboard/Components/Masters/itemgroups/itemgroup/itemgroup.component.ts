@@ -63,7 +63,7 @@ export class ItemgroupComponent implements OnInit {
     if (this.ValidateInputs() == false) {return};    
     let grp = new ClsItemGroups(this.dataService);
     grp.ItemGroup = this.ItemGroup;
-    grp.ItemGroup.BranchSno = this.auth.SelectedBranchSno;
+    grp.ItemGroup.BranchSno = this.auth.SelectedBranchSno();
     grp.saveItemGroup().subscribe(data => {
         if (data.queryStatus == 0) {
           this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);

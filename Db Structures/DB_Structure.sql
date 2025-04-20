@@ -7,7 +7,6 @@ CREATE DATABASE FS2024080701 */
 
 /* TABLES, DEFAULT VALUES, SPS AND DISPLAY FUNCTIONS */
 
-
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='IntToDate') BEGIN DROP FUNCTION IntToDate END
 GO
 CREATE FUNCTION IntToDate(@IntDate INT)
@@ -173,14 +172,13 @@ CREATE TABLE Users
   Image_Name VARCHAR(50),
   Enable_WorkingHours BIT,
   FromTime VARCHAR(10),
-  ToTime VARCHAR(10)
+  ToTime VARCHAR(10),
+  Ip_Restrict VARCHAR(20)
 )
 GO
 
-
-
-INSERT INTO Users (UserName,Password,User_Type, Active_Status)
-VALUES ('Admin','sysdba',1,1)
+INSERT INTO Users (UserName,Password,User_Type, Active_Status, Profile_Image, Image_Name, Enable_WorkingHours, FromTime, ToTime, Ip_Restrict)
+VALUES ('Admin','sysdba',1,1,'','','','','','')
 
 CREATE TABLE Comp_Rights
 (
@@ -188,6 +186,15 @@ CREATE TABLE Comp_Rights
   UserSno INT,
   CompSno INT,
   Comp_Right BIT
+)
+GO
+
+CREATE TABLE Branch_Rights
+(
+  RightsSno INT PRIMARY KEY IDENTITY(1,1),
+  UserSno INT,
+  BranchSno INT,
+  Branch_Right BIT
 )
 GO
 
@@ -303,7 +310,15 @@ CREATE TABLE Party
   Reference       VARCHAR(50),
   Dob               INT,
   Sex               TINYINT,
+
   Aadhar_No         VARCHAR(20),
+  Pancard_No        VARCHAR(20),
+  Smartcard_No      VARCHAR(20),
+  Voterid_No        VARCHAR(20),
+  Nominee           VARCHAR(50),
+  Nominee_Rel       VARCHAR(20),
+  Nominee_Aadhar    VARCHAR(20),
+
   Remarks           VARCHAR(100),
   Occupation        VARCHAR(20),
   Monthly_Income    MONEY,
@@ -314,9 +329,18 @@ CREATE TABLE Party
   Fp_Status         BIT,
   Active_Status     BIT,
   IsFavorite        BIT,
-  Nominee           VARCHAR(50),
+
+  BlackListed       BIT,
+  
   Create_Date       INT,
   LedSno            INT,
+
+  Bank_AccName      VARCHAR(50),
+  Bank_Name         VARCHAR(50),
+  Bank_Branch_Name  VARCHAR(50),
+  Bank_AccountNo    VARCHAR(50),
+  Bank_Ifsc         VARCHAR(20),  
+
   UserSno           INT,
   CompSno           INT   
 )
@@ -334,8 +358,16 @@ CREATE TABLE Schemes
   EmiDues TINYINT,
   OrgRoi DECIMAL(4,2),
   IsStdRoi BIT,
+
+  Doc_Charges_Per DECIMAL(4,2),
+  Doc_Charges MONEY,
+  Tax_Per DECIMAL(4,2),
+
   Calc_Basis TINYINT,
   Calc_Method TINYINT,
+
+  Compound_Period SMALLINT,
+
   Custom_Style TINYINT,
   Payment_Frequency TINYINT,
   Enable_AmtSlab BIT,
@@ -768,7 +800,7 @@ CREATE TABLE Report_Properties
 (
   ReportSno     INT PRIMARY KEY IDENTITY(1,1),
   Report_Name   VARCHAR(20),  
-  Report_Style  VARCHAR(100),
+  Report_Style  VARCHAR(200),
   CompSno       INT
 )
 

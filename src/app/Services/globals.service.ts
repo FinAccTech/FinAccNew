@@ -692,5 +692,29 @@ RoundDigitsToNear(num: number) {
   return num % 1 >= 0.5 ? Math.ceil(num) : Math.floor(num);
 }
 
+RemoveWordsFromString(text: string, wordsToRemove: string[]): string {
+  const escapedWords = wordsToRemove.map(this.escapeRegExp); // Escape special characters
+  const regex = new RegExp(`\\b(${escapedWords.join('|')})\\b`, 'gi');
+  return text.replace(regex, '').replace(/\s+/g, ' ').trim(); // Remove extra spaces
+}
+
+ escapeRegExp(word: string): string {
+  return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex characters
+}
+
+// type: 'lower' | 'upper' | 'number' | 'symbol' (For Predefined set of values as arguments. just like enum)
+
+getRandomCharacters(): string {
+  const allChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const length = Math.floor(Math.random() * 2) + 4; // random length between 4 and 5
+  let result = '';
+  
+  for (let i = 0; i < length; i++) {
+    const randIndex = Math.floor(Math.random() * allChars.length);
+    result += allChars[randIndex];
+  }
+
+  return result;
+}
 
 }

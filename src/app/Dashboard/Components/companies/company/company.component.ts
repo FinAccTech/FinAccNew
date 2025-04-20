@@ -64,28 +64,30 @@ export class CompanyComponent implements OnInit {
   }
 
   DeleteCompany(){
-    if (this.Comp.CompSno == 0){
-      this.globals.SnackBar("error", "No Comp selected to delete");
-      return;
-    }
-    this.globals.QuestionAlert("compe you sure you wanto to delete this Comp?").subscribe(Response => {      
-      if (Response == 1){
-        let comp = new ClsCompanies(this.dataService);
-        comp.Comp = this.Comp;
-        comp.deleteCompany().subscribe(data => {
-          if (data.queryStatus == 0)
-          {
-            this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);
-            return;
-          }
-          else{
-            this.globals.SnackBar("info", "Comp deleted successfully");
-            this.DataChanged = true;
-            this.CloseDialog();
-          }
-        })        
-      }
-    })
+    this.globals.SnackBar("error", "You are not authorized to delete the company");
+    
+    // if (this.Comp.CompSno == 0){
+    //   this.globals.SnackBar("error", "No Comp selected to delete");
+    //   return;
+    // }
+    // this.globals.QuestionAlert("compe you sure you wanto to delete this Comp?").subscribe(Response => {      
+    //   if (Response == 1){
+    //     let comp = new ClsCompanies(this.dataService);
+    //     comp.Comp = this.Comp;
+    //     comp.deleteCompany().subscribe(data => {
+    //       if (data.queryStatus == 0)
+    //       {
+    //         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);
+    //         return;
+    //       }
+    //       else{
+    //         this.globals.SnackBar("info", "Comp deleted successfully");
+    //         this.DataChanged = true;
+    //         this.CloseDialog();
+    //       }
+    //     })        
+    //   }
+    // })
   }
 
   CloseDialog()  {

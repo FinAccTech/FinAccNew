@@ -6,6 +6,7 @@ import { TypeUser, TypeUserRights } from '../Dashboard/Classes/ClsUsers';
 import { TypeCompanies } from '../Dashboard/Classes/ClsCompanies';
 import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 import { UrlService } from './url.service';
+import { TypeBranch } from '../Dashboard/Classes/ClsBranches';
 
 @Injectable({ 
   providedIn: 'root'
@@ -13,16 +14,17 @@ import { UrlService } from './url.service';
 
 @AutoUnsubscribe
 export class AuthService {
-
-  Authenticated: number = 0;  
-  LoggedClient!: TypeClientInfo;
-  LoggedUser!: TypeUser;
-  LoggedUserRights!: TypeUserRights[];
+  Authenticated:      number = 0;  
+  LoggedClient!:      TypeClientInfo;
+  LoggedUser!:        TypeUser;
+  LoggedUserRights!:  TypeUserRights[];
 
   CompSelected: number = 0;
   SelectedCompany!: TypeCompanies;
   
-  SelectedBranchSno: number = 1;
+  BranchSelected: number = 0;
+  SelectedBranch!: TypeBranch;
+
   ServerImagePath: string = "";
 
   constructor(private http: DataService, private urls: UrlService) {     
@@ -41,10 +43,15 @@ export class AuthService {
     }
 
     this.CompSelected = +sessionStorage.getItem("sessionCompSelected")!;
+    this.BranchSelected = +sessionStorage.getItem("sessionBranchSelected")!;
     this.SelectedCompany = JSON.parse (sessionStorage.getItem("sessionSelectedCompany")!);    
-    this.SelectedBranchSno = +sessionStorage.getItem("sessionSelectedBranchSno")!;    
+    this.SelectedBranch = JSON.parse (sessionStorage.getItem("sessionSelectedBranch")!);    
   }
 
+  SelectedBranchSno(): number{
+    return +sessionStorage.getItem("sessionSelectedBranchSno")!;
+  }
+  
   // Authenticated(){
   //   return +sessionStorage.getItem("sessionAuthenticated")!;
   // }
@@ -70,24 +77,33 @@ export class AuthService {
   // }
 
   private subjectName = new Subject<any>(); //need to create a subject
-    
-        sendCompUpdate(CompName: string) { //the component that wants to update something, calls this fn
-            this.subjectName.next({ CompName: CompName }); //next() will feed the value in Subject
-        }
-    
-        getCompUpdate(): Observable<any> { //the receiver component calls this function 
-            return this.subjectName.asObservable(); //it returns as an observable to which the receiver funtion will subscribe
-        }
-        
+  private subjectNameBranch = new Subject<any>();
+  
+  sendCompUpdate(CompName: string) { //the component that wants to update something, calls this fn
+      this.subjectName.next({ CompName: CompName }); //next() will feed the value in Subject
+  }
+
+  getCompUpdate(): Observable<any> { //the receiver component calls this function 
+      return this.subjectName.asObservable(); //it returns as an observable to which the receiver funtion will subscribe
+  }
+   
+  sendBranchUpdate(BranchName: string) { //the component that wants to update something, calls this fn
+    this.subjectNameBranch.next({ BranchName: BranchName }); //next() will feed the value in Subject
+  }
+
+  getBranchUpdate(): Observable<any> { //the receiver component calls this function 
+    return this.subjectNameBranch.asObservable(); //it returns as an observable to which the receiver funtion will subscribe
+  }
+
   CheckSaasLogin( username: string,password: string)
   {          
     let postdata ={ "App_Login" :  username, "App_Pwd" :  password }; 
     return this.http.HttpGet(postdata, "/CheckSaasLogin");     
   }   
 
-  CheckLogin( username: string,password: string)
+  CheckLogin( username: string,password: string, LocalIp: string)
   {          
-    let postdata ={ "App_Login" :  username, "App_Pwd" :  password }; 
+    let postdata ={ "App_Login" :  username, "App_Pwd" :  password, "LocalIp": LocalIp }; 
     return this.http.HttpGet(postdata, "/CheckUserandgetCompanies");     
   }   
   
