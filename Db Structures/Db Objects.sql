@@ -1362,6 +1362,34 @@ RETURN
 GO
 
 
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getPartyBySearch') BEGIN DROP FUNCTION Udf_getPartyBySearch END
+GO
+
+CREATE FUNCTION Udf_getPartyBySearch(@PartySno INT, @Party_Cat TINYINT, @Verify_Status TINYINT, @Fp_Status TINYINT, @Active_Status TINYINT,@CompSno INT)
+RETURNS TABLE
+WITH ENCRYPTION AS
+RETURN
+
+	SELECT	Pty.*,
+                      RelInfo  = CASE Rel WHEN 0 THEN 'S/o' WHEN 1 THEN 'D/o' WHEN 2 THEN 'W/o' WHEN 3 THEN 'C/o' END,
+                      RelGroup = CASE Rel WHEN 0 THEN 'S/o ' + RelName WHEN 1 THEN 'D/o ' + RelName WHEN 2 THEN 'W/o ' + RelName WHEN 3 THEN 'C/o ' + RelName END,
+                      Pty.Party_Name as 'Name', 'Code:' + Pty.Party_Code as Details, Ar.AreaSno as 'Area.AreaSno', Ar.Area_Code as 'Area.Area_Code', Ar.Area_Name as 'Area.Area_Name', Ar.Area_Name as 'Area.Name',
+                      ProfileImage = (SELECT TOP 1 Image_Url FROM Image_Details WHERE Image_Grp = 1 AND TransSno=Pty.PartySno)
+
+	            FROM	  Party Pty
+                      INNER JOIN Area Ar ON Ar.AreaSno = Pty.AreaSno
+
+	            WHERE	  (Pty.PartySno=@PartySno OR @PartySno=0) AND (Pty.Party_Cat=@Party_Cat OR @Party_Cat=0) AND
+                      Pty.Verify_Status < (CASE WHEN @Verify_Status=0 THEN 3 ELSE @Verify_Status END ) AND
+                      Pty.Fp_Status < (CASE WHEN @Fp_Status=0 THEN 3 ELSE @Fp_Status END ) AND
+                      Pty.Active_Status < (CASE WHEN @Active_Status=0 THEN 3 ELSE @Active_Status END ) AND
+                      (Pty.CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno)))
+
+GO
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Party_Delete') BEGIN DROP PROCEDURE Sp_Party_Delete END
 GO
 CREATE PROCEDURE Sp_Party_Delete
@@ -4558,7 +4586,7 @@ CREATE VIEW VW_VOUCHERDETAILS
         WITH ENCRYPTION
         AS
           SELECT    Vd.DetSno, Vd.VouSno, Vm.Vou_Date,Vm.TrackSno, Vm.VouTypeSno, Vt.VouType_Name,
-                    Vm.Vou_No, Vd.LedSno, Lm.GrpSno, Lg.Grp_Name, Lm.Led_Name,
+                    Vm.Vou_No, Vd.LedSno, Lm.GrpSno, Lg.Grp_Name, Lm.Led_Name, Lm.Std_No,
                     Vd.Credit, Vd.Debit, Lg.Grp_Nature, Lm.Led_Desc, Vs.BranchSno,
                     Vm.Narration, Vm.CompSno
           FROM      Voucher_Details Vd

@@ -309,7 +309,7 @@ SaveLoan(){
           if (this.Loan.LoanSno == 0) {this.alertService.CreateLoanAlert(this.globals.AlertTypeNewLoan, this.Loan);}
 
           this.globals.SnackBar("info", this.Loan.LoanSno == 0 ? "Loan Created successfully" : "Loan updated successfully");   
-          this.apidataService.fetchData("1");  
+          //this.apidataService.fetchData("1");  
           this.router.navigate(['dashboard/loans/' + this.IsOpen]);  
         }
     }, 
@@ -428,12 +428,12 @@ CalculateLoanValues(){
     }
   }  
 
-  this.Loan.Nett_Payable = +(this.Loan.Principal - this.Loan.AdvIntAmt - this.Loan.DocChargesAmt).toFixed(2);
+  this.Loan.Nett_Payable = +(this.Loan.Principal - this.Loan.AdvIntAmt - this.Loan.DocChargesAmt);
 
   if (this.SelectedScheme.Calc_Method == 3){    
     this.Loan.Emi_Due_Amt  =  this.globals.RoundDigitsToNear ((+this.Loan.Principal + +(this.Loan.Principal * (this.Loan.Roi/100)) + this.Loan.DocChargesAmt ) / +this.SelectedScheme.EmiDues!);
     this.Loan.AdvIntAmt = this.Loan.Emi_Due_Amt * this.Loan.AdvIntDur;  
-    this.Loan.Nett_Payable = +(this.Loan.Principal - (this.Loan.AdvIntDur * this.Loan.Emi_Due_Amt)).toFixed(2);
+    this.Loan.Nett_Payable = +(this.Loan.Principal - (this.Loan.AdvIntDur * this.Loan.Emi_Due_Amt) - this.Loan.DocChargesAmt ).toFixed(2);
   }
 }
 

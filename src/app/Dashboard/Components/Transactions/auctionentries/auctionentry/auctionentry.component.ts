@@ -102,8 +102,8 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
       return;             
     });
 
-    this.apidataService.getData("1").subscribe((data) => {
-      this.LoansList = JSON.parse (data.apiData);
+    
+      this.LoansList = this.apidataService.getLoansList();
       this.LoansList.filter(ln=>{
         return ln.Loan_Status == this.globals.LoanStatusMatured;
       })
@@ -114,7 +114,7 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
                     loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
                     loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
           });
-    });
+    
     
     // let ln = new ClsLoans(this.dataService);
     // ln.getLoans(0,0,0,this.globals.LoanStatusMatured,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans ).subscribe(data=> {

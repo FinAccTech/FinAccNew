@@ -38,11 +38,11 @@
             <div class="filterRight">
                 <div class="formGroup" >
                     <input style="text-align: center; font-size: 1.3rem; font-weight: bold;" type="text" readonly class="formControl" [ngModel]="Opening_Balance" />                                                                                                            
-                    <label for="" class="formLabel date"> Opening Balance </label>            
+                    <label for="" class="formLabel date"> Opening Balance   <span style="font-weight: bold;" [style.color]="Opening_Balance < 0 ? 'red' : 'green'" > {{Opening_Balance < 0 ? ' (DR)' : ' (CR)'}} </span> </label>             
                 </div>
                 <div class="formGroup" >
                     <input style="text-align: center; font-size: 1.3rem; font-weight: bold;" type="text" readonly class="formControl" [ngModel]="Closing_Balance" />                                                                                                            
-                    <label for="" class="formLabel date"> Closing Balance </label>            
+                    <label for="" class="formLabel date"> Closing Balance <span style="font-weight: bold;"  [style.color]="Opening_Balance < 0 ? 'red' : 'green'" > {{Opening_Balance < 0 ? ' (DR)' : ' (CR)'}} </span> </label>            
                 </div>
             </div>
         </div>

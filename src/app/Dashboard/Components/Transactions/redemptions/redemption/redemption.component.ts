@@ -33,6 +33,8 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
 export class RedemptionComponent implements OnInit {
 
   private searchSubject = new Subject<number>();
+  private searchSubjectLoanNo = new Subject<string>();
+  private searchSubjectPartyName = new Subject<string>();
 
   LoansList!:       TypeLoan[];
   SelectedLoan!:    TypeLoan;
@@ -112,6 +114,52 @@ export class RedemptionComponent implements OnInit {
                   // Add your search logic here
                 });
 
+
+                this.searchSubjectLoanNo
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (!searchText || searchText.length < 3) { return;}
+                  let ln = new ClsLoans(this.dataService);  
+                  ln.getLoanbySearch(searchText, this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=>{
+                    if (data.apiData){
+                      this.LoansList = JSON.parse(data.apiData);
+                                    
+                      this.LoansList.map(loan => {        
+                      return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
+                                loan.Location   =   JSON.parse (loan.Location_Json)[0],
+                                loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
+                                loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
+                                loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+                      });
+                    }                            
+                  })
+                });
+                
+                this.searchSubjectPartyName
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (!searchText || searchText.length < 3) { return;}
+                  let cust = new ClsParties(this.dataService);
+                  cust.getPartybySearch(searchText,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
+                    if (data.queryStatus == 0){
+                      this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+                      return;
+                    }
+                    else{
+                      this.CustomersList = JSON.parse(data.apiData);
+                    }
+                  },
+                  error => {
+                    this.globals.ShowAlert(this.globals.DialogTypeError,error);
+                    return;             
+                  });
+                });
               }
 
  ngOnInit(): void {    
@@ -148,19 +196,19 @@ export class RedemptionComponent implements OnInit {
     return;             
   });
   
-  this.apidataService.getData("1").subscribe((data) => {
-    this.LoansList = JSON.parse (data.apiData);    
-    this.LoansList = this.LoansList.filter(ln =>{
-    return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
-  }) 
-        this.LoansList.map(loan => {        
-          return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
-                  loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
-                  loan.Location = JSON.parse (loan.Location_Json)[0], 
-                  loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
-                  loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
-        });
-  });
+  
+  //   this.LoansList = this.apidataService.getLoansList();
+  //   this.LoansList = this.LoansList.filter(ln =>{
+  //   return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured
+  // }) 
+  //       this.LoansList.map(loan => {        
+  //         return  loan.Customer = JSON.parse (loan.Party_Json)[0], 
+  //                 loan.IGroup = JSON.parse (loan.IGroup_Json)[0], 
+  //                 loan.Location = JSON.parse (loan.Location_Json)[0], 
+  //                 loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
+  //                 loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+  //       });
+  
 
   // let ln = new ClsLoans(this.dataService);
   // ln.getLoans(0,0,0,this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {
@@ -187,20 +235,20 @@ export class RedemptionComponent implements OnInit {
   //   return;             
   // });
 
-  let cust = new ClsParties(this.dataService);
-  cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
-    if (data.queryStatus == 0){
-      this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
-      return;
-    }
-    else{
-      this.CustomersList = JSON.parse (data.apiData);      
-    }
-  },
-  error => {
-    this.globals.ShowAlert(this.globals.DialogTypeError,error);
-    return;             
-  });
+  // let cust = new ClsParties(this.dataService);
+  // cust.getParties(0,this.globals.PartyTypCustomers,0,0,0).subscribe(data=> {
+  //   if (data.queryStatus == 0){
+  //     this.globals.ShowAlert(this.globals.DialogTypeError,data.apiData);
+  //     return;
+  //   }
+  //   else{
+  //     this.CustomersList = JSON.parse (data.apiData);      
+  //   }
+  // },
+  // error => {
+  //   this.globals.ShowAlert(this.globals.DialogTypeError,error);
+  //   return;             
+  // });
  
   if (this.Redemption.RedemptionSno === 0){
     let Trans  = new ClsRedemptions(this.dataService);
@@ -228,6 +276,7 @@ export class RedemptionComponent implements OnInit {
     this.StdLedgerList = JSON.parse(data.apiData);
   })
 }
+
 
 SaveRedemption(){    
 
@@ -351,6 +400,14 @@ onSearchByBarCode(event: Event): void {
   this.searchSubject.next(+input.value);
 }
 
+SearchbyLoanNo($event: string){
+  this.searchSubjectLoanNo.next($event);    
+}
+
+SearchbyPartyName($event: string){
+  this.searchSubjectPartyName.next($event);    
+}
+
 getLoan($event: TypeLoan){       
   this.SelectedLoan = $event;  
   this.InterestDetails = null!;
@@ -389,7 +446,16 @@ getCustomer($event: TypeParties){
       dialogRef.disableClose = true;  
       dialogRef.afterClosed().subscribe(result => {        
         if (result){                
-          this.getLoan(this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0]);
+          let ln = new ClsLoans(this.dataService);
+          ln.getLoanBySno(result.LoanSno,0,0,0,0,0,0).subscribe(data=>{
+            this.SelectedLoan             = JSON.parse(data.apiData)[0];  
+            this.SelectedLoan.IGroup      =   JSON.parse (this.SelectedLoan.IGroup_Json)[0],  
+            this.SelectedLoan.Location    =   JSON.parse (this.SelectedLoan.Location_Json)[0],
+            this.SelectedLoan.Scheme      =   JSON.parse (this.SelectedLoan.Scheme_Json)[0],
+            this.SelectedLoan.Customer    =   JSON.parse (this.SelectedLoan.Party_Json)[0]; 
+            this.getLoan(this.SelectedLoan);
+          })     
+          //this.getLoan(this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0]);
           //  this.SelectedLoan = this.LoansList.filter((ln)=> ln.LoanSno === parseInt(result.LoanSno))[0];
         }
         

@@ -67,16 +67,14 @@ export class PartiesComponent {
     this.LoadDataIntoMatTable();
     // let pty = new ClsParties(this.dataService);     
     
-    this.apidataService.getData("2").subscribe((data) => {
-      console.log(data);
-      
-        this.PartiesList = JSON.parse(data.apiData);         
+          
+        this.PartiesList = this.apidataService.getPartiessList();
         if (!this.PartiesList) {
           this.PartiesList = [];
         }        
         this.LoadDataIntoMatTable();
       
-    }); 
+    
   }
 
   AddNewParty(){

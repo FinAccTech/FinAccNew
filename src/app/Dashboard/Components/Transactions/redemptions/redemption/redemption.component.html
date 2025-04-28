@@ -92,10 +92,10 @@
                             </div>
                         </div>
                         <div class="col30">                            
-                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (debounceString)="SearchbyLoanNo($event)" (newItemEvent)="getLoan($event)" ></app-selectionlist>
                         </div>
                         <div class="col50">
-                            <app-selectionlist [Caption]="'Select by Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer"  (newItemEvent)="getCustomer($event)" ></app-selectionlist>
+                            <app-selectionlist [Caption]="'Select by Customer'" [DataSource]="CustomersList" [SelectedItem]="SelectedCustomer" (debounceString)="SearchbyPartyName($event)" (newItemEvent)="getCustomer($event)" ></app-selectionlist>
                         </div>
                     </div>
 

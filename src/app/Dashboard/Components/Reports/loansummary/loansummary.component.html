@@ -43,7 +43,7 @@
                     </div>
                 </div>  
                 <div class="col80">
-                    <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                    <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan" (debounceString)="SearchbyLoanNo($event)"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
                 </div>
             </div>
         </div>

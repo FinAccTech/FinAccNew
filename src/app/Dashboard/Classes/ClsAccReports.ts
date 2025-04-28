@@ -42,6 +42,7 @@ export interface TypeLedgerBook {
     VouType_Name: string;
     Vou_No: string;
     LedSno: number;
+    Std_No: number;
     GrpSno: number;
     Grp_Name: string;
     Led_Name: string;

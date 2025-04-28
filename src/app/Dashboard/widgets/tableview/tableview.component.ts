@@ -1,10 +1,5 @@
 import { Component, effect, EventEmitter, Input, input, Output, signal } from '@angular/core';
 import { _isNumberValue } from '@angular/cdk/coercion';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatOption, MatSelect } from '@angular/material/select';
-import { SearchPipe } from '../../Pipes/search.pipe';
-import { IntToDatePipe } from '../../Pipes/int-to-date.pipe';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { TypeFieldInfo } from '../../Types/TypeFieldInfo';
 

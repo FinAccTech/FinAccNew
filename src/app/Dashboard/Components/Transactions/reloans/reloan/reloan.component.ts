@@ -147,9 +147,8 @@ export class ReloanComponent implements OnInit {
     this. NewLoanSchemesList = JSON.parse(data.apiData);
     this.getNewLoanScheme(this.NewLoanSchemesList[0]);    
   })
-
-  this.apidataService.getData("1").subscribe((data) => {
-    this.LoansList = JSON.parse (data.apiData);
+  
+    this.LoansList = this.apidataService.getLoansList();
     this.LoansList.filter(ln=>{
       return ln.Loan_Status == this.globals.LoanStatusOpen || ln.Loan_Status == this.globals.LoanStatusMatured;
     })
@@ -160,7 +159,7 @@ export class ReloanComponent implements OnInit {
                         loan.Scheme = JSON.parse (loan.Scheme_Json)[0], 
                         loan.fileSource = loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
         });
-  });
+  
 
   // let ln = new ClsLoans(this.dataService);
   // ln.getLoans(0,0,0,this.globals.LoanStatusOpen, this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=> {

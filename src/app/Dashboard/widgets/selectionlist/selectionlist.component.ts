@@ -22,6 +22,7 @@ import { VoucherseriesComponent } from '../../Components/Settings/voucherseriesl
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ClsAgents } from '../../Classes/ClsAgents';
 import { AgentComponent } from '../../Components/Masters/agents/agent/agent.component';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-selectionlist',
@@ -31,11 +32,24 @@ import { AgentComponent } from '../../Components/Masters/agents/agent/agent.comp
 
 @AutoUnsubscribe 
 export class SelectionlistComponent implements OnInit {
+
+  private searchSubject = new Subject<string>();
+  
 focus() {
 //throw new Error('Method not implemented.');
 } 
-constructor(private dialog: MatDialog, private dataService: DataService){}
+constructor(private dialog: MatDialog, private dataService: DataService){
   
+this.searchSubject
+        .pipe(
+          debounceTime(300), // Wait 300ms after user stops typing
+          distinctUntilChanged() // Only emit if the value is different from the last
+        )
+        .subscribe((searchText) => {                  
+          if (!searchText || searchText.length < 3) { return;}
+          this.debounceString.emit(searchText);            
+        });
+      }
   showList: boolean     = false;
   SelectionList: any [] = [];
   FilteredData: any []  = [];  
@@ -50,7 +64,8 @@ constructor(private dialog: MatDialog, private dataService: DataService){}
   @Output() newItemEvent = new EventEmitter<any>();
   @Output() newMasterEmit = new EventEmitter<any>();   
   @Input() MasterComponentId!: number;
-  
+
+  @Output() debounceString = new EventEmitter<string>();
 
   ngAfterViewInit(){
     
@@ -62,6 +77,12 @@ constructor(private dialog: MatDialog, private dataService: DataService){}
   ngOnChanges(changes: SimpleChanges) {        
     this.SelectionList = this.DataSource;
     this.FilteredData = this.DataSource;         
+}
+
+
+sendTypedString(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  this.searchSubject.next(input.value);    
 }
 
 OpenMaster()

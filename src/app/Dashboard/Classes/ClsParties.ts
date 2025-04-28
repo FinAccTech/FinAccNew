@@ -20,6 +20,11 @@ export class ClsParties{
         let postdata ={ "PartySno" :  PartySno, "Party_Cat": Party_Cat, "Verify_Status": Verify_Status, "Fp_Status": Fp_Status, "Active_Status": Active_Status, "CompSno" :  this.CompSno }; 
         return this.dataService.HttpGet(postdata, "/getParties");                
     }
+    
+    getPartybySearch(Search_String: string, Party_Cat: number, Verify_Status: number, Fp_Status: number, Active_Status: number): Observable<TypeHttpResponse> {
+        let postdata ={ "Search_String" :  Search_String, "Party_Cat": Party_Cat, "Verify_Status": Verify_Status, "Fp_Status": Fp_Status, "Active_Status": Active_Status, "CompSno" :  this.CompSno }; 
+        return this.dataService.HttpGet(postdata, "/getPartybySearch");                
+    }
 
     checkPartyExists(CheckValue: string, CheckbyParam: number): Observable<TypeHttpResponse> {
         //  CheckByParam 1-- By Party Code,  2-- By MobileNumber

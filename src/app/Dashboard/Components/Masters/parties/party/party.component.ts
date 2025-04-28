@@ -172,7 +172,7 @@ export class PartyComponent implements OnInit {
           pty.Party.Name = pty.Party.Party_Name;
           pty.Party.Details = 'Code: ' + pty.Party.Party_Code;
           this.globals.SnackBar("info", this.Party.PartySno == 0 ? "Party Created successfully" : "Party updated successfully");          
-          this.apidataService.fetchData("2");
+          //this.apidataService.fetchData("2");
           this.CloseDialog(pty.Party);
         }
     },  

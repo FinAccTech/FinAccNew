@@ -40,6 +40,11 @@ export class ClsLoans{
         return subject.asObservable();              
     }
 
+    getLoanbySearch(Search_String: string, Loan_Status: number, Approval_Status: number, Cancel_Status: number, Open_Status: number): Observable<TypeHttpResponse> {
+        let postdata ={ "BranchSno": this.BranchSno, "CompSno" : this.CompSno, "Search_String": Search_String, "Loan_Status": Loan_Status, "Approval_Status": Approval_Status, "Cancel_Status": Cancel_Status, "Open_Status" : Open_Status }; 
+        return this.dataService.HttpGet(postdata, "/getLoanbySearch");                
+    }
+
 
     saveLoan(): Observable<TypeHttpResponse>  {              
         var subject = new Subject<TypeHttpResponse>();        

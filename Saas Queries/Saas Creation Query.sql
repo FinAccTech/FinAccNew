@@ -8,20 +8,20 @@ INSERT INTO Registered_Clients (Client_Code, Client_Name, Address, State, Mobile
 VALUES 
 (
 
-	'FS2025041453', --Client Code
-	'Udayam Nidhiyagam',  -- ClientName
-	'Cauvery Nagar south, Pudukottai Road, Thanjavur', -- Address
+	'FS2025042755', --Client Code
+	'SUDHESI GOLD FINANCE',  -- ClientName
+	'Valasai street, Thangachimadam, Ramanathapuram', -- Address
 	'Tamilnadu', -- State
-	'9043257800', -- Mobile
-	'', -- Alternate Mobile
-	'', -- Email
-	'Naveen', -- Contact Person
-	20250414, -- Creation Date
-	20250414, -- Subscription Start
-	20260413, -- Subscription End
+	'9790669338', -- Mobile
+	'04573223622', -- Alternate Mobile
+	'emkumar10@gmail.com', -- Email
+	'Manoj Kumar', -- Contact Person
+	20250427, -- Creation Date
+	20250427, -- Subscription Start
+	20260426, -- Subscription End
 	'', -- App Login
 	'', -- App_Pwd
-	'FS2025041453', -- DbName
+	'FS2025042755', -- DbName
 	1, -- Status
 	3, -- Version Type
 	0 -- Own_Serer

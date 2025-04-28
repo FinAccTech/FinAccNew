@@ -27,9 +27,9 @@ export class AppComponent {
     const BranchSno: number = +sessionStorage.getItem("sessionSelectedBranchSno")!;      
 	  const UserSno: number   = sessionStorage.getItem("sessionLoggedUser") ? JSON.parse(sessionStorage.getItem("sessionLoggedUser")!).UserSno : 0; 
 
-    if ((CompSno && CompSno > 0 ) && (ClientSno && ClientSno>0) && (BranchSno && BranchSno >0) && (UserSno && UserSno > 0) ){
-      this.apidataService.fetchData("1");
-    }
+    // if ((CompSno && CompSno > 0 ) && (ClientSno && ClientSno>0) && (BranchSno && BranchSno >0) && (UserSno && UserSno > 0) ){    
+    //   console.log("App Initialized");      
+    // }
 
     const baseUrl = window.location.origin; 
     

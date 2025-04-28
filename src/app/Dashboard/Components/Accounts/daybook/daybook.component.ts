@@ -17,7 +17,7 @@ export class DaybookComponent {
   @ViewChild('TABLE')  table!: ElementRef;
   
   FromDate: number = 0;
-  ToDate: number  = 0;
+  ToDate: number  = 0; 
   Opening_Balance: number = 0;
   Closing_Balance: number = 0;
   Daybooklist:       TypeLedgerBook[] = [];
@@ -36,7 +36,14 @@ export class DaybookComponent {
       else{                        
         this.Daybooklist = JSON.parse(data.apiData.daybooklist);    
         let prevdate = 0;
-        this.Daybooklist.forEach(vou=>{
+
+        this.Daybooklist.map(vou=>{
+          if (vou.Std_No == this.globals.StdLedgerCashAc) {
+            this.Daybooklist.splice( this.Daybooklist.indexOf(vou),1);
+          }
+        })
+
+        this.Daybooklist.forEach(vou=>{ 
           if (vou.Vou_Date == prevdate){            
             vou.Vou_Date = 0;            
           }
