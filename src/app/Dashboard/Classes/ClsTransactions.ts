@@ -24,6 +24,8 @@ export class ClsTransactions{
 
 	saveTransaction(): Observable<TypeHttpResponse> {        
 		let postdata = this.Transaction;		
+		console.log(postdata.toString().length);
+		
         return this.dataService.HttpPost(postdata, "/saveTransaction");                        
     }
 

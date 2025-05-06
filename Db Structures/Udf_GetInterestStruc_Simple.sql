@@ -155,10 +155,6 @@ GO
                                              DATEDIFF(DAY,@FromDate,DATEADD(DAY,1,@ToDate))
                                          End
         
-        -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 ---------------------A1
-                                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
-                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
-        ------------------------------------------------------------------------------A1
                         
                          SET @IntAccured = CASE @Calc_Basis WHEN 0 THEN
                                                                  CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays*30)AS DECIMAL(18,2))
@@ -167,7 +163,11 @@ GO
                                                                 CAST((@Roi/100)*@NewPrincipal/12 AS decimal(18,2))
                                                                  --CAST(@Duration * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays)AS DECIMAL(18,2))
                                                              End
-     
+
+                  -------------- FOR ADD PRINCIPAL --- UPDATED ON 05/12/20 ---------------------A1
+                                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                                 SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
+        ------------------------------------------------------------------------------A1
         
                          SET @NewPrincipal = @NewPrincipal - ISNULL(@PrinPaid,0)
 						             
@@ -175,7 +175,8 @@ GO
                          /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
                         SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
 
-                        SET @TotIntAccured = @TotIntAccured + @IntAccured
+                        
+                        SET @TotIntAccured =  @TotIntAccured + @IntAccured
 
                          INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,@Calc_Basis,@Roi,
                                                      ISNULL(@IntAccured,0),ISNULL(@TotIntAccured,0),

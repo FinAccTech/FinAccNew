@@ -16,7 +16,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 export class ReportpropertiesComponent {
 constructor(
     public dialogRef: MatDialogRef<ReportpropertiesComponent>,    
-    @Inject(MAT_DIALOG_DATA) public data: number,            
+    @Inject(MAT_DIALOG_DATA) public data: any,            
     private dataService: DataService,
     private globals: GlobalsService
   )  {} 
@@ -27,30 +27,35 @@ constructor(
 
   ngOnInit(){
     let rep = new ClsReportProperties(this.dataService);
-    rep.getReportProperties(this.data,).subscribe(data=>{
-      console.log(this.RepProps);
-      
-      this.RepProps = JSON.parse(data.apiData)[0];            
-      if (this.RepProps.Report_Style !== ''){
-        this.RepProps.Report_Style.trim().trimStart().trimEnd().split(";").forEach(rep=>{
+    
+    rep.getReportProperties(this.data.ReportSno,).subscribe(data=>{
+      this.RepProps = JSON.parse(data.apiData)[0];      
+
+
+      if(!this.RepProps){          
+          let rep = new ClsReportProperties(this.dataService);    
+          this.RepProps = rep.Initialize();
+      }
+
+      if (this.RepProps.Report_Styleslist !== ''){
+        this.RepProps.Report_Styleslist.trim().trimStart().trimEnd().split(";").forEach(rep=>{
           if (rep !== ''){
             this.StyleList.push(rep);
           }
         })          
       }
+      
     })    
     //this.StyleList = this.data.result;    
   }
 
-  AddStyle(){
-    if (this.NewStyleName.trim() == ''){ this.globals.SnackBar("error","StyleName cannot be empty, 1000"); return; }      
-    this.StyleList.push(  this.NewStyleName);
+  AddStyle(){    
+    if (this.NewStyleName.trim() == ''){ this.globals.SnackBar("error","StyleName cannot be empty, 1000"); return; }          
+    this.StyleList.push(this.NewStyleName);
+    this.RepProps.Report_Styleslist += this.NewStyleName + ";";    
     let rep = new ClsReportProperties(this.dataService);  
-    console.log(this.RepProps);
-    
-    rep.ReportPropertie = this.RepProps;    
-    
-    rep.saveReportProperties().subscribe(data=>{
+
+    rep.saveReportProperties(this.data.ReportSno, this.data.Report_Name, this.RepProps.Report_Styleslist).subscribe(data=>{
       if (data.queryStatus == 1){
         this.NewStyleName = "";
         this.ExtractStyles();
@@ -73,9 +78,9 @@ constructor(
     this.dialogRef.close(style);
   }
   ExtractStyles(){
-    this.RepProps.Report_Style = "";
+    this.RepProps.Report_Styleslist = "";
     this.StyleList.forEach((sty) =>{
-      this.RepProps.Report_Style += sty + '; ';
+      this.RepProps.Report_Styleslist += sty + '; ';
     })
     
   }

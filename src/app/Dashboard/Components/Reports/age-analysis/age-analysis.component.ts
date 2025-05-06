@@ -39,6 +39,7 @@ export class AgeAnalysisComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;  
   
+  ShowFilterOptionsCustom: boolean = false;
   AsOnDate: number = 0;
   LoansList:       TypeAgeAnalysis[] = [];    
   FilteredList:    TypeAgeAnalysis[] = [];    

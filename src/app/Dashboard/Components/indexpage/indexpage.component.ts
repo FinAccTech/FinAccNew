@@ -62,8 +62,8 @@ export class IndexpageComponent {
 
   ngOnInit(){    
     
-    this.apidataService.InitLoans();
-    this.apidataService.InitParties();
+    // this.apidataService.InitLoans();
+    // this.apidataService.InitParties();
 
     this.LoggedUser = this.auth.LoggedUser.UserName!;      
     if (this.auth.CompSelected == 0){      

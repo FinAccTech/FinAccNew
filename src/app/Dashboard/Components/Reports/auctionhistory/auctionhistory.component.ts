@@ -123,7 +123,7 @@ export class AuctionhistoryComponent {
   PrintReport(){
     const dialogRef = this.dialog.open(ReportpropertiesComponent, 
       { 
-        data:  this.globals.RepAuctionHistory,
+        data:  { "ReportSno": this.globals.RepAuctionHistory, "Report_Name": "Auction History" } ,
       });        
       dialogRef.disableClose = true;    
       dialogRef.afterClosed().subscribe(result => {         

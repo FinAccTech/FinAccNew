@@ -1332,6 +1332,7 @@ GO
 
 
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getParties') BEGIN DROP FUNCTION Udf_getParties END
 GO
 
@@ -2908,10 +2909,11 @@ BEGIN
   INSERT INTO Area (Area_Code,Area_Name,Remarks,Active_Status,Create_Date,UserSno,CompSno) VALUES ('PRIMARY','PRIMARY','',1,dbo.DateToInt(GETDATE()),1,@CompSno)
   
   
-  INSERT INTO Schemes(Scheme_Code,Scheme_Name, Roi, EmiDues, OrgRoi, IsStdRoi, Calc_Basis, Calc_Method, Custom_Style, Payment_Frequency, Enable_AmtSlab, Preclosure_Days, Min_CalcDays, Grace_Days, LpYear,
-                      LpMonth, LpDays, Min_MarketValue, Max_MarketValue, Active_Status, AdvanceMonth, ProcessingFeePer, Min_LoanValue, Max_LoanValue, Enable_FeeSlab, SeriesSno,
-                      Create_Date, Remarks, UserSno, CompSno)
-  VALUES ('STD','STANDARD',24, 0, 24, 0, 2,0, 0,0 ,0, 30, 15, 3, 1, 0, 7, 0, 100, 1, 1, 0, 0, 0, 0, 12,[dbo].DateToInt(GETDATE()),'', 1, @CompSno)
+  INSERT INTO Schemes(Scheme_Code,Scheme_Name, Roi, EmiDues, OrgRoi, IsStdRoi, Calc_Basis, Calc_Method, Custom_Style, Payment_Frequency, Enable_AmtSlab, Preclosure_Days, Min_CalcDays,
+                      Grace_Days, LpYear, LpMonth, LpDays, Min_MarketValue, Max_MarketValue, Active_Status, AdvanceMonth, ProcessingFeePer, Min_LoanValue, Max_LoanValue,
+                      Enable_FeeSlab, SeriesSno, Create_Date, Doc_Charges_Per, Doc_Charges, Tax_Per, Compound_Period, Remarks, UserSno, CompSno)
+                      
+  VALUES ('STD','STANDARD',24, 0, 24, 0, 2,0, 0,0 ,0, 30, 15, 3, 1, 0, 7, 0, 100, 1, 1, 0, 0, 0, 0, 12,[dbo].DateToInt(GETDATE()),0,0,0,0,'', 1, @CompSno)
 
 
   INSERT INTO Item_Groups(Grp_Code, Grp_Name, Market_Rate, Loan_PerGram, Restrict_Type, Remarks, Active_Status, Create_Date, UserSno, CompSno)

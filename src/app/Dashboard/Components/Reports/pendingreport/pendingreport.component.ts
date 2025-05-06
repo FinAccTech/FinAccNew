@@ -17,7 +17,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
   templateUrl: './pendingreport.component.html',
   styleUrls: ['./pendingreport.component.scss'],
   animations: [
-    trigger('detailExpand', [
+    trigger('detailExpand', [ 
       state('collapsed', style({height: '0px', minHeight: '0'})),
       state('expanded', style({height: '*'})),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
@@ -47,6 +47,7 @@ export class PendingreportComponent {
   DueDays: number = 28;
 
   ShowFilterOptions: boolean = false;
+  
   FilteMonthsParams: number = 0;
   FilteDaysParams: number = 0;
   FilterMonths:number = 0;
@@ -114,7 +115,7 @@ export class PendingreportComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+      this.dataSource.paginator.firstPage(); 
     }
   }
 

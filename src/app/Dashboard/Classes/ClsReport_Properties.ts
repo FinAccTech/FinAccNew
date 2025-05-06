@@ -16,10 +16,8 @@ export class ClsReportProperties{
         return this.dataService.HttpGet(postdata, "/getReportProperties");                
     }
 
-    saveReportProperties(): Observable<TypeHttpResponse> {                
-        let postdata = this.ReportPropertie;
-        console.log(postdata);
-        
+    saveReportProperties(ReportSno: number, Report_Name: string,  Report_Styleslist: string): Observable<TypeHttpResponse> {                
+        let postdata ={ "ReportSno" :  ReportSno, "CompSno" :  this.CompSno, "Report_Name": Report_Name, "Report_Styleslist": Report_Styleslist }; 
         return this.dataService.HttpPost(postdata, "/saveReportProperties");                        
     }
 
@@ -32,7 +30,7 @@ export class ClsReportProperties{
         let ReportPropertie: TypeReportPropertie = {
             ReportSno: 0,    
             Report_Name: "",
-            Report_Style: "",
+            Report_Styleslist: "",
             CompSno: 0,   
         }
         return ReportPropertie
@@ -43,6 +41,6 @@ export interface TypeReportPropertie{
     ReportSno: number;    
     Report_Name: string;
     CompSno: number;        
-    Report_Style: string;    
+    Report_Styleslist: string;    
 }
 

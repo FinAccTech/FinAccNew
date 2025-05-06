@@ -61,7 +61,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         SET @ToDate = @Receipt_Date
         
                         --STEP 1 : GET DURATION
-                        SET @TotDuration = DATEDIFF(DAY,@FromDate, @ToDate)
+                        SET @TotDuration = DATEDIFF(DAY,@FromDate, @ToDate) -- + 1
         
                         --STEP 2: GET ROI AS PER DURATION
 						

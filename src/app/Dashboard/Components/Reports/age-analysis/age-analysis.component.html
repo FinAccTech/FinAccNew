@@ -51,7 +51,8 @@
             </div>
     
             <div class="filterRight">                
-                <button class="btn" (click)="ShowFilterOptions=!ShowFilterOptions"><i class='bx bx-filter-alt' ></i> More Filter</button>
+                <!-- <button class="btn" (click)="ShowFilterOptions=!ShowFilterOptions"><i class='bx bx-filter-alt' ></i> More Filter</button> -->
+                <button class="btn" (click)="ShowFilterOptionsCustom=!ShowFilterOptionsCustom"><i class='bx bx-filter-alt' ></i> More Filter</button>
                 <button class="btn" (click)="ClearFilter()" ><i class='bx bxs-eraser'></i>Clear </button>
             </div>
         </div>
@@ -205,4 +206,38 @@
           
         </div>
     </ng-container>
+
+    <ng-container *ngIf="ShowFilterOptionsCustom" >
+        <div class="filterOptions" >
+            <div class="row">
+                <p style="position: absolute; right: .5rem; top: .5rem; font-size: 1.8rem; cursor: pointer; margin-right: .7rem;" (click)="ShowFilterOptionsCustom=false" >&times;</p>
+            </div>
+
+        
+            <div class="row" style="margin-top: 1.5rem;" >
+                <p>Pending Months</p>
+                <div class="matGroup" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="FilteMonthsParams"  >
+                            <mat-option style="font-size: 1rem;" [value]=0>6</mat-option>
+                            <mat-option style="font-size: 1rem;" [value]=1>11</mat-option>                            
+                            <mat-option style="font-size: 1rem;" [value]=2>17</mat-option>                            
+                            <mat-option style="font-size: 1rem;" [value]=2>23</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Months
+                    </div>
+                </div>
+                
+                <mat-checkbox [checked]=1 > Receipt  </mat-checkbox>
+                
+                <button class="btnDefault" (click)="FilterByParams(0)" > Filter </button>
+            </div>        
+            <br>
+
+          
+        </div>
+    </ng-container>
+    
 </div>

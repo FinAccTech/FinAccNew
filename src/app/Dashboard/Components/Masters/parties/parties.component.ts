@@ -65,16 +65,18 @@ export class PartiesComponent {
   LoadPartiesList(){        
     this.PartiesList = [];
     this.LoadDataIntoMatTable();
-    // let pty = new ClsParties(this.dataService);     
+    let pty = new ClsParties(this.dataService);     
     
-          
-        this.PartiesList = this.apidataService.getPartiessList();
-        if (!this.PartiesList) {
-          this.PartiesList = [];
-        }        
-        this.LoadDataIntoMatTable();
-      
+    pty.getParties(0,this.Party_Cat,0,0,0).subscribe(data=>{
+      this.PartiesList = JSON.parse(data.apiData);
+      if (!this.PartiesList) {
+        this.PartiesList = [];
+      } 
+      this.LoadDataIntoMatTable();       
+    })
     
+        // this.PartiesList = this.apidataService.getPartiessList();
+        
   }
 
   AddNewParty(){
