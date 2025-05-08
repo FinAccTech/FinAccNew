@@ -15,6 +15,7 @@ AS
   END
 GO
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE NAME='SDateDiff') BEGIN DROP FUNCTION SDateDiff END
 GO
 
@@ -634,7 +635,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @MobileNumberMandatory BIT,
   @Enable_AutoApproval BIT,
   @Lock_PreviousDate BIT,
-  @Enable_EmptyWt BIT
+  @Enable_EmptyWt BIT,
+  @Allow_Red_Before_Close BIT
 
   
 WITH ENCRYPTION AS
@@ -657,7 +659,7 @@ BEGIN
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
                                       Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,
-                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt
+                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -948,10 +950,10 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close)
 
         VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0)
         IF @@ERROR <> 0 GOTO CloseNow
 
         UPDATE Transaction_Setup SET BranchCode_CurrentNo = BranchCode_CurrentNo + 1 WHERE CompSno=@CompSno
@@ -2082,7 +2084,7 @@ BEGIN
           SELECT @PurityCode_AutoGen=PurityCode_AutoGen FROM Transaction_Setup WHERE BranchSno=@BranchSno
           IF @PurityCode_AutoGen=1
           BEGIN
-              SELECT @Purity_Code=TRIM(PurityCode_Prefix)+CAST((PurityCode_CurrentNo+1) AS VARCHAR) FROM Transaction_Setup WHERE BranchSno=@BranchSno
+              SELECT @Purity_Code=TRIM(PurityCode_Prefix)+CAST((PurityCode_CurrentNo+1) AS VARCHAR) FROM Transaction_SetupS WHERE BranchSno=@BranchSno
           End
 
 
@@ -2446,16 +2448,19 @@ BEGIN
 		ELSE
 			BEGIN
 
-        IF (@VouTypeSno=14)
+        IF (SELECT Allow_Red_Before_Close FROM Transaction_Setup WHERE BranchSno=@BranchSno) = 0
           BEGIN
-              DECLARE @RpStatus TINYINT
-              SELECT @RpStatus = Repledge_Status FROM VW_REPLEDGES WHERE RepledgeSno = (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=@RefSno)
-              SET @RpStatus = ISNULL(@RpStatus,0)
-              IF (@RpStatus = 1) OR (@RpStatus=3)
-                BEGIN
-                  Raiserror ('Cannot Close the Loan when Repledge exists for this Loan', 16, 1) 
-                  GOTO CloseNow
-                END
+            IF (@VouTypeSno=14)
+              BEGIN
+                  DECLARE @RpStatus TINYINT
+                  SELECT @RpStatus = Repledge_Status FROM VW_REPLEDGES WHERE RepledgeSno = (SELECT MAX(TransSno) FROM Repledge_Details WHERE LoanSno=@RefSno)
+                  SET @RpStatus = ISNULL(@RpStatus,0)
+                  IF (@RpStatus = 1) OR (@RpStatus=3)
+                    BEGIN
+                      Raiserror ('Cannot Close the Loan when Repledge exists for this Loan', 16, 1) 
+                      GOTO CloseNow
+                    END
+              END
           END
 
         DECLARE @Num_Method TINYINT
@@ -2952,10 +2957,10 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close)
 
   VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0)
 
   INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
   VALUES                    (@CompSno, '','','','','','','',0,0)

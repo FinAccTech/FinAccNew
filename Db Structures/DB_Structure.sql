@@ -157,7 +157,8 @@ CREATE TABLE Transaction_Setup
   MobileNumberMandatory         BIT,
   Enable_AutoApproval   BIT,
   Lock_PreviousDate   BIT,
-  Enable_EmptyWt      BIT
+  Enable_EmptyWt      BIT,
+  Allow_Red_Before_Close BIT
 )
 GO
 
