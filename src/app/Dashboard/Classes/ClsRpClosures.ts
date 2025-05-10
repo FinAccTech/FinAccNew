@@ -29,8 +29,6 @@ export class ClsRpClosures{
 
     saveRpClosure(): Observable<TypeHttpResponse>  {   
            
-        console.log(this.RpClosure);
-        
         var subject = new Subject<TypeHttpResponse>();        
 
         let trans = new ClsTransactions(this.dataService); 
@@ -53,7 +51,8 @@ export class ClsRpClosures{
         newTrans.PaymentModesXML        = this.RpClosure.PaymentModesXML;
         newTrans.Remarks               = this.RpClosure.Remarks;        
         newTrans.UserSno               = this.RpClosure.UserSno;
-        newTrans.BranchSno             = this.BranchSno;          
+        newTrans.BranchSno             = this.BranchSno;      
+        newTrans.Payment_Status         = this.RpClosure.Payment_Status;    
         newTrans.ItemDetailXML         = null!;        
         newTrans.ImageDetailXML        = this.RpClosure.ImageDetailXML;
         newTrans.RepledgeLoansXML        = null!;        
@@ -106,6 +105,8 @@ export class ClsRpClosures{
             UserSno: this.UserSno,
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+            Payment_Status: 1,
+
             VouSno: 0,
 
             ItemDetailXML: "",
@@ -144,6 +145,8 @@ export class ClsRpClosures{
 		UserSno: number;
 		CompSno: number;
 		BranchSno: number;
+        Payment_Status: number;
+
         VouSno: number;
 
         ItemDetailXML: string;

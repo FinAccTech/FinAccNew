@@ -25,6 +25,7 @@
     ]
   },
   "angularCompilerOptions": {
+    "typeRoots": ["node_modules/@types", "src/types"],
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,

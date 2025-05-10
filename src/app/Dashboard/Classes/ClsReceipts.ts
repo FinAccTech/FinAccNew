@@ -62,6 +62,7 @@ export class ClsReceipts{
         newTrans.Remarks               = this.Receipt.Remarks;        
         newTrans.UserSno               = this.Receipt.UserSno;
         newTrans.BranchSno             = this.BranchSno;          
+        newTrans.Payment_Status         = this.Receipt.Payment_Status;
         newTrans.ItemDetailXML         = this.Receipt.ItemDetailXML;        
         newTrans.ImageDetailXML        = this.Receipt.ImageDetailXML;
         newTrans.RepledgeLoansXML        = null!;        
@@ -129,6 +130,7 @@ export class ClsReceipts{
 		    UserSno: this.UserSno,
 		    CompSno: this.CompSno,
 		    BranchSno: this.BranchSno,
+            Payment_Status: 1,
             ItemDetailXML: "",
             Item_Details: "",
 		    ImageDetailXML: "",
@@ -179,6 +181,7 @@ export class ClsReceipts{
 		UserSno: number;
 		CompSno: number;
 		BranchSno: number;
+        Payment_Status: number;
         VouSno: number;
 
         ItemDetailXML: string;

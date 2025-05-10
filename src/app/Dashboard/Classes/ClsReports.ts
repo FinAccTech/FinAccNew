@@ -115,6 +115,11 @@ export class ClsReports{
         let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
         return this.dataService.HttpGet(postdata, "/getBusinessRegisterDaily");                
     }
+
+    getPendingLoanPayments(): Observable<TypeHttpResponse> {
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getPendingLoanPayments");                
+    }
     
 }
 

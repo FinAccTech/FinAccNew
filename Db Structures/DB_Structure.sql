@@ -158,7 +158,8 @@ CREATE TABLE Transaction_Setup
   Enable_AutoApproval   BIT,
   Lock_PreviousDate   BIT,
   Enable_EmptyWt      BIT,
-  Allow_Red_Before_Close BIT
+  Allow_Red_Before_Close BIT,
+  Enable_Payment_Process BIT
 )
 GO
 
@@ -553,7 +554,8 @@ CREATE TABLE Transactions
   VouSno              INT,	
 	UserSno					    INT,
 	CompSno					    INT,
-  BranchSno           INT
+  BranchSno           INT,
+  Payment_Status      BIT
 )
 GO
 

@@ -100,6 +100,7 @@
                 </div>
             </div> 
         </div>
+
         <div class="statusHeader">
             <div class="statusLeft">
                 <ng-container *ngIf="Loan.LoanSno !==0">
@@ -146,9 +147,25 @@
                 <div [ngClass]="(Loan.Loan_Status == 1) ? 'statusLabelOpen' : (Loan.Loan_Status == 2) ? 'statusLabelClosed' : (Loan.Loan_Status == 3)? 'statusLabelMatured' :'statusLabelAuctioned' " >
                     <div class="caption">Loan Staus</div>
                     <div class="value">{{Loan.Loan_Status == 1 ? 'Open' : Loan.Loan_Status == 2 ? 'Closed' : Loan.Loan_Status == 3 ? 'Matured' : 'Auctioned' }}</div>
-                </div>                  
+                </div>   
+                
+                @if (EnablePaymentProcess) {
+                    <div class="matGroup">
+                        <div class="matSelect"> 
+                            <mat-select [(value)]="Loan.Payment_Status"  >
+                                <mat-option [value]="0">Pending</mat-option>
+                                <mat-option [value]="1">Completed</mat-option>                            
+                            </mat-select>
+                        </div>
+                        <div class="matLabel">
+                            &nbsp;&nbsp; Payment Process
+                        </div>
+                    </div>
+                }
             </div>            
         </div>
+
+       
     </div>
 
     <div class="partySection">
@@ -327,8 +344,8 @@
                         <div class="col50">
                             <button class="paymodeButton" (click)="MultiPaymentModes()"> <i class="fa fa-credit-card" aria-hidden="true"></i> &nbsp; Payment Modes</button>                        
                         </div>   
-                        <div class="col50">
-                            
+                        <div class="col50">                            
+                           
                         </div>                 
                     </div>
                 </div>

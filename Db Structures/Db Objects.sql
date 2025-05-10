@@ -636,7 +636,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Enable_AutoApproval BIT,
   @Lock_PreviousDate BIT,
   @Enable_EmptyWt BIT,
-  @Allow_Red_Before_Close BIT
+  @Allow_Red_Before_Close BIT,
+  @Enable_Payment_Process BIT
 
   
 WITH ENCRYPTION AS
@@ -659,7 +660,7 @@ BEGIN
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
                                       Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,
-                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close
+                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close, Enable_Payment_Process=@Enable_Payment_Process
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -950,10 +951,10 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close, Enable_Payment_Process)
 
         VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0)
         IF @@ERROR <> 0 GOTO CloseNow
 
         UPDATE Transaction_Setup SET BranchCode_CurrentNo = BranchCode_CurrentNo + 1 WHERE CompSno=@CompSno
@@ -1687,14 +1688,15 @@ CREATE FUNCTION Udf_getRoiforAmoount(@SchemeSno INT, @Amount MONEY)
 RETURNS TABLE
 WITH ENCRYPTION AS
 RETURN
-	SELECT		ISNULL(Slb.Roi,0) as Roi, ISNULL(fSlb.FeePer,0) as FeePer
+	SELECT		ISNULL(Slb.Roi,0) as Roi --, ISNULL(fSlb.FeePer,0) as FeePer
 	FROM		  Schemes Sch
-				    LEFT OUTER JOIN Amt_Slab_Details Slb ON Slb.SchemeSno=Sch.SchemeSno
-            LEFT OUTER JOIN Fee_Slab_Details fSlb ON fSlb.SchemeSno=Sch.SchemeSno
+				    LEFT OUTER JOIN Amt_Slab_Details Slb ON Slb.SchemeSno=Sch.SchemeSno        
+            --LEFT OUTER JOIN Fee_Slab_Details fSlb ON fSlb.SchemeSno=Sch.SchemeSno
 				
 	WHERE		  (Sch.SchemeSno=@SchemeSno) AND
-            (@Amount >=Slb.FromAmount) AND (@Amount <= Slb.ToAmount  OR Slb.ToAmount = 0) OR
-            (@Amount >=fSlb.FromAmount) AND (@Amount <= fSlb.ToAmount  OR fSlb.ToAmount = 0)
+            (@Amount >=Slb.FromAmount) AND (@Amount <= Slb.ToAmount  OR Slb.ToAmount = 0)
+            --OR
+            --(@Amount >=fSlb.FromAmount) AND (@Amount <= fSlb.ToAmount  OR fSlb.ToAmount = 0)
 
 GO
 
@@ -2383,6 +2385,7 @@ CREATE PROCEDURE Sp_Transactions
 	@UserSno				      INT,
 	@CompSno				      INT,
 	@BranchSno				    INT,
+  @Payment_Status       BIT,
 	@ItemDetailXML			  XML,
 	@ImageDetailXML			  XML,
   @RepledgeLoansXML     XML,
@@ -2429,7 +2432,7 @@ BEGIN
                                   Due_Start_Date=@Due_Start_Date, Emi_Principal=@Emi_Principal, Emi_Interest=@Emi_Interest, DocChargesAmt = @DocChargesAmt,	RefSno  = @RefSno,	Rec_Principal = @Rec_Principal,
                                   Rec_IntMonths = @Rec_IntMonths,	Rec_IntDays = @Rec_IntDays, Rec_Interest = @Rec_Interest, Rec_Other_Credits = @Rec_Other_Credits,	Rec_Other_Debits = @Rec_Other_Debits,
                                   Rec_Default_Amt = @Rec_Default_Amt,	Rec_Add_Less = @Rec_Add_Less, Rec_DuesCount=@Rec_DuesCount, Rec_DueAmount=@Rec_DueAmount, Red_Method = @Red_Method, Nett_Payable = @Nett_Payable, Mature_Date = @Mature_Date,	PayModeSno = @PayModeSno,
-                                  LocationSno = @LocationSno, AgentSno=@AgentSno,Remarks = @Remarks,	UserSno = @UserSno, CompSno = @CompSno,BranchSno=@BranchSno					  
+                                  LocationSno = @LocationSno, AgentSno=@AgentSno,Remarks = @Remarks,	UserSno = @UserSno, CompSno = @CompSno,BranchSno=@BranchSno,Payment_Status=@Payment_Status					  
 				WHERE TransSno=@TransSno
 				IF @@ERROR <> 0 GOTO CloseNow
 
@@ -2479,10 +2482,10 @@ BEGIN
 
       	INSERT INTO Transactions (VouTypeSno, SeriesSno, Trans_No, Ref_No, BorrowerSno, Trans_Date, PartySno, SchemeSno, GrpSno, TotQty, TotGrossWt, TotNettWt, TotPureWt,	Market_Value, Market_Rate, Loan_PerGram,	Principal, Roi,
                                   AdvIntDur, AdvIntAmt, DocChargesPer, DocChargesAmt, Emi_Due_Amt, OrgEmi_Due_Amt, Due_Start_Date, Emi_Principal, Emi_Interest, RefSno, Rec_Principal, Rec_IntMonths,	Rec_IntDays, Rec_Interest, Rec_Other_Credits,	Rec_Other_Debits,
-                                  Rec_Default_Amt,	Rec_Add_Less, Rec_DuesCount, Rec_DueAmount, Red_Method,	Nett_Payable, Mature_Date,	PayModeSno,	LocationSno, AgentSno, Remarks, UserSno,	CompSno, BranchSno)
+                                  Rec_Default_Amt,	Rec_Add_Less, Rec_DuesCount, Rec_DueAmount, Red_Method,	Nett_Payable, Mature_Date,	PayModeSno,	LocationSno, AgentSno, Remarks, UserSno,	CompSno, BranchSno, Payment_Status)
         VALUES                    (@VouTypeSno, @SeriesSno, @Trans_No, @Ref_No, @BorrowerSno, @Trans_Date, @PartySno, @SchemeSno, @GrpSno, @TotQty, @TotGrossWt, @TotNettWt, @TotPureWt, @Market_Value, @Market_Rate, @Loan_PerGram,	@Principal, @Roi,
                                   @AdvIntDur, @AdvIntAmt, @DocChargesPer, @DocChargesAmt, @Emi_Due_Amt, @OrgEmi_Due_Amt, @Due_Start_Date, @Emi_Principal, @Emi_Interest, @RefSno, @Rec_Principal, @Rec_IntMonths,	@Rec_IntDays, @Rec_Interest, @Rec_Other_Credits,	@Rec_Other_Debits,
-                                  @Rec_Default_Amt,	@Rec_Add_Less, @Rec_DuesCount, @Rec_DueAmount, @Red_Method,	@Nett_Payable, @Mature_Date,	@PayModeSno,	@LocationSno,	@AgentSno, @Remarks, @UserSno,	@CompSno,@BranchSno)
+                                  @Rec_Default_Amt,	@Rec_Add_Less, @Rec_DuesCount, @Rec_DueAmount, @Red_Method,	@Nett_Payable, @Mature_Date,	@PayModeSno,	@LocationSno,	@AgentSno, @Remarks, @UserSno,	@CompSno,@BranchSno, @Payment_Status)
 
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @TransSno = @@IDENTITY
@@ -2509,9 +2512,11 @@ BEGIN
   DECLARE  @VouDetailXML XML  = CAST([dbo].GetVoucherXML(@CompSno, @VouTypeSno, @PartySno, @IsOpen, @Principal, @AdvIntAmt, @DocChargesAmt, @Rec_Principal, @Rec_Interest, @Rec_Add_Less, @Rec_Default_Amt,  @Rec_Other_Debits,
 	                                        @Rec_Other_Credits, CAST(@PaymentModesXML AS VARCHAR(MAX))) AS XML) 
 
-                                          
-  EXEC Sp_AccVouchers @VouSno, @VouTypeSno, @SeriesSno, @Trans_No,  @Trans_Date, '', 0, 1, 0, @UserSno, @CompSno, @VouDetailXML, @VouSno OUTPUT
-  UPDATE Transactions SET VouSno=@VouSno WHERE TransSno=@TransSno
+  IF @Payment_Status = 1
+    BEGIN
+      EXEC Sp_AccVouchers @VouSno, @VouTypeSno, @SeriesSno, @Trans_No,  @Trans_Date, '', 0, 1, 0, @UserSno, @CompSno, @VouDetailXML, @VouSno OUTPUT
+      UPDATE Transactions SET VouSno=@VouSno WHERE TransSno=@TransSno
+    END
 
    IF @ItemDetailXML IS NOT NULL
           BEGIN
@@ -2957,10 +2962,10 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close, Enable_Payment_Process)
 
   VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0)
 
   INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
   VALUES                    (@CompSno, '','','','','','','',0,0)
@@ -2994,7 +2999,7 @@ AS
 				    Sch.SchemeSno, Sch.Scheme_Code, Sch.Scheme_Name,
 				    Grp.GrpSno, Grp.Grp_Code, Grp.Grp_Name,
 
-            Trans.Emi_Due_Amt, Trans.OrgEmi_Due_Amt, Trans.Due_Start_Date, Trans.Emi_Principal, Trans.Emi_Interest,
+            Trans.Emi_Due_Amt, Trans.OrgEmi_Due_Amt, Trans.Due_Start_Date, Trans.Emi_Principal, Trans.Emi_Interest, Trans.Payment_Status,
           
                STUFF(( SELECT   (','+ It.Item_Name + '-' + CAST(Ld.Qty AS VARCHAR))
                     FROM     Transaction_Details Ld

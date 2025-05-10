@@ -152,6 +152,7 @@ import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/
 import { LazyLoadOnVisibleDirective } from './Dashboard/Directives/lazy-load-on-visible.directive';
 import { IntstatementViewComponent } from './Dashboard/widgets/intstatement-view/intstatement-view.component';
 import { TableviewComponent } from './Dashboard/widgets/tableview/tableview.component';
+import FileSaver from 'file-saver';
 
 @NgModule({ declarations: [                
         LazyLoadOnVisibleDirective,
@@ -238,7 +239,7 @@ import { TableviewComponent } from './Dashboard/widgets/tableview/tableview.comp
     MatProgressBarModule,
     MatSortModule,
     NgxEchartsDirective,
-    MatTableExporterModule,
+    MatTableExporterModule,    
     NgxEchartsModule.forRoot({
         /**
          * This will import all modules from echarts.

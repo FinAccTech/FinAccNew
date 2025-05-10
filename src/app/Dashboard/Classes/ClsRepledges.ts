@@ -63,6 +63,7 @@ export class ClsRepledges{
         newTrans.VouSno                = this.Repledge.VouSno;
         newTrans.UserSno               = this.Repledge.UserSno;
         newTrans.BranchSno             = this.BranchSno;
+        newTrans.Payment_Status          = this.Repledge.Payment_Status;
         newTrans.ItemDetailXML         = null!;
         newTrans.RepledgeLoansXML      = this.Repledge.RepledgeLoansXML;
         newTrans.ImageDetailXML        = this.Repledge.ImageDetailXML;        
@@ -159,6 +160,7 @@ export class ClsRepledges{
             UserSno: this.UserSno,       
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+            Payment_Status: 1,
             Series_Json: "",
             Party_Json: "",
             Borrower_Json: "",
@@ -203,7 +205,9 @@ export class ClsRepledges{
         VouSno: number;
         UserSno: number;
         CompSno: number;
-        BranchSno: number
+        BranchSno: number;
+        Payment_Status: number;
+
         RepledgeLoan_Details: string;
         RepledgeLoansXML: string;
         ImageDetailXML: string;        

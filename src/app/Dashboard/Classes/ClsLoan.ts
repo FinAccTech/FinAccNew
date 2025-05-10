@@ -90,6 +90,7 @@ export class ClsLoans{
         newTrans.VouSno                 = this.Loan.VouSno;
         newTrans.UserSno                = this.Loan.UserSno;
         newTrans.BranchSno              = this.BranchSno;
+        newTrans.Payment_Status         = this.Loan.Payment_Status;
         newTrans.ItemDetailXML          = this.Loan.ItemDetailXML;
         newTrans.ImageDetailXML         = this.Loan.ImageDetailXML;        
         newTrans.RepledgeLoansXML       = null!;        
@@ -199,6 +200,7 @@ export class ClsLoans{
             UserSno: this.UserSno,       
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+            Payment_Status: 1,
             Series_Json: "",
             Party_Json: "",
             Scheme_Json:"",
@@ -261,7 +263,8 @@ export class ClsLoans{
         VouSno: number;
         UserSno: number;
         CompSno: number;
-        BranchSno: number
+        BranchSno: number;
+        Payment_Status: number;
         Item_Details: string;
         ItemDetailXML: string;
         ImageDetailXML: string;        

@@ -103,6 +103,7 @@ export class LoanComponent implements OnInit {
   LoanPerGram: number = 0;  
   IsOpen: number = 0;
   LockPreviousDate: boolean = false;
+  EnablePaymentProcess: boolean = false;
   StdRoi: boolean = false;
 
   DocChargesTax: number = 0;
@@ -153,9 +154,8 @@ export class LoanComponent implements OnInit {
 
  ngOnInit(): void {  
     
-  
-  
   this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
+  this.EnablePaymentProcess = this.globals.AppSetup()[0].Enable_Payment_Process == 1 ? true : false;
   
   let ln = new ClsLoans(this.dataService);
   ln.getLoanMasters().subscribe(data=>{
@@ -200,6 +200,10 @@ export class LoanComponent implements OnInit {
 
       //Agents
       this.getAgent(this.AgentList[0]);
+
+      if (this.EnablePaymentProcess){
+        this.Loan.Payment_Status = 0;
+      }
     }
     else
     {
@@ -235,6 +239,7 @@ export class LoanComponent implements OnInit {
 }
 
 SaveLoan(){      
+  
   if (this.Loan.LoanSno !== 0){
     if (!this.globals.GetUserRight(this.auth.LoggedUserRights, this.globals.FormIdLoans, this.globals.UserRightEdit)) { this.globals.SnackBar("error", "You are not authorized for this operation."); return; }
   }
@@ -685,9 +690,11 @@ GetRoi($event: any){
   if (this.SelectedScheme.Enable_AmtSlab == false && this.SelectedScheme.Enable_FeeSlab == false ) { return;}
 
     let sch = new ClsSchemes(this.dataService);    
-    sch.getRoiforAmoount(this.SelectedScheme.SchemeSno, amt).subscribe(data => {            
-        if (JSON.parse(data.apiData).length < 1) {return}        
+    sch.getRoiforAmoount(this.SelectedScheme.SchemeSno, amt).subscribe(data => {   
+        if (JSON.parse(data.apiData).length < 1) {return}  
+
         this.Loan.Roi = (JSON.parse (data.apiData)[0].Roi);
+
         if (this.SelectedScheme.Enable_FeeSlab){
           this.Loan.DocChargesPer = (JSON.parse (data.apiData)[0].FeePer);        
         }        

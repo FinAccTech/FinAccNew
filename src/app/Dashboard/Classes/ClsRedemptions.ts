@@ -58,7 +58,8 @@ export class ClsRedemptions{
         newTrans.PaymentModesXML        = this.Redemption.PaymentModesXML;  
         newTrans.Remarks               = this.Redemption.Remarks;        
         newTrans.UserSno               = this.Redemption.UserSno;
-        newTrans.BranchSno             = this.BranchSno;          
+        newTrans.BranchSno             = this.BranchSno;       
+        newTrans.Payment_Status         = this.Redemption.Payment_Status;   
         newTrans.ItemDetailXML         = this.Redemption.ItemDetailXML;        
         newTrans.ImageDetailXML        = this.Redemption.ImageDetailXML;
         newTrans.RepledgeLoansXML        = null!;        
@@ -123,6 +124,8 @@ export class ClsRedemptions{
 		    UserSno: this.UserSno,
 		    CompSno: this.CompSno,
 		    BranchSno: this.BranchSno,
+            Payment_Status: 1,
+
             ItemDetailXML: "",
             Item_Details: "",
 		    ImageDetailXML: "",
@@ -170,6 +173,7 @@ export class ClsRedemptions{
 		UserSno: number;
 		CompSno: number;
 		BranchSno: number;
+        Payment_Status: number;
 
         ItemDetailXML: string;
         Item_Details: string;

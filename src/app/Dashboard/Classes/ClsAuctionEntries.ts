@@ -46,6 +46,7 @@ export class ClsAuctionEntries{
         newTrans.VouSno               = this.Auction.VouSno;
         newTrans.UserSno               = this.Auction.UserSno;
         newTrans.BranchSno             = this.BranchSno;        
+        newTrans.Payment_Status          = this.Auction.Payment_Status;
         newTrans.ItemDetailXML        = this.Auction.ItemDetailXML;
         newTrans.ImageDetailXML        = this.Auction.ImageDetailXML;
         newTrans.RepledgeLoansXML        = null!;        
@@ -118,6 +119,7 @@ export class ClsAuctionEntries{
             UserSno: this.UserSno,
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+            Payment_Status: 1,
             ItemDetailXML: "",            
             ImageDetailXML: "",     
             //VouDetailXML: "",       
@@ -150,7 +152,8 @@ export class ClsAuctionEntries{
         VouSno: number;  
         UserSno: number;
         CompSno: number;
-        BranchSno: number        
+        BranchSno: number;
+        Payment_Status: number;  
         ItemDetailXML: string;        
         ImageDetailXML: string;        
         //VouDetailXML: string;

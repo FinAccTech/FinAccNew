@@ -12,8 +12,8 @@ import { ClsVoucherSeries } from 'src/app/Dashboard/Classes/ClsVoucherSeries';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { concatMap, from, Observable } from 'rxjs';
-import { ClsTransactions } from 'src/app/Dashboard/Classes/ClsTransactions';
+import { PendingpaymentsComponent } from 'src/app/Dashboard/widgets/pendingpayments/pendingpayments.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-loans',
@@ -34,7 +34,7 @@ export class LoansComponent{
   
   constructor(private route: ActivatedRoute, private dataService: DataService, private loanService: LoanService, 
               private globals: GlobalsService, private router: Router, private auth: AuthService,
-              private vouprint: VoucherprintService
+              private vouprint: VoucherprintService, private dialog: MatDialog
              ){
     this.route.params.subscribe(             
       (params: Params) => 
@@ -55,6 +55,8 @@ export class LoansComponent{
   FromDateValid: boolean = true; 
   ToDateValid: boolean = true;
 
+  EnablePaymentProcess: boolean = false;
+  
   LoansList!: TypeLoan[];
   dataSource!: MatTableDataSource<TypeLoan>;  
   columnsToDisplay: string[] = [ '#', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date','Approval_Status', 'Cancel_Status', 'crud'];
@@ -65,7 +67,7 @@ export class LoansComponent{
   @ViewChild(MatSort) sort!: MatSort;  
 
   ngOnInit(){
-    
+    this.EnablePaymentProcess = this.globals.AppSetup()[0].Enable_Payment_Process == 1 ? true : false;
   } 
  
 InitLoansList(){
@@ -207,6 +209,19 @@ InitLoansList(){
     // }
   }
   
+  LoadPendingLoanPayments(){
+     const dialogRef = this.dialog.open(PendingpaymentsComponent, 
+          {         
+            // width:'50vw',
+            data: {} ,
+          });
+          
+          dialogRef.disableClose = true;  
+          dialogRef.afterClosed().subscribe(result => {                    
+            
+          }); 
+  }
+
   LoadDataIntoMatTable(){
     this.dataSource = new MatTableDataSource<TypeLoan> (this.LoansList);     
     if (this.dataSource.filteredData)

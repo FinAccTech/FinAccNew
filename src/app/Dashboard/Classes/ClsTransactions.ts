@@ -24,8 +24,6 @@ export class ClsTransactions{
 
 	saveTransaction(): Observable<TypeHttpResponse> {        
 		let postdata = this.Transaction;		
-		console.log(postdata.toString().length);
-		
         return this.dataService.HttpPost(postdata, "/saveTransaction");                        
     }
 
@@ -220,6 +218,7 @@ export class ClsTransactions{
 			UserSno: this.UserSno,
 			CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+			Payment_Status: 1,
 			ItemDetailXML: "",
 			ImageDetailXML: "",
 			RepledgeLoansXML: "",
@@ -295,7 +294,8 @@ export class ClsTransactions{
 		UserSno: number;
 		CompSno: number;
 		BranchSno: number;
-
+		Payment_Status: number;
+		
 		ItemDetailXML: string;
 		ImageDetailXML: string;
 		RepledgeLoansXML: string;

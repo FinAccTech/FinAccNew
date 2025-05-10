@@ -27,10 +27,7 @@ export class ClsRpPayments{
         return subject.asObservable(); 
     }
 
-    saveRpPayment(): Observable<TypeHttpResponse>  {   
-           
-        console.log(this.RpPayment);
-        
+    saveRpPayment(): Observable<TypeHttpResponse>  {           
         var subject = new Subject<TypeHttpResponse>();        
 
         let trans = new ClsTransactions(this.dataService); 
@@ -55,6 +52,7 @@ export class ClsRpPayments{
         newTrans.Remarks               = this.RpPayment.Remarks;        
         newTrans.UserSno               = this.RpPayment.UserSno;
         newTrans.BranchSno             = this.BranchSno;          
+        newTrans.Payment_Status          = this.RpPayment.Payment_Status;
         newTrans.ItemDetailXML         = null!;        
         newTrans.ImageDetailXML        = this.RpPayment.ImageDetailXML;
         newTrans.RepledgeLoansXML        = null!;        
@@ -108,6 +106,8 @@ export class ClsRpPayments{
             UserSno: this.UserSno,
             CompSno: this.CompSno,
             BranchSno: this.BranchSno,
+            Payment_Status: 1,
+
             VouSno: 0,
 
             ItemDetailXML: "",
@@ -147,6 +147,7 @@ export class ClsRpPayments{
 		UserSno: number;
 		CompSno: number;
 		BranchSno: number;
+        Payment_Status: number;
         VouSno: number;
 
         ItemDetailXML: string;

@@ -1,0 +1,39 @@
+<div class="modalForm" style="width: 30vw;">
+    <div class="header">
+        <div class="headerLeft">
+            <span class="bar"></span>
+            <p> &nbsp; Pending Loan Payments </p>
+        </div>
+        <div class="headerRight">
+            <p matDialogClose="" >&times;</p>
+        </div>
+    </div>
+
+    <div class="body">        
+        <div style="text-align: right; padding-bottom: 1rem; cursor: pointer;" >
+            <i style="font-size: 1.5rem; color: green;" class='bx bx-download' (click)="DownloadasExcel()" ></i>
+        </div>
+            <table class="stdTable" >
+                <thead>
+                    <th>#</th>
+                    <th>Loan No</th>
+                    <th>Loan Date</th>
+                    <th>Customer Name</th>
+                    <th>Principal</th>
+                    <th>Nett Payable</th>
+                </thead>
+                <tbody>
+                    @for (ln of LoansList; track $index) {
+                        <tr>
+                            <td>{{ $index+1 }} </td>
+                            <td> {{ln.Loan_No}} </td>
+                            <td> {{ln.Loan_Date}} </td>
+                            <td> {{ln.Customer.Party_Name}} </td>
+                            <td> {{ln.Principal}} </td>
+                            <td> {{ln.Nett_Payable}} </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>        
+    </div>
+</div>

@@ -94,6 +94,7 @@ export class ClsAppSetup{
             Lock_PreviousDate: 0,       
             Enable_EmptyWt: 0,
             Allow_Red_Before_Close: 0,
+            Enable_Payment_Process:0,
             
         }
         return AppSetup
@@ -171,6 +172,7 @@ export interface TypeAppSetup{
     Lock_PreviousDate: number;
     Enable_EmptyWt: number;
     Allow_Red_Before_Close: number;
+    Enable_Payment_Process: number;
 }
 
 
