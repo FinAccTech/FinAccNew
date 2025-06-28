@@ -10,6 +10,7 @@ import { ReceiptService } from './receipts.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 
 @Component({
   selector: 'app-receipts',
@@ -21,7 +22,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 export class ReceiptsComponent {
   IsOpen: number = 0;
 
-  constructor(private route: ActivatedRoute, private auth: AuthService, private dataService: DataService, private ReceiptService: ReceiptService, 
+  constructor(private route: ActivatedRoute, private auth: AuthService, private dataService: DataService, private ReceiptService: ReceiptService, private excelService: ExcelExportService,
     private globals: GlobalsService, private router: Router, private vouPrint: VoucherprintService ){
     this.route.params.subscribe(             
       (params: Params) => 
@@ -122,6 +123,24 @@ export class ReceiptsComponent {
       setTimeout(() => this.dataSource.sort = this.sort);      
     }
   }
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.ReceiptsList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Receipts", SelectedColumns);
+      this.globals.SnackBar("info","Receipts List downloaded successfully")
+    }
+    
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

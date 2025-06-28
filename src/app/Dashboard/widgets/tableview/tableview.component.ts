@@ -2,6 +2,7 @@ import { Component, effect, EventEmitter, Input, input, Output, signal } from '@
 import { _isNumberValue } from '@angular/cdk/coercion';
 import { GlobalsService } from 'src/app/Services/globals.service';
 import { TypeFieldInfo } from '../../Types/TypeFieldInfo';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 
 
 interface PagedData{
@@ -56,7 +57,7 @@ export class TableviewComponent {
 
  @Output() actionEvent = new EventEmitter<any>();
 
- constructor(private globals: GlobalsService){
+ constructor(private globals: GlobalsService, private excelService: ExcelExportService){
   effect(() => {            
     this.DataList     = this.DataSource();   
     this.FilteredDataList = this.DataList;   
@@ -79,12 +80,11 @@ export class TableviewComponent {
     }      
   })
  }
-
+ 
   
   searchText: string = "";
 
-  ngOnInit(){
-              
+  ngOnInit(){              
   }
 
  EditRecord(row: any){
@@ -167,6 +167,7 @@ testfilter(event: any){
   if (newPage.length > 0){
     this.PagedDataList.push({PageNumber: pageNumber, PageData: newPage});
   }
+  
   this.SetTotals();
  }
 
@@ -281,6 +282,22 @@ SortTable(ColName: string, index: number){
   this.DoSorting(ColName, index);
 }
 
+
+ExportToExcel(){
+
+    let SelectedColumns: string[] = [];
+    this.FieldNames().forEach(fld=>{
+      SelectedColumns.push(fld.Field_Name);
+    })
+    
+    SelectedColumns.splice(SelectedColumns.indexOf("#"),1);
+    SelectedColumns.splice(SelectedColumns.indexOf("Actions"),1);
+
+    const ExportList = this.FilteredDataList.map((item: any) => SelectedColumns.map(col => item[col]));      
+    
+    this.excelService.exportAsExcelFile(ExportList,"FinAcc Report", SelectedColumns);
+    this.globals.SnackBar("info","Report downloaded successfully")
+}
 // document.querySelectorAll("th[data-column]").forEach(header => {
 //   header.addEventListener("click", () => {
 //     const column = header.getAttribute("data-column") as keyof any;

@@ -12,7 +12,7 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
   selector: 'app-loansummary',
   templateUrl: './loansummary.component.html',
   styleUrls: ['./loansummary.component.scss'],  
-})
+}) 
 
 @AutoUnsubscribe
 export class LoansummaryComponent {

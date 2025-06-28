@@ -108,7 +108,7 @@ export class IndexpageComponent {
       this.LoadCard(0);
       let trans  = new ClsTransactions(this.dataService);
       trans.getRecentTransactions().subscribe(data=>{      
-        this.TransactionList = JSON.parse (data.apiData);      
+        this.TransactionList = JSON.parse (data.apiData);       
       })
       this.LoadChart();
     }
@@ -117,7 +117,7 @@ export class IndexpageComponent {
   
   LoadCard(duration: number){
     let trans  = new ClsTransactions(this.dataService);
-    trans.getStatusCard(duration+1).subscribe(data=>{      
+    trans.getStatusCard(duration).subscribe(data=>{      
       this.StatusData = data.apiData[0];      
     })
   }

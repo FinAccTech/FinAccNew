@@ -121,6 +121,15 @@ export class ClsReports{
         return this.dataService.HttpGet(postdata, "/getPendingLoanPayments");                
     }
     
+    getLoanHistoryCustomBr(): Observable<TypeHttpResponse> {
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno}; 
+        return this.dataService.HttpGet(postdata, "/getLoanHistoryCustomBr");                
+    }
+
+    getDayHistoryCustomFS2025061361(AsOn: number): Observable<TypeHttpResponse> {
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "AsOn": AsOn}; 
+        return this.dataService.HttpGet(postdata, "/getDayHistoryCustomFS2025061361");                
+    }
 }
 
 export interface TypeCustomerDetailed extends TypeParties{
@@ -213,6 +222,7 @@ export interface TypeMarketValueAnalysis extends TypeLoan{
 }
 
 export interface TypePendingReport extends TypeLoan{
+    Due_Date_Str: string;
     Pending_Dues: number;
     Pending_Days: number;
 }

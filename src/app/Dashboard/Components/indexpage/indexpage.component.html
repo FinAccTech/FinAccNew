@@ -8,11 +8,12 @@
         <div class="welcomeRight">
             <div class="matGroup" style="background-color: #fff;width: 100%;">
                 <div class="matSelect" >
-                    <mat-select [(value)]="Duration"  (selectionChange)="LoadCard(Duration)">
+                    <mat-select [(value)]="Duration"  (selectionChange)="LoadCard(Duration)">                        
                         <mat-option style="font-size: 1rem;" [value]=0>Last 7 Days</mat-option>
                         <mat-option style="font-size: 1rem;" [value]=1>Today</mat-option>                            
                         <mat-option style="font-size: 1rem;" [value]=2>Past Month</mat-option>                            
-                        <mat-option style="font-size: 1rem;" [value]=3>Past Year</mat-option>                            
+                        <mat-option style="font-size: 1rem;" [value]=3>Past Year</mat-option>
+                        <mat-option style="font-size: 1rem;" [value]=4>ALL</mat-option>                            
                     </mat-select>
                 </div>
                 <div class="matLabel">

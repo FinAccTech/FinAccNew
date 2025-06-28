@@ -12,7 +12,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
   templateUrl: './ledger.component.html',
   styleUrls: ['./ledger.component.scss']
 })
-
+ 
 @AutoUnsubscribe
 export class LedgerComponent implements OnInit {  
   Ledger!:          TypeLedger;   
@@ -42,8 +42,6 @@ export class LedgerComponent implements OnInit {
     grp.getLedgerGroups(0).subscribe(data => {
       this.GrpsList = JSON.parse (data.apiData);
     })
-    console.log(this.Ledger);
-    
   }
 
   SaveLedger(){    

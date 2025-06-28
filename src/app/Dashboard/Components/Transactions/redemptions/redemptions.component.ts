@@ -10,6 +10,7 @@ import { RedemptionserviceService } from './redemptionservice.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { VoucherprintService } from 'src/app/Services/voucherprint.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 @AutoUnsubscribe
 export class RedemptionsComponent {
   
-  constructor(private dataService: DataService, private auth: AuthService,  private RedemptionService: RedemptionserviceService, 
+  constructor(private dataService: DataService, private auth: AuthService,  private RedemptionService: RedemptionserviceService, private excelService: ExcelExportService,
     private globals: GlobalsService, private router: Router,
   private vouPrint: VoucherprintService ){
      
@@ -124,6 +125,24 @@ export class RedemptionsComponent {
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
   }
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.RedemptionsList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Redemptions", SelectedColumns);
+      this.globals.SnackBar("info","Redemptions List downloaded successfully")
+    }
+    
 
 
   applyFilter(event: Event) {

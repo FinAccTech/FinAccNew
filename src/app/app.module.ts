@@ -153,6 +153,9 @@ import { LazyLoadOnVisibleDirective } from './Dashboard/Directives/lazy-load-on-
 import { IntstatementViewComponent } from './Dashboard/widgets/intstatement-view/intstatement-view.component';
 import { TableviewComponent } from './Dashboard/widgets/tableview/tableview.component';
 import FileSaver from 'file-saver';
+import { AucnoticesVelsamyComponent } from './Dashboard/Components/Custom/aucnotices-velsamy/aucnotices-velsamy.component';
+import { LoanhistoryBrgoldComponent } from './Dashboard/Components/Custom/loanhistory-brgold/loanhistory-brgold.component';
+import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Custom/custom-day-history-fs2025061361/custom-day-history-fs2025061361.component';
 
 @NgModule({ declarations: [                
         LazyLoadOnVisibleDirective,
@@ -217,7 +220,8 @@ import FileSaver from 'file-saver';
         SitebodyComponent, SimplifyComponent, SiteschemesComponent, SitemodulesComponent, SitecashflowComponent, SiterepledgeComponent, SitemobileappComponent, AlertconfirmationComponent, 
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
         ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
-        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent, TableviewComponent,
+        BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent, TableviewComponent, AucnoticesVelsamyComponent, LoanhistoryBrgoldComponent,
+        CustomDayHistoryFS2025061361Component
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,        
     AppRoutingModule,

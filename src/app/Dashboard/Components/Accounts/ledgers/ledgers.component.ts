@@ -41,8 +41,7 @@ export class LedgersComponent {
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
-        this.LedgerList = JSON.parse(data.apiData);
-        console.log (this.LedgerList)
+        this.LedgerList = JSON.parse(data.apiData);        
         this.LoadDataIntoMatTable();
       }
     },

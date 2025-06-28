@@ -12,6 +12,7 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { DataService } from 'src/app/Services/data.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
+import { ImageUploadtoServerService } from 'src/app/Services/image-uploadto-server.service';
 import { ProgressbroadcastService } from 'src/app/Services/progressbroadcast.service';
 
 @Component({
@@ -35,6 +36,8 @@ export class PartyComponent implements OnInit {
   PartyNameValid: boolean = true;
   MobNumberValid: boolean = true;
   AreaNameValid: boolean = true;
+  SaveImageasFile: boolean = false;
+
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -45,7 +48,8 @@ export class PartyComponent implements OnInit {
     private globals: GlobalsService,
     private progressService: ProgressbroadcastService,
     private auth: AuthService,
-    private apidataService: ApiDataService
+    private apidataService: ApiDataService,
+    private imgUpload: ImageUploadtoServerService,
   ) 
   {
     this.Party = data;      
@@ -105,6 +109,9 @@ export class PartyComponent implements OnInit {
       }      
     });    
 
+
+    this.SaveImageasFile  = this.globals.AppSetup()[0].ImageUpload_ByFile == 1 ? true : false;
+
     if (this.Party.PartySno == 0){
       // const fileHandle: FileHandle ={
       //   Image_Name: "noimage.jpg",
@@ -148,16 +155,17 @@ export class PartyComponent implements OnInit {
 
     StrImageXml += "</Images>" 
     StrImageXml += "</ROOT>"
-
     
     let pty = new ClsParties(this.dataService);
     pty.Party = this.Party;    
     pty.Party.BranchSno = this.auth.SelectedBranchSno();
     pty.Party.ImageDetailXML = StrImageXml;
-    pty.Party.fileSource = this.TransImages;
 
+    if (this.SaveImageasFile == false) { 
+        pty.Party.fileSource = this.TransImages;
+    }
+    
     this.progressService.sendUpdate("start","Saving Party");
-    console.log(pty.Party);
     
     pty.saveParty().subscribe(data => {      
       
@@ -171,6 +179,15 @@ export class PartyComponent implements OnInit {
           pty.Party.PartySno = data.RetSno;
           pty.Party.Name = pty.Party.Party_Name;
           pty.Party.Details = 'Code: ' + pty.Party.Party_Code;
+
+          if (this.SaveImageasFile == true) {     
+            // let ImageFiles: File[] = [];
+            // this.TransImages.forEach(img=>{
+            //   ImageFiles.push(img.Image_FilesBlob);
+            // })
+            this.imgUpload.UploadImages(this.TransImages, "Parties", pty.Party.Party_Code!);
+          }
+
           this.globals.SnackBar("info", this.Party.PartySno == 0 ? "Party Created successfully" : "Party updated successfully");          
           //this.apidataService.fetchData("2");
           this.CloseDialog(pty.Party);
@@ -279,7 +296,6 @@ export class PartyComponent implements OnInit {
           this.TransImages = result;
         }
 
-        console.log(this.TransImages);
         
         // this.urls = [];
         // this.urls.push  (result);     
@@ -303,11 +319,12 @@ export class PartyComponent implements OnInit {
 
   selectFile($event: any)
   {     
-    if ($event.target.files)
+    const fileInput = $event.target as HTMLInputElement;
+    if (fileInput.files)
     {
       // for (var i=0; i < $event.target.files.length; i++)
       // {
-        const file = $event?.target.files[0];        
+        const file = fileInput.files[0];        
         if (file.type.slice(0,5) !== 'image') {
           this.globals.SnackBar("error","Only Image Files are allowed");
           return;
@@ -317,8 +334,9 @@ export class PartyComponent implements OnInit {
         reader.readAsDataURL($event.target.files[0]);
         reader.onload = (event: any) => {
           const fileHandle: FileHandle ={
-            Image_Name: file.name,            
+            Image_Name: file.name.substring(0,6) + "_" + this.globals.getRandomCharacters() + ".jpeg",
             Image_File: event.target.result, 
+            Image_FilesBlob: file,
             Image_Url: this.sanitizer.bypassSecurityTrustUrl(
               window.URL.createObjectURL(file),              
             ),

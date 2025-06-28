@@ -253,7 +253,11 @@ GO
                                   /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
                                 SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
 
-                                 SET @TotIntAccured = @TotIntAccured + @IntAccured
+                                SELECT @IntAccured = ISNULL(@IntAccured,0) - ISNULL(SUM(IntAccured),0) from Udf_GetIntDiscount(@LoanSno,@FromDate,@ToDate,@Roi)
+
+                                SET @TotIntAccured = @TotIntAccured + @IntAccured
+
+
 
                      INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,1,@Roi,@IntAccured,@TotIntAccured,@IntPaid,@PrinPaid,ISNULL(@AddedPrincipal,0),0,@NewPrincipal-@PrinPaid)
         ENDS_HERE:

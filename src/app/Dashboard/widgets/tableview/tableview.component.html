@@ -22,10 +22,10 @@
             @if (EnableCheckbox) {
                 <button class="btnDefault" (click)="AddMultiItems()" style="margin-right: 2rem; display: flex;align-items: center; " > <i class='bx bx-add-to-queue'></i> &nbsp; Add Items </button>
             }
-            <i class='bx bxs-download' style="color: purple;" ></i>
+            <i class='bx bxs-download' (click)="ExportToExcel()" style="color: purple;" ></i>
         </div>
     </div>
-
+ 
     <div class="tableBody">
         <table>
             <thead>
@@ -165,7 +165,8 @@
         </div>
 
         <div class="footerRight">
-            <p> Page {{CurrentPage+1}} of {{FilteredDataList.length-1}}</p>
+            <!-- <p> Page {{CurrentPage+1}} of {{FilteredDataList.length-1}}</p> -->
+             <p> Page {{CurrentPage+1}} of {{TotalPages}}</p>
             <div class="navButtons">
                 <i class='bx bx-first-page bx-flip-vertical' (click)="SetCurrentPage(1)" ></i>
                 <i class='bx bxs-chevron-left bx-flip-vertical' (click)="SetCurrentPage(2)"></i>

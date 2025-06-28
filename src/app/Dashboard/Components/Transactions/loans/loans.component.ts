@@ -14,6 +14,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { PendingpaymentsComponent } from 'src/app/Dashboard/widgets/pendingpayments/pendingpayments.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 
 @Component({
   selector: 'app-loans',
@@ -34,7 +35,7 @@ export class LoansComponent{
   
   constructor(private route: ActivatedRoute, private dataService: DataService, private loanService: LoanService, 
               private globals: GlobalsService, private router: Router, private auth: AuthService,
-              private vouprint: VoucherprintService, private dialog: MatDialog
+              private vouprint: VoucherprintService, private dialog: MatDialog, private excelService: ExcelExportService,
              ){
     this.route.params.subscribe(             
       (params: Params) => 
@@ -54,7 +55,7 @@ export class LoansComponent{
 
   FromDateValid: boolean = true; 
   ToDateValid: boolean = true;
-
+ 
   EnablePaymentProcess: boolean = false;
   
   LoansList!: TypeLoan[];
@@ -230,6 +231,24 @@ InitLoansList(){
       setTimeout(() => this.dataSource.sort = this.sort);      
     }
   }
+
+  DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);
+      this.globals.SnackBar("info","Loans List downloaded successfully")
+    }
+    
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

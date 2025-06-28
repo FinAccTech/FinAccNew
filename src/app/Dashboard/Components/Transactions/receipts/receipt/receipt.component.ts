@@ -128,6 +128,8 @@ export class ReceiptComponent implements OnInit {
                   if (!searchText || searchText.length < 3) { return;}
                   let ln = new ClsLoans(this.dataService);  
                   ln.getLoanbySearch(searchText, this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=>{
+                    console.log(data);
+                    
                     if (data.apiData){
                       this.LoansList = JSON.parse(data.apiData);
                                     

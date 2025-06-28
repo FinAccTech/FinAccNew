@@ -10,10 +10,11 @@ import { ClsReports,TypeAuctionHistory} from 'src/app/Dashboard/Classes/ClsRepor
 import { ReportpropertiesComponent } from 'src/app/Dashboard/widgets/reportproperties/reportproperties.component';
 import { AucprintService, TypeAuctionNoticeInfo } from 'src/app/Services/aucprint.service';
 import { DataService } from 'src/app/Services/data.service';
-import { GlobalsService } from 'src/app/Services/globals.service';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
+import { GlobalsService } from 'src/app/Services/globals.service'; 
 
 @Component({
-  selector: 'app-auctionhistory',
+  selector: 'app-auctionhistory', 
   templateUrl: './auctionhistory.component.html',
   styleUrls: ['./auctionhistory.component.scss'],
   animations: [
@@ -28,7 +29,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class AuctionhistoryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog, private aucPrintService: AucprintService){}
+  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog, private aucPrintService: AucprintService, private excelService: ExcelExportService){}
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
@@ -98,10 +99,10 @@ export class AuctionhistoryComponent {
     return this.globals.DateToInt( new Date ($event.target.value));
   }
 
-  PrintNotice(ln: TypeLoan){
+  PrintNotice(ln: TypeLoan){ 
     const dialogRef = this.dialog.open(ReportpropertiesComponent, 
       { 
-        data:  this.globals.RepAuctionHistory,
+        data:  this.globals.RepAuctionHistory, 
       });        
       dialogRef.disableClose = true;    
       dialogRef.afterClosed().subscribe(result => {         
@@ -115,15 +116,35 @@ export class AuctionhistoryComponent {
                   AucPrintList.push({"Customer": ln.Customer, "Loan": ln, "LoansList" : prnLoans, Auction_DueDate : ""});
               //})
 
-              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList, result);          
+              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList,[], result);          
         }          
       }); 
-  }
+  } 
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);
+      this.globals.SnackBar("info","Loans List downloaded successfully")
+    }
+    
+
 
   PrintReport(){
     const dialogRef = this.dialog.open(ReportpropertiesComponent, 
       { 
-        data:  { "ReportSno": this.globals.RepAuctionHistory, "Report_Name": "Auction History" } ,
+        // data:  { "ReportSno": this.globals.RepAuctionHistory, "Report_Name": "Auction History" } ,
+        data:  this.globals.RepAuctionHistory ,
       });        
       dialogRef.disableClose = true;    
       dialogRef.afterClosed().subscribe(result => {         
@@ -135,7 +156,7 @@ export class AuctionhistoryComponent {
                   AucPrintList.push({"Customer": ln.Customer, "Loan": ln, "LoansList" : JSON.parse (ln.OtherLoans_Json), Auction_DueDate : ""});
               })
 
-              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList, result);
+              this.aucPrintService.StartPrintingAuctionNotices(AucPrintList, [], result);
               //this.StartPrinting(Trans, VouType, result);
           }
         }          

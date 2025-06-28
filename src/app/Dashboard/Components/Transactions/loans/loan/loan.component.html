@@ -211,11 +211,11 @@
                     <tbody>
                         <tr *ngFor="let loan of LoanData; let i = index" >
                             <td [style.color]="GetStatusColor(loan)"> {{i+1}} </td>
-                            <td [style.color]="GetStatusColor(loan)" > {{loan.Loan_No}} </td>
+                            <td [style.color]="GetStatusColor(loan)"> {{loan.Loan_No}} </td>
                             <td [style.color]="GetStatusColor(loan)"> {{loan.Loan_Date | intToDate | date: "dd/MM/yyyy" }} </td>
                             <td [style.color]="GetStatusColor(loan)"> {{loan.Principal}} </td>
                             <td [style.color]="GetStatusColor(loan)"> {{loan.TotNettWt.toFixed(3) }} </td>
-                            <td [style.color]="GetStatusColor(loan)">  {{loan.Ason_Duration_Months!==0 ? loan.Ason_Duration_Months + ' months ':'' }} {{ (loan.Ason_Duration_Months !==0 && loan.Ason_Duration_Days) ? ' and ' : '' }}  {{loan.Ason_Duration_Days !==0 ? loan.Ason_Duration_Days + ' days' :''}} </td>
+                            <td [style.color]="GetStatusColor(loan)"> {{loan.Ason_Duration_Months!==0 ? loan.Ason_Duration_Months + ' months ':'' }} {{ (loan.Ason_Duration_Months !==0 && loan.Ason_Duration_Days) ? ' and ' : '' }}  {{loan.Ason_Duration_Days !==0 ? loan.Ason_Duration_Days + ' days' :''}} </td>
                             
                         </tr>
                     </tbody>

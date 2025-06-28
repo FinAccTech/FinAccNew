@@ -16,7 +16,7 @@ export class AucprintService {
 
     constructor(private dataService: DataService, private globals: GlobalsService, private auth: AuthService){}
 
-    StartPrintingAuctionNotices(AuctionList: TypeAuctionNoticeInfo[], PrintStyle: string){
+    StartPrintingAuctionNotices(AuctionList: TypeAuctionNoticeInfo[],StaticFields: TypeStaticFields[], PrintStyle: string){
                 
         this.dataService.HttpGetPrintStyle(PrintStyle).subscribe(data=>{        
             // console.log(data);
@@ -24,16 +24,18 @@ export class AucprintService {
             let FldList = JSON.parse(data).FieldSet;        
             let StrHtml = '<div style="position:relative; width:100%; height:100%"; padding:0; margin:0; box-sizing: border-box;>';    
             let topmargin = 0;
+
             AuctionList.forEach(ln=>{
                 let FieldSet = this.GetPrintFields(ln);     
-                StrHtml += this.GetHtmlFromAucLoan(FldList, FieldSet,0,topmargin);
+                StrHtml += this.GetHtmlFromAucLoan(FldList, FieldSet, StaticFields, 0,topmargin);
                 StrHtml += ' <div class="pagebreak"> </div>';
                 topmargin += Setup.PageHeight;
+                // topmargin += 1000;
             })
             
             StrHtml += '</div>';    
 
-            let popupWin;    
+        let popupWin;    
         popupWin = window.open();
         popupWin!.document.open();
         popupWin!.document.write(`
@@ -62,7 +64,7 @@ export class AucprintService {
 
 
     
-    GetHtmlFromAucLoan(FldList: [], AucLoan: TypePrintFields, LeftMargin: number, TopMargin: number): string{
+    GetHtmlFromAucLoan(FldList: [], AucLoan: TypePrintFields, StaticFields: TypeStaticFields[], LeftMargin: number, TopMargin: number): string{
 
         let StrHtml = ``;
         FldList.forEach((fld: any) => {                
@@ -165,7 +167,21 @@ export class AucprintService {
                     //         </div>                      
                     //         `;    
                     //     break;
+                    case "staticfield":                        
+                                        
+                        StaticFields.forEach(sfld=>{
+                            console.log(sfld);
                             
+                            if (sfld.Name == fld.fldvalue){
+                              StrHtml += `
+                               <div style="position:absolute;left:`+ (LeftMargin + +fld.left) + `px; top:`+ (TopMargin + +fld.top) + `px; 
+                                font-family:` + fld.fontname + `; font-size:`+ fld.fontsize + `px; font-weight:`+ fld.fontweight + `; color:`+ fld.forecolor + `; " >
+                                    ` + sfld.Value  + `
+                                </div>
+                                `;        
+                            }
+                        })
+                        
                 }
                     break;
         
@@ -508,6 +524,10 @@ interface TypePrintFields {
     
 }
 
+interface TypeStaticFields{
+    Name: string;
+    Value: string;
+}
 
 export interface TypeAuctionNoticeInfo{
     Customer: TypeParties;

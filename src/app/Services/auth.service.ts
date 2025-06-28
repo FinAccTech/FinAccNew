@@ -134,15 +134,15 @@ export class AuthService {
 
   getUserImagesServerPath(): string{    
     return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/';    
-}
+  }
 
-getRepledgeImagesServerPath(): string{    
-  return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/Repledges/';    
-}
-getRpPaymentImagesServerPath(): string{    
-  return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/RpPayments/';    
-}
-getRpClosureImagesServerPath(): string{    
-  return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/RpClosures/';    
-}
+  getRepledgeImagesServerPath(): string{    
+    return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/Repledges/';    
+  }
+  getRpPaymentImagesServerPath(): string{    
+    return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/RpPayments/';    
+  }
+  getRpClosureImagesServerPath(): string{    
+    return this.ServerImagePath + "Images/" + this.LoggedClient.ClientSno + '/' + this.SelectedCompany.CompSno + '/RpClosures/';    
+  }
 }

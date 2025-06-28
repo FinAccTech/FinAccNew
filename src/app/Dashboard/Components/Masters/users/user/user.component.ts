@@ -83,12 +83,12 @@ export class UserComponent implements OnInit {
           this.User.Rights_List = [];
         }        
         
-        this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":this.User.Profile_Image, "SrcType":1,"Image_Name":this.User.Image_Name} ;
-        this.User.fileSource =  {"DelStatus":0, "Image_File":null!, "Image_Url":this.User.Profile_Image, "SrcType":1,"Image_Name":this.User.Image_Name};           
+        this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_FilesBlob":null!, "Image_Url":this.User.Profile_Image, "SrcType":1,"Image_Name":this.User.Image_Name} ;
+        this.User.fileSource =  {"DelStatus":0, "Image_File":null!, "Image_FilesBlob":null!,"Image_Url":this.User.Profile_Image, "SrcType":1,"Image_Name":this.User.Image_Name};           
       }
       else{
-        this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;
-        this.User.fileSource =  {"DelStatus":0, "Image_File":null!, "Image_Url":"", "SrcType":1,"Image_Name":""};  
+        this.TransImages = {"DelStatus":0, "Image_File":null!, "Image_FilesBlob":null!, "Image_Url":"", "SrcType":1,"Image_Name":""} ;
+        this.User.fileSource =  {"DelStatus":0, "Image_File":null!, "Image_FilesBlob":null!, "Image_Url":"", "SrcType":1,"Image_Name":""};  
       }
   }
 
@@ -273,6 +273,7 @@ export class UserComponent implements OnInit {
           const fileHandle: FileHandle ={
             Image_Name: file.name,
             Image_File: event.target.result,  
+            Image_FilesBlob : file,
             Image_Url: this.sanitizer.bypassSecurityTrustUrl(
               window.URL.createObjectURL(file),              
             ),

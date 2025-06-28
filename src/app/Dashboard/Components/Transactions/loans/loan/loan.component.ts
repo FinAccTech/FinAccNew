@@ -28,6 +28,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { TypeAgent } from 'src/app/Dashboard/Classes/ClsAgents';
 import { EmitableComponent } from 'src/app/Dashboard/widgets/emitable/emitable.component';
 import { ApiDataService } from 'src/app/Services/api-data.service';
+import { ImageUploadtoServerService } from 'src/app/Services/image-uploadto-server.service';
 
 
 @Component({
@@ -108,6 +109,8 @@ export class LoanComponent implements OnInit {
 
   DocChargesTax: number = 0;
 
+  SaveImageasFile: boolean = false;
+
   constructor (  
                 private globals: GlobalsService, 
                 private auth: AuthService,
@@ -119,6 +122,7 @@ export class LoanComponent implements OnInit {
                 private vouprint: VoucherprintService,
                 private alertService: AlertsService, 
                 private apidataService: ApiDataService,
+                private imgUpload: ImageUploadtoServerService,
               )
               {           
                 this.Loan = loanService.getLoan();                  
@@ -156,7 +160,8 @@ export class LoanComponent implements OnInit {
     
   this.LockPreviousDate = this.globals.AppSetup()[0].Lock_PreviousDate == 1 ? true : false;
   this.EnablePaymentProcess = this.globals.AppSetup()[0].Enable_Payment_Process == 1 ? true : false;
-  
+  this.SaveImageasFile  = this.globals.AppSetup()[0].ImageUpload_ByFile == 1 ? true : false;
+
   let ln = new ClsLoans(this.dataService);
   ln.getLoanMasters().subscribe(data=>{
     
@@ -172,6 +177,13 @@ export class LoanComponent implements OnInit {
 
     if (this.Loan.LoanSno === 0){
 
+      this.VoucherSeriesList = this.VoucherSeriesList.filter(vou=>{ return vou.Active_Status == true; })
+      this.SchemesList = this.SchemesList.filter(sch=>{ return sch.Active_Status == true; })
+      this.DataSchemesList = this.DataSchemesList.filter(sch=>{ return sch.Active_Status == true; })
+      this.GrpList = this.GrpList.filter(grp=>{ return grp.Active_Status == 1; })
+      this.LocationList = this.LocationList.filter(loc=>{ return loc.Active_Status == 1; })
+      this.CustomersList = this.CustomersList.filter(cust=>{ return cust.BlackListed == false; })
+      
       let Trans  = new ClsLoans(this.dataService);
       this.Loan = Trans.Initialize();      
       this.Loan.IsOpen = this.IsOpen;
@@ -294,7 +306,11 @@ SaveLoan(){
   Ln.Loan.ImageDetailXML  = StrImageXml;    
   Ln.Loan.PaymentModesXML = this.globals.GetPaymentModeXml(this.Loan.PaymentMode, this.globals.VTypLoanPayment);
   
-  Ln.Loan.fileSource      = this.Loan.fileSource;
+
+  if (this.SaveImageasFile == false) {         
+      Ln.Loan.fileSource      = this.TransImages;
+  }
+  
   Ln.Loan.BranchSno = this.auth.SelectedBranchSno();
   
   if (this.SelectedScheme.Calc_Method == 3){
@@ -311,8 +327,21 @@ SaveLoan(){
         }        
         else{      
           
-          if (this.Loan.LoanSno == 0) {this.alertService.CreateLoanAlert(this.globals.AlertTypeNewLoan, this.Loan);}
+          if (this.Loan.LoanSno == 0) {            
+            this.alertService.CreateLoanAlert(this.globals.AlertTypeNewLoan, this.Loan);
+          }
 
+          Ln.Loan.LoanSno = data.RetSno;
+          Ln.Loan.Loan_No = Ln.Loan.Loan_No;
+
+          if (this.SaveImageasFile == true) {     
+            // let ImageFiles: File[] = [];
+            // this.TransImages.forEach(img=>{
+            //   ImageFiles.push(img.Image_FilesBlob);
+            // })
+
+            this.imgUpload.UploadImages( this.TransImages, "Loans",Ln.Loan.Loan_No!);
+          }
           this.globals.SnackBar("info", this.Loan.LoanSno == 0 ? "Loan Created successfully" : "Loan updated successfully");   
           //this.apidataService.fetchData("1");  
           this.router.navigate(['dashboard/loans/' + this.IsOpen]);  
@@ -350,7 +379,7 @@ ValidateInputs(): boolean{
   this.Loan.IGroup          = this.SelectedGrp;
   this.Loan.Location        = this.SelectedLocation;
   this.Loan.Agent           = this.SelectedAgent;
-  this.Loan.fileSource      = this.TransImages;
+  //this.Loan.fileSource      = this.TransImages;
 
   if (!this.Loan.Series )  { this.SeriesValid = false; this.globals.SnackBar("error","Invalid Series...");  return false; }  else  {this.SeriesValid = true; }    
   if (!this.Loan.Loan_No.length )  { this.LoanNumberValid = false; this.globals.SnackBar("error","Invalid Loan Number...");  return false; }  else  {this.LoanNumberValid = true; }    
@@ -472,7 +501,7 @@ GetEmiTable(){
   for (let index = 0; index < EmiDues; index++) {
     ExcessAmt += DueAmt- OriginalEmi
     if (index == EmiDues-1){
-      DueAmt = this.globals.RoundDigitsToNear (DueAmt - ExcessAmt);
+      DueAmt = this.globals.RoundDigitsToNear(DueAmt - ExcessAmt);
     }
 
     TblArray.push({ "DueDate": this.globals.IntToDateString( this.globals.DateToInt(currentDate)), "DueAmt": DueAmt, "OrgEmi": OriginalEmi });
@@ -483,20 +512,22 @@ GetEmiTable(){
         tDate.setDate(tDate.getDate()+1);
         currentDate = tDate;
         break;
+
       case 1:        
         tDate.setDate(tDate.getDate()+7);
         currentDate = tDate;
         break;
+
       case 2:
         tDate.setDate(tDate.getDate()+15);
         currentDate = tDate;
         break;
+
       case 3:
         tDate.setMonth(tDate.getMonth()+1);
         currentDate = tDate;
         break;
-    }
-    
+    }    
   }
 
   const dialogRef = this.dialog.open(EmitableComponent, 
@@ -683,7 +714,7 @@ SetMatureDate(){
   this.Loan.Mature_Date = this.globals.DateToInt(tDate);  
 }
 
-GetRoi($event: any){
+GetRoi($event: any){ 
   const amt =  $event.target.value;    
   if (this.CheckMinMaxLoanValues(amt) == false) { $event.target.value = 0; return; }
   

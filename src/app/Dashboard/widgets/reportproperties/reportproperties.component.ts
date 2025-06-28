@@ -26,19 +26,19 @@ constructor(
   NewStyleName: string = "";
 
   ngOnInit(){
+    
     let rep = new ClsReportProperties(this.dataService);
     
-    rep.getReportProperties(this.data.ReportSno,).subscribe(data=>{
+    rep.getReportProperties(this.data).subscribe(data=>{
+
       this.RepProps = JSON.parse(data.apiData)[0];      
-
-
       if(!this.RepProps){          
           let rep = new ClsReportProperties(this.dataService);    
           this.RepProps = rep.Initialize();
       }
 
-      if (this.RepProps.Report_Styleslist !== ''){
-        this.RepProps.Report_Styleslist.trim().trimStart().trimEnd().split(";").forEach(rep=>{
+      if (this.RepProps.Report_Style !== ''){
+        this.RepProps.Report_Style.trim().trimStart().trimEnd().split(";").forEach(rep=>{
           if (rep !== ''){
             this.StyleList.push(rep);
           }
@@ -52,35 +52,46 @@ constructor(
   AddStyle(){    
     if (this.NewStyleName.trim() == ''){ this.globals.SnackBar("error","StyleName cannot be empty, 1000"); return; }          
     this.StyleList.push(this.NewStyleName);
-    this.RepProps.Report_Styleslist += this.NewStyleName + ";";    
+
+    this.RepProps.Report_Style += this.NewStyleName + ";";    
     let rep = new ClsReportProperties(this.dataService);  
 
-    rep.saveReportProperties(this.data.ReportSno, this.data.Report_Name, this.RepProps.Report_Styleslist).subscribe(data=>{
+    rep.saveReportProperties(this.RepProps.ReportSno, this.RepProps.Report_Name, this.RepProps.Report_Style).subscribe(data=>{
       if (data.queryStatus == 1){
         this.NewStyleName = "";
         this.ExtractStyles();
       }
       else{
         this.globals.SnackBar("error", "Problem adding Style");        
-      }
-      
+      }      
     })
     
   }
 
-  RemoveStyle($index: number){
-    this.StyleList.splice($index, 1)
+  RemoveStyle($index: number){    
+    this.StyleList.splice($index, 1);
     this.ExtractStyles();
+
+    let rep = new ClsReportProperties(this.dataService);  
+    rep.saveReportProperties(this.RepProps.ReportSno, this.RepProps.Report_Name, this.RepProps.Report_Style ).subscribe(data=>{
+      if (data.queryStatus == 1){        
+        
+      }
+      else{
+        this.globals.SnackBar("error", "Problem adding Style");        
+      }      
+    })    
   }
 
   SelectStyle(style: string){
     style = style.trim();
     this.dialogRef.close(style);
   }
+
   ExtractStyles(){
-    this.RepProps.Report_Styleslist = "";
+    this.RepProps.Report_Style = "";
     this.StyleList.forEach((sty) =>{
-      this.RepProps.Report_Styleslist += sty + '; ';
+      this.RepProps.Report_Style += sty + '; ';
     })
     
   }

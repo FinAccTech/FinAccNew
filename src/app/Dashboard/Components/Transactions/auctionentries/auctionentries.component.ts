@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/Services/auth.service';
 import { ClsAuctionEntries, TypeAuctionEntry } from 'src/app/Dashboard/Classes/ClsAuctionEntries';
 import { AuctionService } from './auction.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 
 @Component({
   selector: 'app-auctionentries',
@@ -19,11 +20,12 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 @AutoUnsubscribe
 export class AuctionentriesComponent {
 
-  constructor(private dataService: DataService, private auctionService: AuctionService, private globals: GlobalsService, private router: Router, private auth: AuthService ){}
+  constructor(private dataService: DataService, private auctionService: AuctionService, private globals: GlobalsService, private router: Router, 
+    private excelService: ExcelExportService, private auth: AuthService ){}
   
   @ViewChild('TABLE')  table!: ElementRef;
  
-  FromDate: number = 0;
+  FromDate: number = 0; 
   ToDate: number = 0;
 
   FromDateValid: boolean = true; 
@@ -120,6 +122,25 @@ export class AuctionentriesComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.AuctionEntriesList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Auctions", SelectedColumns);
+      this.globals.SnackBar("info","Auction List downloaded successfully")
+    }
+    
+
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
   }

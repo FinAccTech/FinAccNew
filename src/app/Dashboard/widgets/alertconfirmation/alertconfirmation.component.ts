@@ -34,20 +34,23 @@ export class AlertconfirmationComponent {
     Submit(){
       let aStp = new ClsAlertSetup(this.dataService);
       aStp.getAlertSetup(1).subscribe(data =>{
-      let StpData: TypeAlertsSetup = JSON.parse(data.apiData);        
+      let StpData: TypeAlertsSetup[] = JSON.parse(data.apiData);        
+
+      console.log(StpData[0].Add_91);
+      
       
       if (!StpData) { this.globals.SnackBar("error", "Alert Setup is not complete or invalid in Alert Setup");  return}
         if (this.SelectedAlertMode == this.globals.AlertModeSms){
-          if (  (StpData.Sms_Api == '' || StpData.Sms_Sender_Id == '' || StpData.Sms_Username == '' || StpData.Sms_Password == ''))
+          if (  (StpData[0].Sms_Api == '' || StpData[0].Sms_Sender_Id == '' || StpData[0].Sms_Username == '' || StpData[0].Sms_Password == ''))
                 {
             this.globals.SnackBar("error", "Sms Api Setup is not complete or invalid in Alert Setup");
             return;
           }
         }
         if (this.SelectedAlertMode == this.globals.AlertModeWhatsApp){
-          console.log(StpData.WhatsApp_Instance);
+          console.log(StpData[0].WhatsApp_Instance);
           
-          if (!StpData.WhatsApp_Instance || StpData.WhatsApp_Instance == ''){
+          if (!StpData[0].WhatsApp_Instance || StpData[0].WhatsApp_Instance == ''){
             this.globals.SnackBar("error", "WhatsApp Api Setup is not complete or invalid in Alert Setup");
             return;
           }

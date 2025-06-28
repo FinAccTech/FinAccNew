@@ -24,7 +24,7 @@ export class SidenavComponent {
   
   TreeData = menuTree;
   Expanded: boolean[] = [];
-
+  
   @Input()  SideNavCompact: boolean = false; 
   // @Input()  SlideNav: boolean = false; 
   SlideNav: boolean = false;
@@ -95,6 +95,29 @@ export class SidenavComponent {
         this.LogoName = "FinAcc";
         break;
     }   
+
+    switch (this.auth.LoggedClient.Client_Code) {
+
+      case "FS2024071105":
+          this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
+            SubMenu: [
+              {Caption :"Auction Notices", Iconn:"", "RouterLink" :"CustomAuctionNoticeVelsamy" },              
+            ]})              
+        break;    
+      case "FS2025031246":
+          this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
+            SubMenu: [
+              {Caption :"Loan History - Custom", Iconn:"", "RouterLink" :"CustomLoanHistoryBrGold" },              
+            ]})   
+        break;    
+      case "FS2025061361":
+          this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
+            SubMenu: [
+              {Caption :"Day History - Custom", Iconn:"", "RouterLink" :"CustomDayHistoryFS2025061361" },              
+            ]})   
+        break;    
+
+    }
 
     for (var i=0; i<=this.TreeData.length; i++)
       {

@@ -44,20 +44,22 @@ export class ImagesComponent implements OnInit {
 
      
   selectFiles($event: any)
-  {     
+  { 
     let largefileSelected: boolean = false;
-    if ($event.target.files)
+    const fileInput = $event.target as HTMLInputElement;
+    if (fileInput.files)
     {
-      for (var i=0; i < $event.target.files.length; i++)
+      for (var i=0; i < fileInput.files.length; i++)
       {        
-        const file = $event?.target.files[i];
+        const file = fileInput.files[i];
         if (file.size < 1000000) {                  
           var reader = new FileReader();
           reader.readAsDataURL($event.target.files[i]);
           reader.onload = (event: any) => {
             const fileHandle: FileHandle ={ 
-              Image_Name: file.name.substring(0,10),
+              Image_Name: file.name.substring(0,6) + "_" + this.globals.getRandomCharacters() + ".jpeg",
               Image_File: event.target.result, 
+              Image_FilesBlob: file,
               Image_Url: this.sanitizer.bypassSecurityTrustUrl(
                 window.URL.createObjectURL(file),              
               ),

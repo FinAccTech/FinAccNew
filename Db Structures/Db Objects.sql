@@ -203,9 +203,20 @@ RETURN
 
 SELECT  CompSno
 FROM    Companies 
-WHERE   (CommMasters = CASE WHEN ((SELECT CommMasters FROM Companies WHERE CompSno=@CompSno)=1) THEN 1 ELSE 0 END)
+/*WHERE   (CommMasters = CASE WHEN ((SELECT CommMasters FROM Companies WHERE CompSno=@CompSno)=1) THEN 1 ELSE 0 END)
         AND
         (CompSno = CASE WHEN (SELECT CommMasters FROM Companies WHERE CompSno=@CompSno)=0 THEN @CompSno ELSE 0 END)
+*/
+WHERE
+        (
+            (SELECT CommMasters FROM Companies WHERE CompSno = @CompSno) = 1
+            AND CommMasters = 1
+        )
+        OR
+        (
+            (SELECT CommMasters FROM Companies WHERE CompSno = @CompSno) = 0
+            AND CompSno = @CompSno
+        );
           
 GO
 
@@ -637,7 +648,8 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Lock_PreviousDate BIT,
   @Enable_EmptyWt BIT,
   @Allow_Red_Before_Close BIT,
-  @Enable_Payment_Process BIT
+  @Enable_Payment_Process BIT,
+  @ImageUpload_ByFile BIT
 
   
 WITH ENCRYPTION AS
@@ -660,7 +672,8 @@ BEGIN
                                       MakeFp_Mandatory = @MakeFp_Mandatory, Allow_NullInterest = @Allow_NullInterest, Show_CashBalance = @Show_CashBalance, Images_Mandatory = @Images_Mandatory,
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
                                       Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,
-                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close, Enable_Payment_Process=@Enable_Payment_Process
+                                      Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close,
+                                      Enable_Payment_Process=@Enable_Payment_Process, ImageUpload_ByFile=@ImageUpload_ByFile
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -951,10 +964,11 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close, Enable_Payment_Process)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close,
+                                      Enable_Payment_Process, ImageUpload_ByFile)
 
         VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0)
         IF @@ERROR <> 0 GOTO CloseNow
 
         UPDATE Transaction_Setup SET BranchCode_CurrentNo = BranchCode_CurrentNo + 1 WHERE CompSno=@CompSno
@@ -2046,8 +2060,10 @@ END
 
 GO
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Purity') BEGIN DROP PROCEDURE Sp_Purity END
 GO
+
 CREATE PROCEDURE Sp_Purity
 	@PuritySno INT,
   @Purity_Code VARCHAR(10),
@@ -2086,7 +2102,7 @@ BEGIN
           SELECT @PurityCode_AutoGen=PurityCode_AutoGen FROM Transaction_Setup WHERE BranchSno=@BranchSno
           IF @PurityCode_AutoGen=1
           BEGIN
-              SELECT @Purity_Code=TRIM(PurityCode_Prefix)+CAST((PurityCode_CurrentNo+1) AS VARCHAR) FROM Transaction_SetupS WHERE BranchSno=@BranchSno
+              SELECT @Purity_Code=TRIM(PurityCode_Prefix)+CAST((PurityCode_CurrentNo+1) AS VARCHAR) FROM Transaction_Setup WHERE BranchSno=@BranchSno
           End
 
 
@@ -2962,14 +2978,16 @@ BEGIN
                                       LocCode_CurrentNo, PurityCode_AutoGen, PurityCode_Prefix, PurityCode_CurrentNo, BranchCode_AutoGen, BranchCode_Prefix, BranchCode_CurrentNo,
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
-                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close, Enable_Payment_Process)
+                                      CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close,
+                                      Enable_Payment_Process, ImageUpload_ByFile)
 
   VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0)
 
   INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
   VALUES                    (@CompSno, '','','','','','','',0,0)
 
+  
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Day History','',@CompSno)
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Loan Summary','',@CompSno)
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Customer History','',@CompSno)
@@ -2977,6 +2995,8 @@ BEGIN
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Auction History','',@CompSno)
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Pending Report','',@CompSno)
   INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Age Analysis','',@CompSno)
+  INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('MarketValue Analysis','',@CompSno)
+  INSERT INTO Report_Properties(Report_Name, Report_Style, CompSno) VALUES ('Auction CustVelsamy','',@CompSno)
 
 END
 
@@ -3111,7 +3131,7 @@ AS
 	SELECT		Trans.TransSno as RedemptionSno, Trans.SeriesSno, Ser.VouTypeSno, Ser.Series_Name, Trans.VouSno,
             Ln.Loan_No,Pty.PartySno, Pty.Party_Code  as Customer_Code, Pty.Party_Name as Customer_Name, Ln.Item_Details,
 				    Trans.Trans_No as Redemption_No, Trans.Trans_Date as Redemption_Date,
-             Trans.RefSno as LoanSno, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
+             Trans.RefSno as LoanSno, Ln.Loan_Date, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
             CAST(Trans.Rec_Other_Credits AS DECIMAL(10,2)) as Rec_Other_Credits, CAST(Trans.Rec_Other_Debits AS DECIMAL(10,2)) as Rec_Other_Debits, CAST(Trans.Rec_Default_Amt AS DECIMAL(10,2)) as Rec_Default_Amt,
             CAST(Trans.Rec_Add_Less AS DECIMAL(10,2)) as Rec_Add_Less,
             Trans.Rec_DuesCount, Trans.Rec_DueAmount,
@@ -4029,16 +4049,37 @@ RETURN
 
                     Pending_Dues = CASE 
 										WHEN Ln.Last_Receipt_Date = 0 
-											THEN DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
+											THEN
+                            CASE WHEN DAY(CASE WHEN @AsOn=0 THEN GETDATE() ELSE [dbo].IntToDate(@AsOn) END) >= DAY( [dbo].IntToDate(Ln.Loan_Date))
+                              THEN
+                                  DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
+																										      WHEN 0 THEN GETDATE() 
+																										      ELSE [dbo].IntToDate(@AsOn) END) 
+                              ELSE
+                                  (DATEDIFF(MONTH, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
-																										ELSE [dbo].IntToDate(@AsOn) END) -1
-																										
-										  ELSE 
-											  DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
+																										ELSE [dbo].IntToDate(@AsOn) END)) -1
+                              END
+										  ELSE
+
+                          CASE WHEN DAY(CASE WHEN @AsOn=0 THEN GETDATE() ELSE [dbo].IntToDate(@AsOn) END) >= DAY( [dbo].IntToDate(Ln.Last_Receipt_Date))
+                              THEN
+                                  DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
+																										      WHEN 0 THEN GETDATE() 
+																										      ELSE [dbo].IntToDate(@AsOn) END) 
+                              ELSE
+                                  (DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
+																										WHEN 0 THEN GETDATE() 
+																										ELSE [dbo].IntToDate(@AsOn) END)) -1
+                              END 
+                      END,
+                        
+											  /*DATEDIFF(MONTH, [dbo].IntToDate(Ln.Last_Receipt_Date), CASE @AsOn 
 																										WHEN 0 THEN GETDATE() 
 																										ELSE [dbo].IntToDate(@AsOn) END) 
 																										END,
-
+                    */
+                    
                      Pending_Days = CASE 
 										  WHEN Ln.Last_Receipt_Date = 0 
 											  THEN DATEDIFF(DAY, [dbo].IntToDate(Ln.Loan_Date), CASE @AsOn 
@@ -4315,9 +4356,12 @@ CREATE PROCEDURE SSp_AccLedger_Master
 
             IF @Opening_Balance <> 0
               BEGIN
+                UPDATE Ledgers SET Created_Date=@Created_Date
+                WHERE LedSno=@LedSno
+
                 DECLARE @SeriesSno INT = (SELECT SeriesSno FROM Voucher_Series WHERE CompSno=@CompSno AND VouTypeSno = 1)
                 INSERT INTO Vouchers(VouTypeSno, SeriesSno, Vou_No, Vou_Date, Narration, TrackSno, IsAuto, GenType, UserSno, CompSno)
-                VALUES (1, @SeriesSno, '', 0, 'Ledger Opening Balance', 0, 1, 0, @UserSno, @CompSno)
+                VALUES (1, @SeriesSno, '', @Created_Date, 'Ledger Opening Balance', 0, 1, 0, @UserSno, @CompSno)
                 IF @@ERROR <> 0 GOTO CloseNow
                 SET @OpenSno=@@IDENTITY
 
@@ -5654,6 +5698,7 @@ RETURN
 GO
 
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getAgeAnalysis') BEGIN DROP FUNCTION Udf_getAgeAnalysis END
 GO
 CREATE FUNCTION Udf_getAgeAnalysis(@CompSno INT,@BranchSno INT)
@@ -5661,7 +5706,18 @@ CREATE FUNCTION Udf_getAgeAnalysis(@CompSno INT,@BranchSno INT)
   WITH ENCRYPTION AS
 RETURN
 
-SELECT		*
+SELECT		Ln.*,
+              ( SELECT  Oln.*
+                FROM    VW_LOANS Oln
+                WHERE   (Oln.CompSno=@CompSno) AND (Oln.BranchSno=@BranchSno) AND (Oln.Approval_Status=2) AND (Oln.Cancel_Status=1)
+                        AND
+                        (PartySno=Ln.PartySno) -- AND  (Oln.LoanSno <> Ln.LoanSno)
+                        AND
+                        OLn.LoanSno NOT IN (SELECT LoanSno FROM VW_REDEMPTIONS	WHERE (Redemption_Date <= [dbo].DateToInt(GETDATE()) ) AND LoanSno=OLn.LoanSno) -- No Redemptions Made
+				                AND 
+				                OLn.LoanSno NOT IN (SELECT TransSno FROM Transactions WHERE VouTypeSno=15 AND (Trans_Date <= [dbo].DateToInt(GETDATE()))	AND RefSno=OLn.LoanSno) -- No Auction Entries Made
+				                AND
+				                OLn.Mature_Date < [dbo].DateToInt(GETDATE()) FOR JSON PATH ) as OtherLoans_Json
 
 FROM		Udf_getLoans(0,@CompSno,0,2,1,0,@BranchSno) Ln
 
@@ -6003,15 +6059,16 @@ SELECT		DayStart,
 			ISNULL((SELECT SUM(Principal) FROM VW_LOANS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Loan_Date = DayStart),0) as LoansValue,
 			(SELECT COUNT(RedemptionSno) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno  AND (BranchSno=@BranchSno OR @BranchSno=0) AND Redemption_Date = DayStart) as RedCount,
 			ISNULL((SELECT SUM(Rec_Principal) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Redemption_Date = DayStart),0) as RedValue,
-			
-			ISNULL(	((SELECT SUM(AdvIntAmt) FROM VW_LOANS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Loan_Date = DayStart)
-						+
-					(SELECT SUM(Rec_Interest) FROM VW_RECEIPTS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Receipt_Date =DayStart )
-						+
-					(SELECT SUM(Rec_Interest) FROM VW_REDEMPTIONS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Redemption_Date = DayStart)
-				),0) as Interest,
 
-      (SELECT SUM(DocChargesAmt) FROM VW_LOANS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Loan_Date = DayStart) as DocCharges
+      ISNULL((SELECT SUM(Rec_Interest) FROM VW_REDEMPTIONS WHERE (CompSno=@CompSno) AND (BranchSno=@BranchSno OR @BranchSno=0) AND (Redemption_Date = DayStart)),0)
+      +
+      ISNULL((SELECT SUM(Rec_Interest) FROM VW_RECEIPTS WHERE (CompSno=@CompSno) AND (BranchSno=@BranchSno OR @BranchSno=0) AND (Receipt_Date = DayStart)),0)
+      +
+      ISNULL((SELECT SUM(AdvIntAmt) FROM VW_LOANS WHERE (CompSno=@CompSno) AND (BranchSno=@BranchSno OR @BranchSno=0) AND (Loan_Date = DayStart)),0)
+
+      as Interest,
+			
+      ISNULL((SELECT SUM(DocChargesAmt) FROM VW_LOANS WHERE CompSno=@CompSno AND (BranchSno=@BranchSno OR @BranchSno=0) AND Loan_Date = DayStart),0) as DocCharges
 			
 			--FORMAT(MonthStart, 'yyyy-MM') AS MonthFormatted
 FROM		DaySequence
@@ -6092,3 +6149,35 @@ BEGIN
 END
 
 GO
+
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetIntDiscount') BEGIN DROP FUNCTION Udf_GetIntDiscount END
+GO
+
+CREATE FUNCTION [dbo].Udf_GetIntDiscount(
+	@LoanSno INT,	@FromDate DATE, 	@ToDate DATE,	@Roi DECIMAL(4,2)
+)
+RETURNS @Result TABLE (IntAccured MONEY )
+
+WITH ENCRYPTION AS
+
+BEGIN
+  DECLARE @BranchSno INT
+	DECLARE @FDate	INT = [dbo].DateToInt(@FromDate)
+	DECLARE @TDate	INT = [dbo].DateToInt(@ToDate)
+	DECLARE @IntCalcinDays INT  
+
+	SELECT @BranchSno=BranchSno FROM VW_LOANS WHERE LoanSno=@LoanSno
+	SELECT @IntCalcinDays=CASE IntCalcinDays WHEN 0 THEN 360 ELSE 365 END FROM  Transaction_Setup WHERE BranchSno=@BranchSno
+
+  INSERT INTO @Result
+  SELECT  --Rec.Receipt_Date, Rec.Rec_Principal,
+          CAST((DATEDIFF(DAY, @FromDate, [dbo].IntToDate(Rec.Receipt_Date)) * @Roi/100*Rec.Rec_Principal/@IntCalcinDays) AS DECIMAL(18,2)) as IntAccured
+  FROM    VW_RECEIPTS Rec
+  WHERE   Rec.LoanSno=@LoanSno AND Rec.Receipt_Date BETWEEN @FDate AND @TDate
+
+  RETURN
+END
+
+GO
+

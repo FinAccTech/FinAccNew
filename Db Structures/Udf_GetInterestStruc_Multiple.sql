@@ -1,4 +1,5 @@
 --select * from vw_loans
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetInterestStruc_Multiple') BEGIN DROP FUNCTION Udf_GetInterestStruc_Multiple END
 GO
 
@@ -47,7 +48,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
 
         --DECLARE @Result TABLE(Sno INT IDENTITY(1,1),FromDate DATE, ToDate DATE, Duration SMALLINT,Roi FLOAT,IntAccured MONEY,PrinPaid MONEY, IntPaid MONEY, AdjPrincipal MONEY, PrinBal MONEY)
         SET @FromDate = @Loan_Date
-
+        
         IF EXISTS(SELECT ReceiptSno FROM VW_RECEIPTS WHERE LoanSno=@LoanSno)
             BEGIN
                 DECLARE Rec_Cursor CURSOR FOR SELECT [dbo].IntToDate(Receipt_Date),Rec_Principal,Rec_Interest FROM VW_RECEIPTS WHERE LoanSno=@LoanSno  ORDER BY Receipt_Date        
@@ -107,7 +108,8 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                 --REMAINING DAYS AFTER RECEIPTS
                 IF @AsOn >= @ToDate
                     BEGIN
-                        SET @FromDate = DATEADD(DAY,1, @ToDate)
+                        --SET @FromDate = DATEADD(DAY,-1, @ToDate)
+                        SET @FromDate = @ToDate
                         SET @ToDate = @AsOn
                         
                         SET @TotDuration = DATEDIFF(DAY,@FromDate, @ToDate)
@@ -145,7 +147,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                             AND (@TotDuration >= FromPeriod) AND (@TotDuration <=ToPeriod or ToPeriod=0)
                 
                 IF @TotDuration < @PreClosureDays BEGIN SET @TotDuration = @PreClosureDays END
-                SET @IntAccured = @TotDuration * ((@Roi/100)*@Principal / 12 /30)
+                SET @IntAccured = (@TotDuration+1) * ((@Roi/100)*@Principal / 12 /30)
 
                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                 SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)

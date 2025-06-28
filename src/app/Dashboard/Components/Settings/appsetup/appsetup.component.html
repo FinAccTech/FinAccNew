@@ -507,11 +507,24 @@
                     <div class="matLabel">
                         &nbsp;&nbsp; Enable Payment Processing
                     </div>
-                </div>   
-                  
-
+                </div>  
             </div>
 
+            <div class="rows" style="margin-top: 1.5rem;" >
+                <div class="matGroup" style="width: 50%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="AppSetup.ImageUpload_ByFile"  >
+                            <mat-option [value]="0">No</mat-option>
+                            <mat-option [value]="1">Yes</mat-option>                            
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">
+                        &nbsp;&nbsp; Save Images as File
+                    </div>
+                </div>   
+
+                
+            </div>
         </div>     
     </div>
 

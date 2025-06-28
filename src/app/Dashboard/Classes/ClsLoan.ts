@@ -214,7 +214,8 @@ export class ClsLoans{
             Items_Json: "",
             Images_Json: "",
             Name: "",
-            Details: ""
+            Details: "",
+            OtherLoans_Json: ""
 		  }
 		  return Loan;
 	}
@@ -286,6 +287,7 @@ export class ClsLoans{
         Images_Json: string;
         Name: string;
         Details: string;
+        OtherLoans_Json: string;
 	}
 	
 

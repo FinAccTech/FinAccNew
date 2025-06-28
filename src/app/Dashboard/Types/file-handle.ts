@@ -5,5 +5,6 @@ export interface FileHandle{
     Image_File: File,
     Image_Url: SafeUrl,
     SrcType: number,
-    DelStatus: number
+    DelStatus: number,
+    Image_FilesBlob: File,
 }

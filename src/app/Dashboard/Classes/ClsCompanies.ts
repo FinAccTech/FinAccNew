@@ -29,6 +29,11 @@ export class ClsCompanies{
         return this.dataService.HttpPost(postdata, "/deleteCompany");                
     }
 
+    getClientDataSize(ClientSno: number): Observable<number> {
+        let postdata ={ "ClientSno" :  ClientSno }; 
+        return this.dataService.HttpPost(postdata, "/getClientDataSize");                
+    }
+
     Initialize(){
         let Company: TypeCompanies = {
             CompSno: 0,    

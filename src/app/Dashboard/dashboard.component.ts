@@ -5,6 +5,7 @@ import { IdleService } from '../idle.service';
 import { DataService } from '../Services/data.service';
 import { GlobalsService } from '../Services/globals.service';
 import { AuthService } from '../Services/auth.service';
+import { ClsCompanies } from './Classes/ClsCompanies';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,10 @@ export class DashboardComponent {
   SubscriptionMsg: string = "";
   CloseEnable: boolean = false;
   ShowAlert: boolean = true;
+
+  UsedDataPercentage: number = 0;
+  UsedSpace: string = "";
+  AvailableSpace:string = "";
 
   constructor(@Inject(DOCUMENT) private document: any,private idleService: IdleService, private dataService: DataService, private auth: AuthService, private globals: GlobalsService ){    
   } 
@@ -57,6 +62,17 @@ export class DashboardComponent {
       this.SubscriptionMsg = "Your subscription is expiring Today";
     }      
   })
+
+  let comp = new ClsCompanies(this.dataService);
+  comp.getClientDataSize(this.auth.LoggedClient.ClientSno).subscribe(data=>{
+    
+    // 2Gb - 2147483648
+    this.UsedDataPercentage = +((data / 2147483648)*100).toFixed(2);
+    let retData = this.globals.getBytesintoSize(data);
+    this.UsedSpace = retData.Size + ' ' + retData.SizeType ;
+    
+  })
+
 }
 
 CloseAlert(){
@@ -85,5 +101,12 @@ ngOnDestroy() {
   SetCompact($event: boolean){  
     this.CompactView = !$event;
   }
-  
+ 
+  RenewApp(){
+    this.globals.SnackBar("info","Online Payment is not yet enabled. Call FinAcc for Renewal Support");
+  }
+
+  BuyMoreSpace(){
+    this.globals.SnackBar("info","Online Payment is not yet enabled. Call FinAcc for Space Support");
+  }
 }

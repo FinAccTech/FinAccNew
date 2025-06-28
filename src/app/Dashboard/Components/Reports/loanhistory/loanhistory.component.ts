@@ -7,6 +7,7 @@ import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
 import { ClsReports, TypeLoanHistory } from 'src/app/Dashboard/Classes/ClsReports';
 import { DataService } from 'src/app/Services/data.service';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
 @Component({
@@ -25,7 +26,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class LoanhistoryComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService){}
+  constructor(private globals: GlobalsService, private dataService: DataService, private excelService: ExcelExportService){}
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
@@ -150,6 +151,25 @@ export class LoanhistoryComponent {
     }
   }
 
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);
+      this.globals.SnackBar("info","Loans List downloaded successfully")
+    }
+    
+    
   DateToInt($event: any): number{        
     return this.globals.DateToInt( new Date ($event.target.value));
   }

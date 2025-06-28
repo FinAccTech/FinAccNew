@@ -1,0 +1,45 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Day History</p>        
+        </div>
+
+        <div class="headerRight">    
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="AsOn! | intToDate | date:'yyyy-MM-dd'" (blur)="AsOn= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> AsOn </label>            
+            </div>
+
+
+            
+            <button class="newBtn" (click)="LoadHistory()"> <i class='bx bx-play'></i> &nbsp; Load Details</button>             
+            
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" (click)="exportexcel()" >                                            
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>            
+        </div>
+    </div>
+
+    <div class="body">
+   
+        <div class="tableBody">
+            @defer (when HistoryList.length >0) {
+                <app-tableview [DataSource]="HistoryList" [FieldNames]="FieldNames" [RemoveSignal]="RemoveSignal" [TotalFields]="TotalFields"  >      </app-tableview>                        
+            }
+            @placeholder {
+                <p>Day History Here</p>
+            }
+            @loading {
+                <p>Loading in Progress</p>        }
+
+        
+        </div>
+    </div>
+</div>

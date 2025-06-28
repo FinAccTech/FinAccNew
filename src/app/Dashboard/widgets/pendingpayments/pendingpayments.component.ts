@@ -40,13 +40,18 @@ export class PendingpaymentsComponent {
 
     DownloadasExcel(){
       let ExcelData: any = [];
+      
       this.LoansList.forEach((ln: TypeLoan)=>{
         ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
           "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
          })
       });
 
-      this.excelService.exportAsExcelFile(ExcelData,"Payments List");
+      let SelectedColumns = ["IFSC Code", "Account Number", "Beneficiary Name", "Sender Information", "Amount"];
+
+      const ExportList = ExcelData.map((item: any) => SelectedColumns.map(col => item[col]));      
+      
+      this.excelService.exportAsExcelFile(ExportList,"Payments List", ["IFSC Code", "Account Number", "Beneficiary Name", "Sender Information", "Amount"] );
       this.globals.SnackBar("info","Payment List downloaded successfully")
     }
     

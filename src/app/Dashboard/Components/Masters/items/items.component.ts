@@ -58,8 +58,7 @@ export class ItemsComponent {
         this.globals.ShowAlert(this.globals.DialogTypeError, data.apiData);      
       }
       else{              
-        this.ItemList = JSON.parse(data.apiData);           
-        console.log(this.ItemList);  
+        this.ItemList = JSON.parse(data.apiData);                   
         if (!this.ItemList){
           this.ItemList = [];
         }

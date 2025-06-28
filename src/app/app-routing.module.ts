@@ -71,6 +71,9 @@ import { BranchdivisionsComponent } from './Dashboard/Components/Settings/branch
 import { RepledgeauctionhistoryComponent } from './Dashboard/Components/Reports/repledgeauctionhistory/repledgeauctionhistory.component';
 import { BusinessregisterComponent } from './Dashboard/Components/Reports/businessregister/businessregister.component';
 import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/importdata.component';
+import { AucnoticesVelsamyComponent } from './Dashboard/Components/Custom/aucnotices-velsamy/aucnotices-velsamy.component';
+import { LoanhistoryBrgoldComponent } from './Dashboard/Components/Custom/loanhistory-brgold/loanhistory-brgold.component';
+import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Custom/custom-day-history-fs2025061361/custom-day-history-fs2025061361.component';
 
 
 
@@ -151,6 +154,11 @@ const routes: Routes = [
       { path:'importdata', component: ImportdataComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
       
       { path:'clientprofile', component: ClientprofileComponent, canActivate:[AuthGuard, CompGuard],data:{"adminCheck":true}},    
+
+
+      { path:'CustomAuctionNoticeVelsamy', component: AucnoticesVelsamyComponent, canActivate:[AuthGuard, CompGuard],data:{"FormSno":42}},    
+      { path:'CustomLoanHistoryBrGold', component: LoanhistoryBrgoldComponent, canActivate:[AuthGuard, CompGuard],data:{"FormSno":43}},    
+      { path:'CustomDayHistoryFS2025061361', component: CustomDayHistoryFS2025061361Component, canActivate:[AuthGuard, CompGuard],data:{"FormSno":44}},    
       
   ]},  
 ];

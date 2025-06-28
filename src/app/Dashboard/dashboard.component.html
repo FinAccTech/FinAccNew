@@ -14,12 +14,28 @@
                 <p class="desc">
                     {{SubscriptionMsg}}
                 </p>
-                <p class="renew">
+                <p class="renew" (click)="RenewApp()" >
                     Renew Now..
                 </p>        
-                @if (CloseEnable) {
+                @if (CloseEnable) { 
                     <p class="closeBtn" (click)="CloseAlert()" >X</p>
                 }
+            </div>
+        }
+
+        @if (UsedDataPercentage >= 70) {
+            <div class="alertHeader">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                <p class="desc">
+                    You have used {{UsedDataPercentage}}% of your 2GB Quota
+                </p>
+                <p>
+                    Used Space {{UsedSpace}} 
+                </p>
+                <p class="renew" (click)="BuyMoreSpace()" >
+                      Buy More Space
+                </p>        
+                <p class="closeBtn" (click)="CloseAlert()" >X</p>
             </div>
         }
         <app-body></app-body>

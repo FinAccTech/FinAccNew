@@ -62,6 +62,7 @@ export class WebcamComponent  implements AfterViewInit {
     const fileHandle: FileHandle ={ 
       Image_Name: this.globals.getRandomCharacters() + (+this.TransImages.length+1)+ ".jpeg",
       Image_File: this.canvas.nativeElement.toDataURL("image/png"), 
+      Image_FilesBlob: this.canvas.nativeElement.toDataURL("image/png"), 
       Image_Url: "",
       SrcType:0,
       DelStatus:0,

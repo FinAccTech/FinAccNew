@@ -49,7 +49,7 @@ export class ClsUser{
 
             Profile_Image: "",   
             Image_Name: "",  
-            fileSource: {"Image_File":null!, "Image_Name":"", "Image_Url":"","DelStatus":0,"SrcType":0},
+            fileSource: {"Image_File":null!, "Image_FilesBlob":null!, "Image_Name":"", "Image_Url":"","DelStatus":0,"SrcType":0},
             ClientSno : this.ClientSno,
             Enable_WorkingHours: 0,
             FromTime: "",

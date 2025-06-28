@@ -45,10 +45,10 @@
 		WHILE @@FETCH_STATUS = 0
 			BEGIN				
 
-				EXEC Sp_Party 0, @Party_Code, @Party_Name, @Print_Name, 1, 1, @Rel, @RelName, @Address1, @Address2,'','','','Tamilnadu', @Pincode, '', @Mobile, '','',0,0,'',
-				'','',0,0,0,'',0,0,1,0,'',20250403,1,
-        2,2,  --CompSno AND BranchSno
-        '<ROOT> </ROOT>',0,@RetPartySno OUTPUT, @RetPartyCode OUTPUT
+				 EXEC Sp_Party 0, @Party_Code, @Party_Name, @Party_Name, @Party_Cat, 1, @Rel, @RelName, @Address1, @Address2,@Address3,@Address4,@City,@State, @Pincode, @Phone, @Mobile, '',@Reference,0,@Sex,@Aadhar_No,
+      '','','','',0,'',
+      '','',0,0,0,'',0,0,1,0,0,20250612,1,1,1,'<ROOT> </ROOT>',0,
+      '','','','','',@RetPartySno OUTPUT, @RetPartyCode OUTPUT
 
 				FETCH NEXT FROM PartiesList INTO @Party_Code,@Party_Name, @Rel,@RelName,@Address1,@Address2,@Pincode, @Mobile, @Occupation
 			END

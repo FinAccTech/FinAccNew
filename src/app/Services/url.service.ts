@@ -24,7 +24,8 @@ export class UrlService {
         return "https://finaccsaas.com/data/";        
 
       case 'http://localhost:4200':
-        return "https://finaccsaas.com/data/";
+        //return "https://finaccsaas.com/data/";
+        return "https://pennygold.in/data/";
 
       case 'http://localhost:4200/#/':
         return "https://finaccsaas.com/data/";
@@ -49,7 +50,7 @@ export class UrlService {
 
       case 'http://localhost:4200':
         return "https://finaccsaas.com/data/RestApi.php/auth";
-        // return "https://pennygold.in/admin/data/RestApi.php/auth";
+        //  return "https://pennygold.in/data/RestApi.php/auth";
 
       case 'http://localhost:4200/#/':
         return "https://finaccsaas.com/data/RestApi.php/auth";
@@ -58,7 +59,7 @@ export class UrlService {
         return "https://finaccsaas.com/data/RestApi.php/auth";        
     }   
   } 
-
+ 
   getbaseApiURL():string{
     const baseUrl = window.location.origin;    
     switch (baseUrl) {
@@ -73,7 +74,7 @@ export class UrlService {
 
       case 'http://localhost:4200':
         return "https://finaccsaas.com/data/RestApi.php/app";
-        // return "https://pennygold.in/admin/data/RestApi.php/app";
+          //return "https://pennygold.in/data/RestApi.php/app";
 
       case 'http://localhost:4200/#/':
         return "https://finaccsaas.com/data/RestApi.php/app";

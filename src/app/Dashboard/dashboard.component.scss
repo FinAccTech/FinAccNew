@@ -30,7 +30,7 @@
             width: 100%;
             display: flex;
             column-gap: 1rem;
-            align-items: center;
+            align-items: center;            
             border-radius: .5rem;
             padding: 1rem;            
             background-color: rgb(248, 215, 215);
@@ -40,7 +40,8 @@
             p.closeBtn{
                 position: absolute;
                 right: 1rem;
-                top: 0.5rem;
+                top: 1.5rem;
+                
                 font-size: 1.2rem;
                 color: red;
                 font-weight: bold;
@@ -62,6 +63,12 @@
             p.renew{
                 font-size: 1.1rem;
                 font-weight: 500;
+                border: 1px solid red;
+                background-color: red;
+                color: #fff;
+                padding: .5rem;
+                border-radius: 5px;
+                cursor: pointer;
             }
         }
 

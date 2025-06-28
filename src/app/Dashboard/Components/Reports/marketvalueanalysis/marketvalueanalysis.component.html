@@ -8,13 +8,13 @@
             <!-- <i class='bx bx-printer' (click)="PrintReport()" style="color: royalblue;"></i>         -->
             <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
             <mat-menu #menu="matMenu" style="padding: 1rem;">
-                <button mat-menu-item (click)="exporter.exportTable('xlsx', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <button mat-menu-item (click)="DownloadasExcel()" >
                     <div class="menuClass">
                         <i class="fas fa-file-excel" style="color: green;" ></i>
                         <span> &nbsp; Excel</span>
                     </div>                    
                 </button>             
-                <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                <!-- <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
                     <div class="menuClass">
                         <i class="fas fa-file-csv" style="color: rgb(168, 15, 168);" ></i>
                         <span> &nbsp; Csv</span>
@@ -31,7 +31,7 @@
                         <i class="fas fa-file-alt" style="color: chocolate;" ></i>
                         <span> &nbsp; Text</span>
                     </div>                    
-                </button>                    
+                </button>                     -->
             </mat-menu>       
         </div>
     </div>

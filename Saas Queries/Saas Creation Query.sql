@@ -7,22 +7,24 @@
 INSERT INTO Registered_Clients (Client_Code, Client_Name, Address, State, Mobile, Alternate_Mobile, Email, Contact_Person, Creation_Date, Subscription_Start, Subscription_End, App_Login, App_Pwd, Db_Name, Status, Version_Type, Own_Server)
 VALUES 
 (
-
-	'FS2025042755', --Client Code
-	'SUDHESI GOLD FINANCE',  -- ClientName
-	'Valasai street, Thangachimadam, Ramanathapuram', -- Address
+	'FS2025062465', --Client Code
+	'Jayam gold bankers',  -- ClientName
+	'No 5 , sethurathinapuram , manapparai', -- Address
 	'Tamilnadu', -- State
-	'9790669338', -- Mobile
-	'04573223622', -- Alternate Mobile
-	'emkumar10@gmail.com', -- Email
-	'Manoj Kumar', -- Contact Person
-	20250427, -- Creation Date
-	20250427, -- Subscription Start
-	20260426, -- Subscription End
+	'9360258177', -- Mobile
+	'9597465222', -- Alternate Mobile
+	'jayasurya22.sgp@gmail.com', -- Email
+	'Jaya surya', -- Contact Person
+	20250624, -- Creation Date
+	20250624, -- Subscription Start
+	20260623, -- Subscription End
 	'', -- App Login
 	'', -- App_Pwd
-	'FS2025042755', -- DbName
+	'FS2025062465', -- DbName
 	1, -- Status
 	3, -- Version Type
 	0 -- Own_Serer
 )
+
+
+

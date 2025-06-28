@@ -10,6 +10,7 @@ import { TypeLoan } from 'src/app/Dashboard/Classes/ClsLoan';
 import { ClsReports,TypePendingReport } from 'src/app/Dashboard/Classes/ClsReports';
 import { AlertconfirmationComponent } from 'src/app/Dashboard/widgets/alertconfirmation/alertconfirmation.component';
 import { DataService } from 'src/app/Services/data.service';
+import { ExcelExportService } from 'src/app/Services/excel-export.service';
 import { GlobalsService } from 'src/app/Services/globals.service';
 
 @Component({
@@ -28,7 +29,7 @@ import { GlobalsService } from 'src/app/Services/globals.service';
 @AutoUnsubscribe
 export class PendingreportComponent {
 
-  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog){}
+  constructor(private globals: GlobalsService, private dataService: DataService, private dialog: MatDialog, private excelService: ExcelExportService){}
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
@@ -41,7 +42,7 @@ export class PendingreportComponent {
   
   AsOnDate: number = 0;
   LoansList:       TypePendingReport[] = [];    
-  FilteredList:    TypePendingReport[] = [];    
+  FilteredList:    any[] = [];    
 
   PendingDues: number = 0;
   DueDays: number = 28;
@@ -70,6 +71,7 @@ export class PendingreportComponent {
         }
         else{                
           this.LoansList = JSON.parse (data.apiData);      
+                    
           this.LoansList.map(ln=>{
             ln.Customer = JSON.parse(ln.Party_Json)[0];
             if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
@@ -96,10 +98,11 @@ export class PendingreportComponent {
     this.FilteredList = this.LoansList;
     this.LoadDataIntoMatTable();
   }
+
   FilterPending(){    
     this.FilteredList =  (this.FilteredList.filter(ln =>{ return ln.Pending_Dues === +this.PendingDues }));
     this.LoadDataIntoMatTable();
-  }
+  } 
 
   LoadDataIntoMatTable(){
     this.dataSource = new MatTableDataSource<TypeLoan> (this.FilteredList);     
@@ -109,6 +112,24 @@ export class PendingreportComponent {
       setTimeout(() => this.dataSource.sort = this.sort);      
     }
   }
+
+    DownloadasExcel(){
+      // let ExcelData: any = [];
+      // this.LoansList.forEach((ln: TypeLoan)=>{
+      //   ExcelData.push({"IFSC Code": ln.Customer.Bank_Ifsc, "Account Number": ln.Customer.Bank_AccountNo, "Beneficiary Name": ln.Customer.Bank_AccName, 
+      //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
+      //    })
+      // });
+      let SelectedColumns = this.columnsToDisplay;
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
+      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
+
+      const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
+
+      this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);
+      this.globals.SnackBar("info","Loans List downloaded successfully")
+    }
+    
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -151,14 +172,18 @@ export class PendingreportComponent {
             break;
       }
     }
-    
-    
+        
     this.LoadDataIntoMatTable();
     this.ShowFilterOptions = false;
+    
   }
 
   SendAlerts(){    
     
+    this.FilteredList.map(ln=>{
+      ln.Due_Date = this.globals.IntToDateString(ln.Due_Date);
+    });
+
       const dialogRef = this.dialog.open(AlertconfirmationComponent, 
         {         
           // width:'40vw',
@@ -176,6 +201,7 @@ export class PendingreportComponent {
             });
   
             let aStp = new ClsAlertSetup(this.dataService);
+
             aStp.insertAlerts( {RecvrList: this.FilteredList, TempSno: result.TempSno, Alert_Type: this.globals.AlertTypeIntReminder,  Alert_Mode: result.Alert_Mode, Auction_Date: result.Auction_Date, BulkInsert:0, CompSno:0 }).subscribe(data =>{            
               
             });

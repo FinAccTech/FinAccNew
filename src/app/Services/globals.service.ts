@@ -167,6 +167,9 @@ export class GlobalsService
      FormIdRepledgeAuctionHistory = 40;
      FormIdBusinessRegistere = 41;
 
+     FormIdCustomAuctionNoticeVelsamy = 42;
+     FormIdCustomLoanHistoryBrGold = 43;
+     FormIdCustomDayHistoryFS2025061361 = 44;
 
      //Report Component Ids
      RepDayHistory = 1;
@@ -177,6 +180,7 @@ export class GlobalsService
      RepPendingReport = 6;
      RepAgeAnalysis = 7;
      RepMarketValueAnalysis = 8;
+     RepAuctionNoticeCustomVelsamy = 9;
 
 
 
@@ -716,5 +720,25 @@ getRandomCharacters(): string {
 
   return result;
 }
+
+getBytesintoSize(bytes: number) {
+    let Size: number = 0;
+    let SizeType: string = "";
+
+    if (bytes >= 1073741824) {
+          Size =  +(bytes / 1073741824).toFixed(2);
+          SizeType = "GB"
+      } else if (bytes >= 1048576) {
+        Size  = +(bytes / 1048576).toFixed(2);
+        SizeType = "MB"          
+      } else if (bytes >= 1024) {
+        Size = +(bytes / 1024).toFixed(2);
+        SizeType = "KB"          
+      } else {
+          Size = bytes;
+          SizeType = "Bytes"          
+      }
+    return {"Size": Size, "SizeType":SizeType};
+  }
 
 }

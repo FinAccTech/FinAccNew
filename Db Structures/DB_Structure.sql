@@ -159,7 +159,8 @@ CREATE TABLE Transaction_Setup
   Lock_PreviousDate   BIT,
   Enable_EmptyWt      BIT,
   Allow_Red_Before_Close BIT,
-  Enable_Payment_Process BIT
+  Enable_Payment_Process BIT,
+  ImageUpload_ByFile BIT
 )
 GO
 

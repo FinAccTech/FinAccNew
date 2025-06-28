@@ -18,10 +18,15 @@ export class AlertsService {
   alertSetup!: TypeAlertsSetup;
 
   CreateLoanAlert (Alert_Type: number, Ln: TypeLoan){
-    let aStp = new ClsAlertSetup(this.dataService);          
+    console.log("Create Loan Alert");
+    let aStp = new ClsAlertSetup(this.dataService);              
     aStp.getAlertSetup(0).subscribe(data=>{
+      console.log(data);
+      
     this.alertSetup = JSON.parse(data.apiData)[0];
     let alerts: TypeAlert[] =  JSON.parse (this.alertSetup.Alerts_Json);
+    
+    console.log("Create Loan Alert");
     
     let FieldSet: TypeAlertFieldSetLoan ={
       LoanSno: Ln.LoanSno,
@@ -44,9 +49,9 @@ export class AlertsService {
     if (alerts[Alert_Type-1].Sms_Alert_Template.TempSno !==0){  
       let rcvrList = [];
       rcvrList.push (FieldSet);
-      console.log(rcvrList);
-      
       aStp.insertAlerts( {RecvrList: rcvrList, TempSno: alerts[Alert_Type-1].Sms_Alert_Template.TempSno, Alert_Type: Alert_Type,  Alert_Mode: this.globals.AlertModeSms, Auction_Date: "", BulkInsert:0, CompSno:0 }).subscribe(data =>{            
+        console.log("Alert Response");
+        
         console.log(data);              
       })
     }
