@@ -109,6 +109,16 @@
                         <p style="color: red; font-size: .9rem; "> *** Enter time in 24 Hour Format</p>
                     </div>
                 </div>
+
+                <div class="row" style="margin-top: 1.2rem;" >
+                    <div class="col50">
+                        <label class="toggle">                    
+                            <input class="toggle-checkbox" type="checkbox" [checked]="User.Enable_Dashboard" [(ngModel)]="User.Enable_Dashboard"> <!-- (change)="SetActiveStatus($event)"  -->
+                            <div class="toggle-switch"></div>
+                                <span class="toggle-label"> {{User.Enable_Dashboard == 1? 'Dashboard Enabled' : 'Dashboard Disabled' }}  </span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
         

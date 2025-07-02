@@ -52,6 +52,11 @@ export class ClsParties{
         return this.dataService.HttpGet(postdata, "/getPartyImages");                
     }
 
+    UpdateVerifyStatus(PartySno: number): Observable<TypeHttpResponse> {
+        let postdata ={ "PartySno" :  PartySno}; 
+        return this.dataService.HttpGet(postdata, "/UpdateVerifyStatus");                
+    }
+
     Initialize(){
         let Party: TypeParties = {
             PartySno:0,

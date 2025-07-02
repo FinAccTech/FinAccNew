@@ -95,7 +95,9 @@ export class ClsAppSetup{
             Enable_EmptyWt: 0,
             Allow_Red_Before_Close: 0,
             Enable_Payment_Process:0,
-            ImageUpload_ByFile: 0
+            ImageUpload_ByFile: 0,
+            Enable_OtpVerification:0,
+            TimeOut_Seconds:0,
         }
         return AppSetup
     }
@@ -174,6 +176,8 @@ export interface TypeAppSetup{
     Allow_Red_Before_Close: number;
     Enable_Payment_Process: number;
     ImageUpload_ByFile: number;
+    Enable_OtpVerification: number;
+    TimeOut_Seconds: number;
 }
 
 

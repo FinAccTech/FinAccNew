@@ -59,13 +59,15 @@ export class IndexpageComponent {
   TransactionList: TypeTransactionList[] = [];
   ChartType: number = 0;
   ChartPeriod: number = 1;
+  EnableDashboard: boolean = false;
 
   ngOnInit(){    
     
     // this.apidataService.InitLoans();
     // this.apidataService.InitParties();
 
-    this.LoggedUser = this.auth.LoggedUser.UserName!;      
+    this.LoggedUser = this.auth.LoggedUser.UserName!; 
+    this.EnableDashboard = this.auth.LoggedUser.UserSno == 1 ? true : this.auth.LoggedUser.Enable_Dashboard == 1 ? true : false;     
     if (this.auth.CompSelected == 0){      
       const dialogRef = this.dialog.open(CompaniesComponent,  
         {

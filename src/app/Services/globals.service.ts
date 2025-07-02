@@ -741,4 +741,8 @@ getBytesintoSize(bytes: number) {
     return {"Size": Size, "SizeType":SizeType};
   }
 
+  GenerateFourDigitRandom(): number {
+    return Math.floor(1000 + Math.random() * 9000);
+  }
+
 }

@@ -96,7 +96,8 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         --SET @IntBal = @IntBal + (@IntAccured - @IntPaid)                                            
                         INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured,IntPaid,PrinPaid,AddedPrincipal,AdjPrincipal,NewPrincipal)
                         VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal, ISNULL(@AdjPrincipal,0), @PrinBal)
-        
+
+                        SET @AdjPrincipal = 0
                         SET @FromDate = DATEADD(DAY,1,@ToDate)
         
                         FETCH NEXT FROM Rec_Cursor INTO @Receipt_Date,@PrinPaid,@IntPaid
@@ -133,6 +134,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         
                         INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured, IntPaid, PrinPaid, AddedPrincipal, AdjPrincipal,NewPrincipal)
                         VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal, ISNULL(@AdjPrincipal,0), @PrinBal)
+                        SET @AdjPrincipal = 0
                     End
         
             End

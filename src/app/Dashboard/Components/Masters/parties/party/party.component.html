@@ -114,7 +114,7 @@
                 </div>
 
                 <div class="verify">
-                    <div class="verifyItem">
+                    <div class="verifyItem" (click)="VerifyNow()" >
                         <ng-container *ngIf="Party.Verify_Status == 1">
                             <i class="fa-solid fa-circle-check status" style="color: green;"></i>                        
                             <div class="desc">                            

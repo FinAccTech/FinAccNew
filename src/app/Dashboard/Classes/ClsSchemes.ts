@@ -78,6 +78,7 @@ export class ClsSchemes{
             Min_LoanValue:0,
             Max_LoanValue:0,
             Remarks: "",
+            AddOneDay:0,
             MultiIntXml: "",
             AmtIntXml:"",
             FeeSlabXml: "",
@@ -130,6 +131,7 @@ export interface TypeScheme {
     Min_LoanValue?: number;
     Max_LoanValue?: number;
     Remarks?: string;
+    AddOneDay?: number;
     MultiIntXml?: string;
     AmtIntXml?: string;
     FeeSlabXml?: string;

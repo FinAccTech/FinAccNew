@@ -7,7 +7,9 @@ import { ClsAreas, TypeArea } from 'src/app/Dashboard/Classes/ClsAreas';
 import { ClsParties, TypeParties } from 'src/app/Dashboard/Classes/ClsParties';
 import { FileHandle } from 'src/app/Dashboard/Types/file-handle';
 import { ImagesComponent } from 'src/app/Dashboard/widgets/images/images.component';
+import { OtpwindowComponent } from 'src/app/Dashboard/widgets/otpwindow/otpwindow.component';
 import { WebcamComponent } from 'src/app/GlobalWidgets/webcam/webcam.component';
+import { AlertsService } from 'src/app/Services/alerts.service';
 import { ApiDataService } from 'src/app/Services/api-data.service';
 import { AuthService } from 'src/app/Services/auth.service';
 import { DataService } from 'src/app/Services/data.service';
@@ -50,6 +52,7 @@ export class PartyComponent implements OnInit {
     private auth: AuthService,
     private apidataService: ApiDataService,
     private imgUpload: ImageUploadtoServerService,
+    private alertService: AlertsService
   ) 
   {
     this.Party = data;      
@@ -72,7 +75,7 @@ export class PartyComponent implements OnInit {
           break;
     }    
     
-       let AutoGenType = 0;
+    let AutoGenType = 0;
 
       switch ( +this.Party.Party_Cat!) {
         case this.globals.PartyTypCustomers:                          
@@ -189,6 +192,34 @@ export class PartyComponent implements OnInit {
           }
 
           this.globals.SnackBar("info", this.Party.PartySno == 0 ? "Party Created successfully" : "Party updated successfully");          
+
+          const OtpVerification = this.globals.AppSetup()[0].Enable_OtpVerification;
+          if (OtpVerification == 1)
+          {
+            const VerifyCode = this.globals.GenerateFourDigitRandom();
+            this.alertService.CreateOTPVerificationAlert(this.globals.AlertTypeOtpValidation, pty.Party, VerifyCode);
+            const dialogRef = this.dialog.open(OtpwindowComponent, 
+            {              
+              data: VerifyCode,
+            });      
+            dialogRef.disableClose = true; 
+            dialogRef.afterClosed().subscribe(result => {        
+              
+              if (result) 
+              { 
+                if (+result == +VerifyCode){
+                  pty.UpdateVerifyStatus(pty.Party.PartySno).subscribe(data=>{
+                    if (data.queryStatus == 0){
+                      this.globals.ShowAlert(3,data.apiData);                      
+                    }
+                    else{
+                        this.globals.SnackBar("info", "Customer Verified Successfully");
+                    }                    
+                  })                  
+                } 
+              }        
+            });    
+          }
           //this.apidataService.fetchData("2");
           this.CloseDialog(pty.Party);
         }
@@ -198,6 +229,42 @@ export class PartyComponent implements OnInit {
       this.globals.ShowAlert(this.globals.DialogTypeError, error);
     }
     )
+  }
+
+  VerifyNow(){
+    
+    const OtpVerification = this.globals.AppSetup()[0].Enable_OtpVerification;    
+        
+    if (this.Party.Verify_Status || OtpVerification === 0) {
+      return;
+    }
+
+    const VerifyCode = this.globals.GenerateFourDigitRandom();
+    this.alertService.CreateOTPVerificationAlert(this.globals.AlertTypeOtpValidation, this.Party, VerifyCode);
+    const dialogRef = this.dialog.open(OtpwindowComponent, 
+    {              
+      data: VerifyCode,
+    });      
+    dialogRef.disableClose = true; 
+    dialogRef.afterClosed().subscribe(result => {        
+      
+      if (result) 
+      { 
+        if (+result == +VerifyCode){
+          let pty = new ClsParties(this.dataService);
+          pty.UpdateVerifyStatus(pty.Party.PartySno).subscribe(data=>{
+            if (data.queryStatus == 0){
+              this.globals.ShowAlert(3,data.apiData);                      
+            }
+            else{
+              this.Party.Verify_Status =1;
+                this.globals.SnackBar("info", "Customer Verified Successfully");
+            }                    
+          })                  
+        } 
+      }        
+    });   
+
   }
 
   DeleteParty(){
@@ -352,7 +419,7 @@ export class PartyComponent implements OnInit {
 
   RemoveProfileImage(){  
     this.TransImages[0].Image_File = null!;
-    this.TransImages[0].Image_Url = "";
+    this.TransImages[0].Image_Url = ""; 
     this.TransImages[0].SrcType = 2;
   }
   

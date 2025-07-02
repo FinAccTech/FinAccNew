@@ -1,0 +1,18 @@
+<div class="otp-container">
+    <p class="closebtn" matDialogClose="" > &times; </p>
+  <h2>Enter OTP</h2>
+  <form [formGroup]="otpForm" (ngSubmit)="submitOTP()">
+    <div class="otp-inputs">
+      <input
+        type="text"
+        maxlength="1"
+        *ngFor="let ctrl of otpControls; let i = index"
+        [formControlName]="i"
+        (input)="onInput($event, i)"
+        #otpInput
+        autocomplete="one-time-code"
+      />
+    </div>
+    <button  type="submit" [disabled]="otpForm.invalid">Verify OTP</button>
+  </form>
+</div>

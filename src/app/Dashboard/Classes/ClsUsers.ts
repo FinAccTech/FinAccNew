@@ -54,7 +54,8 @@ export class ClsUser{
             Enable_WorkingHours: 0,
             FromTime: "",
             ToTime: "",
-            Ip_Restrict: ""
+            Ip_Restrict: "",
+            Enable_Dashboard:0,
         }
         return User
     }
@@ -142,6 +143,7 @@ export interface TypeUser {
     FromTime: string;
     ToTime: string;
     Ip_Restrict: string;
+    Enable_Dashboard: number;
 }
 
 export interface TypeCompRights extends TypeCompanies{    

@@ -160,7 +160,9 @@ CREATE TABLE Transaction_Setup
   Enable_EmptyWt      BIT,
   Allow_Red_Before_Close BIT,
   Enable_Payment_Process BIT,
-  ImageUpload_ByFile BIT
+  ImageUpload_ByFile BIT,
+  Enable_OtpVerification BIT,
+  TimeOut_Seconds SMALLINT
 )
 GO
 
@@ -752,7 +754,7 @@ CREATE TABLE Alerts_Setup
   Sms_Username      VARCHAR(20),
   Sms_Password      VARCHAR(20),
   Sms_Peid          VARCHAR(50),
-  WhatsApp_Instance VARCHAR(100),
+  WhatsApp_Instance VARCHAR(200),
   Add_91            BIT,
   Add_91Sms            BIT
 )

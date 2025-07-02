@@ -1,0 +1,44 @@
+.otp-container {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  padding: 2rem;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;  
+}
+
+.otp-inputs input {
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  text-align: center;
+  border: none;
+  outline: none;
+  border: 2px solid var(--ColorPrimary);
+}
+
+
+button{
+  padding: .8rem;
+  border: none;  
+  cursor: pointer;
+  background-color: var(--ColorPrimary);
+  color: #fff;
+}
+
+.closebtn{
+  position: absolute;
+  right: .5rem;
+  top: 0;
+  font-size: 2rem;
+}
+
+.closebtn:hover{
+  cursor: pointer;
+  transition: transform 0.25s 0s; 
+  transform: scale(1.5); 
+}

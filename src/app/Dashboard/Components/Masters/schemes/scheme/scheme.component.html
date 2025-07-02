@@ -323,6 +323,16 @@
             </div>
         </div>
 
+        <div class="row" style="margin-top: 15px; text-align: center;">
+            <div class="col50">
+                <label class="toggle">
+                    <input class="toggle-checkbox" type="checkbox" [checked]="Scheme.AddOneDay" [(ngModel)]="Scheme.AddOneDay"> <!-- (change)="SetActiveStatus($event)"  -->
+                    <div class="toggle-switch"></div>
+                    <span class="toggle-label"> {{Scheme.AddOneDay == 1? 'Add OneDay' : 'Skip OneDay' }}  </span>
+                </label>
+            </div>
+        </div>
+
         <div class="row" style="margin-top: 15px;">
             <div class="col100">
                 <div class="formGroup">

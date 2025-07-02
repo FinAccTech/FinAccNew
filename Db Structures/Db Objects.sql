@@ -239,6 +239,7 @@ CREATE PROCEDURE Sp_User
   @FromTime VARCHAR(10),
   @ToTime VARCHAR(10),
   @Ip_Restrict VARCHAR(20),
+  @Enable_Dashboard BIT,
 	@RetSno	INT OUTPUT
 
 WITH ENCRYPTION AS
@@ -255,7 +256,7 @@ BEGIN
 		IF EXISTS(SELECT UserSno FROM Users WHERE UserSno=@UserSno)
 			BEGIN
 				UPDATE Users SET  Password=@Password, User_Type=@User_Type,Active_Status=@Active_Status, Profile_Image=@Profile_Image, Image_Name=@Image_Name,
-                          Enable_WorkingHours=@Enable_WorkingHours, FromTime=@FromTime, ToTime=@ToTime, Ip_Restrict=@Ip_Restrict
+                          Enable_WorkingHours=@Enable_WorkingHours, FromTime=@FromTime, ToTime=@ToTime, Ip_Restrict=@Ip_Restrict, Enable_Dashboard=@Enable_Dashboard
 				WHERE UserSno=@UserSno
 				IF @@ERROR <> 0 GOTO CloseNow
 
@@ -277,8 +278,8 @@ BEGIN
               GOTO CloseNow
           END
 
-				INSERT INTO Users(UserName, Password, User_Type,Active_Status,Profile_Image,Image_Name,Enable_WorkingHours,FromTime,ToTime,Ip_Restrict)
-        VALUES           (@UserName, @Password, @User_Type,@Active_Status,@Profile_Image,@Image_Name,@Enable_WorkingHours,@FromTime,@ToTime,@Ip_Restrict)
+				INSERT INTO Users(UserName, Password, User_Type,Active_Status,Profile_Image,Image_Name,Enable_WorkingHours,FromTime,ToTime,Ip_Restrict,Enable_Dashboard)
+        VALUES           (@UserName, @Password, @User_Type,@Active_Status,@Profile_Image,@Image_Name,@Enable_WorkingHours,@FromTime,@ToTime,@Ip_Restrict,@Enable_Dashboard)
 
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @UserSno = @@IDENTITY
@@ -649,7 +650,9 @@ CREATE PROCEDURE Sp_Transaction_Setup
   @Enable_EmptyWt BIT,
   @Allow_Red_Before_Close BIT,
   @Enable_Payment_Process BIT,
-  @ImageUpload_ByFile BIT
+  @ImageUpload_ByFile BIT,
+  @Enable_OtpVerification BIT,
+  @TimeOut_Seconds SMALLINT
 
   
 WITH ENCRYPTION AS
@@ -673,7 +676,7 @@ BEGIN
                                       Enable_ReturnImage = @Enable_ReturnImage, Allow_DuplicateItems = @Allow_DuplicateItems, Disable_AddLess = @Disable_AddLess, Entries_LockedUpto = @Entries_LockedUpto,
                                       Enable_Authentication = @Enable_Authentication, Enable_OldEntries= @Enable_OldEntries, IntCalcinDays=@IntCalcinDays, MobileNumberMandatory=@MobileNumberMandatory,
                                       Enable_AutoApproval=@Enable_AutoApproval, Lock_PreviousDate=@Lock_PreviousDate, Enable_EmptyWt=@Enable_EmptyWt,Allow_Red_Before_Close=@Allow_Red_Before_Close,
-                                      Enable_Payment_Process=@Enable_Payment_Process, ImageUpload_ByFile=@ImageUpload_ByFile
+                                      Enable_Payment_Process=@Enable_Payment_Process, ImageUpload_ByFile=@ImageUpload_ByFile,Enable_OtpVerification=@Enable_OtpVerification,TimeOut_Seconds=@TimeOut_Seconds
 				WHERE  SetupSno=@SetupSno
 				IF @@ERROR <> 0 GOTO CloseNow												
 			END
@@ -965,10 +968,10 @@ BEGIN
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
                                       CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close,
-                                      Enable_Payment_Process, ImageUpload_ByFile)
+                                      Enable_Payment_Process, ImageUpload_ByFile, Enable_OtpVerification, TimeOut_Seconds)
 
         VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0,0,300)
         IF @@ERROR <> 0 GOTO CloseNow
 
         UPDATE Transaction_Setup SET BranchCode_CurrentNo = BranchCode_CurrentNo + 1 WHERE CompSno=@CompSno
@@ -1126,6 +1129,8 @@ END
 
 GO
 
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Party') BEGIN DROP PROCEDURE Sp_Party END
 GO
 
@@ -1219,6 +1224,19 @@ BEGIN
 
 		IF EXISTS(SELECT PartySno FROM Party WHERE PartySno=@PartySno)
 			BEGIN
+
+      IF EXISTS(SELECT PartySno FROM Party WHERE  (Mobile=@Mobile) AND (LEN(Mobile) > 9) AND (PartySno <> @PartySno) AND CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno))  )
+          BEGIN
+              Raiserror ('Mobile Number already exists.', 16, 1)              
+              GOTO CloseNow
+          END
+
+      IF EXISTS(SELECT PartySno FROM Party WHERE  (Aadhar_No=@Aadhar_No) AND (LEN(Aadhar_No) > 11) AND (PartySno <> @PartySno) AND CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno))  )
+      BEGIN
+          Raiserror ('Aadhar Number already exists.', 16, 1)              
+          GOTO CloseNow
+      END
+
 				UPDATE Party SET  Party_Code=@Party_Code, Party_Name=@Party_Name, Print_Name = @Print_Name, Party_Cat = @Party_Cat, AreaSno = @AreaSno, Rel = @Rel, RelName = @RelName, Address1 = @Address1, Address2 = @Address2,
                           Address3 = @Address3, Address4 = @Address4, City = @City, State = @State, Pincode = @Pincode, Phone = @Phone, Mobile = @Mobile, Email = @Email, Reference = @Reference, Dob = @Dob, Sex = @Sex,
 
@@ -1259,7 +1277,19 @@ BEGIN
               GOTO CloseNow
           END
 
-  
+
+          IF EXISTS(SELECT PartySno FROM Party WHERE  (Mobile=@Mobile) AND (LEN(Mobile) > 9) AND CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno))  )
+          BEGIN
+              Raiserror ('Mobile Number already exists.', 16, 1)              
+              GOTO CloseNow
+          END
+
+          IF EXISTS(SELECT PartySno FROM Party WHERE  (Aadhar_No=@Aadhar_No) AND (LEN(Aadhar_No) > 11) AND CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno))  )
+          BEGIN
+              Raiserror ('Aadhar Number already exists.', 16, 1)              
+              GOTO CloseNow
+          END
+
 				INSERT INTO Party(Party_Code, Party_Name, Print_Name, Party_Cat, AreaSno, Rel, RelName, Address1, Address2, Address3, Address4, City, State, Pincode, Phone, Mobile, Email, Reference,
                           Dob, Sex, Aadhar_No, Pancard_No, Smartcard_No, Voterid_No, Nominee, Nominee_Rel, Nominee_Aadhar, Remarks, Occupation, Monthly_Income, Loan_Value_Limit, Allow_More_Value,
                           Verify_Code, Verify_Status, Fp_Status, Active_Status, IsFavorite, BlackListed, Create_Date,
@@ -1478,6 +1508,7 @@ CREATE PROCEDURE Sp_Scheme
   @Active_Status     BIT,
   @Create_Date INT,
   @Remarks VARCHAR(50),
+  @AddOneDay BIT,
   @UserSno INT,
   @CompSno INT,
   @BranchSno INT,
@@ -1496,7 +1527,7 @@ BEGIN
                             Doc_Charges_Per=@Doc_Charges_Per, Doc_Charges=@Doc_Charges, Tax_Per=@Tax_Per,
                             Calc_Basis=@Calc_Basis, Calc_Method=@Calc_Method, Compound_Period=@Compound_Period, Custom_Style=@Custom_Style,Payment_Frequency=@Payment_Frequency,Enable_AmtSlab=@Enable_AmtSlab, Enable_FeeSlab=@Enable_FeeSlab, Preclosure_Days=@Preclosure_Days, Min_CalcDays=@Min_CalcDays,
                             Grace_Days=@Grace_Days, SeriesSno=@SeriesSno, LpYear=@LpYear, LpMonth=@LpMonth, LpDays=@LpDays, AdvanceMonth= @AdvanceMonth, ProcessingFeePer=@ProcessingFeePer,  Min_MarketValue=@Min_MarketValue, Max_MarketValue=@Max_MarketValue, Min_LoanValue=@Min_LoanValue, Max_LoanValue=@Max_LoanValue, Active_Status=@Active_Status,
-                            Create_Date=@Create_Date,Remarks=@Remarks, UserSno=@UserSno, CompSno=@CompSno
+                            Create_Date=@Create_Date,Remarks=@Remarks, AddOneDay=@AddOneDay, UserSno=@UserSno, CompSno=@CompSno
 				WHERE SchemeSno=@SchemeSno
 				IF @@ERROR <> 0 GOTO CloseNow
 
@@ -1528,10 +1559,10 @@ BEGIN
 
 				INSERT INTO Schemes (Scheme_Code,Scheme_Name, Roi,EmiDues, OrgRoi, IsStdRoi, Doc_Charges_Per, Doc_Charges, Tax_Per,
                             Calc_Basis, Calc_Method, Compound_Period, Custom_Style, Payment_Frequency, Enable_AmtSlab, Enable_FeeSlab, Preclosure_Days, Min_CalcDays, Grace_Days, SeriesSno, LpYear, LpMonth, LpDays, AdvanceMonth, ProcessingFeePer,  Min_MarketValue, Max_MarketValue, Min_LoanValue, Max_LoanValue,
-                            Active_Status, Create_Date,Remarks, UserSno, CompSno)
+                            Active_Status, Create_Date,Remarks, AddOneDay, UserSno, CompSno)
         VALUES              (@Scheme_Code,@Scheme_Name, @Roi, @EmiDues, @OrgRoi, @IsStdRoi, @Doc_Charges_Per, @Doc_Charges, @Tax_Per,
                             @Calc_Basis, @Calc_Method, @Compound_Period, @Custom_Style, @Payment_Frequency, @Enable_AmtSlab, @Enable_FeeSlab, @Preclosure_Days, @Min_CalcDays, @Grace_Days, @SeriesSno, @LpYear, @LpMonth, @LpDays, @AdvanceMonth, @ProcessingFeePer, @Min_MarketValue, @Max_MarketValue, @Min_LoanValue, @Max_LoanValue,
-                            @Active_Status, @Create_Date, @Remarks, @UserSno, @CompSno)
+                            @Active_Status, @Create_Date, @Remarks, @AddOneDay, @UserSno, @CompSno)
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @SchemeSno = @@IDENTITY
 
@@ -2979,10 +3010,10 @@ BEGIN
                                       Enable_Opening, Enable_RegLang, Reg_FontName, Reg_FontSize, Enable_FingerPrint, MakeFp_Mandatory, Allow_NullInterest, Show_CashBalance,
                                       Images_Mandatory, Enable_ReturnImage, Allow_DuplicateItems, Disable_AddLess, Entries_LockedUpto, Enable_Authentication, Enable_OldEntries,
                                       CompSno,BranchSno,MobileNumberMandatory, IntCalcinDays, Enable_AutoApproval, Lock_PreviousDate, Enable_EmptyWt,Allow_Red_Before_Close,
-                                      Enable_Payment_Process, ImageUpload_ByFile)
+                                      Enable_Payment_Process, ImageUpload_ByFile, Enable_OtpVerification, TimeOut_Seconds)
 
   VALUES                       (      1, 'AR', 0, 1,'PR', 0, 1,'SUP', 0,1, 'BWR', 0, 1, 'GRP', 0, 1, 'IT', 0, 1, 'SCH', 0, 1, 'LOC', 0, 1, 'PUR', 0, 1, 'BRH', 0, 0, 0, '', 12, 0, 0, 0, 0,
-                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0)
+                                      0, 0, 0, 0, 0, 1, 0,@CompSno,@BranchSno,0,0,0,0, 0,0,0, 0,0,300)
 
   INSERT INTO Alerts_Setup  (CompSno, Admin_Mobile, Sms_Api, Sms_Sender_Id, Sms_Username, Sms_Password, Sms_Peid, WhatsApp_Instance,Add_91,Add_91Sms)
   VALUES                    (@CompSno, '','','','','','','',0,0)
@@ -5420,6 +5451,7 @@ CloseNow:
 END
 
 GO
+
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Alerts_Setup') BEGIN DROP PROCEDURE Sp_Alerts_Setup END

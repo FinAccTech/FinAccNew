@@ -11,6 +11,7 @@ import { PartyComponent } from './party/party.component';
 import { AuthService } from 'src/app/Services/auth.service';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ApiDataService } from 'src/app/Services/api-data.service';
+import { OtpwindowComponent } from 'src/app/Dashboard/widgets/otpwindow/otpwindow.component';
 
 interface TypePreviewStatus {
   Index: number;
@@ -187,4 +188,5 @@ export class PartiesComponent {
     // //this.ShowPreview.push({"Index":i, "Status": false});
     // //console.log(this.ShowPreview);  
   }
-}
+
+ }

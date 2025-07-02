@@ -157,6 +157,10 @@ import { AucnoticesVelsamyComponent } from './Dashboard/Components/Custom/aucnot
 import { LoanhistoryBrgoldComponent } from './Dashboard/Components/Custom/loanhistory-brgold/loanhistory-brgold.component';
 import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Custom/custom-day-history-fs2025061361/custom-day-history-fs2025061361.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+import { OtpwindowComponent } from './Dashboard/widgets/otpwindow/otpwindow.component';
+
+
 @NgModule({ declarations: [                
         LazyLoadOnVisibleDirective,
         NumberInputDirective,
@@ -221,9 +225,10 @@ import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Cu
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
         ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
         BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent, TableviewComponent, AucnoticesVelsamyComponent, LoanhistoryBrgoldComponent,
-        CustomDayHistoryFS2025061361Component
+        CustomDayHistoryFS2025061361Component, OtpwindowComponent,
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,        
+    bootstrap: [AppComponent], imports: [BrowserModule,    
+        ReactiveFormsModule,    
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,

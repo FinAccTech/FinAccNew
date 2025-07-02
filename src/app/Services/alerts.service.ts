@@ -7,6 +7,7 @@ import { TypeReceipt } from '../Dashboard/Classes/ClsReceipts';
 import { TypeRedemption } from '../Dashboard/Classes/ClsRedemptions';
 import { AutoUnsubscribe } from '../auto-unsubscribe.decorator';
 import { number } from 'echarts';
+import { TypeParties } from '../Dashboard/Classes/ClsParties';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +19,14 @@ export class AlertsService {
   alertSetup!: TypeAlertsSetup;
 
   CreateLoanAlert (Alert_Type: number, Ln: TypeLoan){
-    console.log("Create Loan Alert");
+  
     let aStp = new ClsAlertSetup(this.dataService);              
     aStp.getAlertSetup(0).subscribe(data=>{
-      console.log(data);
-      
+            
     this.alertSetup = JSON.parse(data.apiData)[0];
     let alerts: TypeAlert[] =  JSON.parse (this.alertSetup.Alerts_Json);
     
-    console.log("Create Loan Alert");
-    
+     
     let FieldSet: TypeAlertFieldSetLoan ={
       LoanSno: Ln.LoanSno,
       Loan_No: Ln.Loan_No,
@@ -50,8 +49,6 @@ export class AlertsService {
       let rcvrList = [];
       rcvrList.push (FieldSet);
       aStp.insertAlerts( {RecvrList: rcvrList, TempSno: alerts[Alert_Type-1].Sms_Alert_Template.TempSno, Alert_Type: Alert_Type,  Alert_Mode: this.globals.AlertModeSms, Auction_Date: "", BulkInsert:0, CompSno:0 }).subscribe(data =>{            
-        console.log("Alert Response");
-        
         console.log(data);              
       })
     }
@@ -148,7 +145,39 @@ export class AlertsService {
    
   }
 
-  
+
+  CreateOTPVerificationAlert (Alert_Type: number, Pty: TypeParties, Verify_Code: number ){
+    let aStp = new ClsAlertSetup(this.dataService);          
+    aStp.getAlertSetup(0).subscribe(data=>{
+    this.alertSetup = JSON.parse(data.apiData)[0];
+    let alerts: TypeAlert[] =  JSON.parse (this.alertSetup.Alerts_Json);
+    
+    let FieldSet: TypeAlertFieldSetOTPVerification ={
+      PartySno: Pty.PartySno,
+      Verify_Code: Verify_Code
+    }   
+
+    if (alerts[Alert_Type-1].Sms_Alert_Template.TempSno !==0){  
+      let rcvrList = [];
+      rcvrList.push (FieldSet);
+      aStp.insertAlerts( {RecvrList: rcvrList, TempSno: alerts[Alert_Type-1].Sms_Alert_Template.TempSno, Alert_Type: Alert_Type,  Alert_Mode: this.globals.AlertModeSms, Auction_Date: "", BulkInsert:0, CompSno:0 }).subscribe(data =>{            
+        
+      })
+    }
+
+    if (alerts[Alert_Type-1].WhatsApp_Alert_Template.TempSno !==0){  
+      let rcvrList = [];
+      rcvrList.push (FieldSet);
+      aStp.insertAlerts( {RecvrList: rcvrList, TempSno: alerts[Alert_Type-1].WhatsApp_Alert_Template.TempSno, Alert_Type: Alert_Type,  Alert_Mode: this.globals.AlertModeWhatsApp, Auction_Date: "", BulkInsert:0, CompSno:0 }).subscribe(data =>{            
+        console.log(data);              
+      })
+    }
+
+    });
+   
+  }
+
+
 }
   
 interface TypeAlertFieldSetLoan{
@@ -197,6 +226,10 @@ interface TypeAlertFieldSetRedemption{
   Nett_Payable: number;
 }
 
+interface TypeAlertFieldSetOTPVerification{
+  PartySno: number;
+  Verify_Code: number;  
+}
 
   // CreateAlert (Alert_Type: number, Trans: any, Trans_Type: number){
   //   let astp = new ClsAlertSetup(this.dataService);

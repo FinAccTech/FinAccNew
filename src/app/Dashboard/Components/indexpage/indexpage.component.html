@@ -5,140 +5,143 @@
             <p>Welcome, {{LoggedUser}}</p>
         </div>
 
-        <div class="welcomeRight">
-            <div class="matGroup" style="background-color: #fff;width: 100%;">
-                <div class="matSelect" >
-                    <mat-select [(value)]="Duration"  (selectionChange)="LoadCard(Duration)">                        
-                        <mat-option style="font-size: 1rem;" [value]=0>Last 7 Days</mat-option>
-                        <mat-option style="font-size: 1rem;" [value]=1>Today</mat-option>                            
-                        <mat-option style="font-size: 1rem;" [value]=2>Past Month</mat-option>                            
-                        <mat-option style="font-size: 1rem;" [value]=3>Past Year</mat-option>
-                        <mat-option style="font-size: 1rem;" [value]=4>ALL</mat-option>                            
-                    </mat-select>
-                </div>
-                <div class="matLabel">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <ng-container *ngIf="StatusData">
-        <div class="statusBoxes">
-            <div class="statusBox">
-                <div class="dataLeft">
-                    <p class="caption"> <i class='bx bx-message-rounded-add'></i> Fresh Loans</p>
-                    <p class="count" > {{StatusData.FreshCount}} </p>
-                    <p class="value" > Rs. {{StatusData.FreshLoans | number}} </p>
-                </div>
-                
-                <div class="dataRight">
-                    <i  [ngClass]=" StatusData.FreshLoans >= StatusData.PrevFreshLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.FreshLoans >= StatusData.PrevFreshLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
-                    <!-- <p>2%</p> -->
-                </div>
-            </div>
-            <div class="statusBox">
-                <div class="dataLeft">
-                    <div class="caption" > <i class='bx bx-copy-alt' style='color:#088c1b' ></i> <p>Old Loans</p> </div>
-                    <p class="count" > {{StatusData.OldCount}} </p>
-                    <p class="value" > Rs. {{StatusData.OldLoans | number}} </p>
-                </div>
-                
-                <div class="dataRight">
-                    <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
-                </div>
-            </div>
-
-            <div class="statusBox">
-                <div class="dataLeft">
-                    <div class="caption" > 
-                        <i class='bx bx-money-withdraw' style='color:#088c1b'></i>
-                        <p>Loans</p>
+        @if (EnableDashboard) {
+            <div class="welcomeRight">
+                <div class="matGroup" style="background-color: #fff;width: 100%;">
+                    <div class="matSelect" >
+                        <mat-select [(value)]="Duration"  (selectionChange)="LoadCard(Duration)">                        
+                            <mat-option style="font-size: 1rem;" [value]=0>Last 7 Days</mat-option>
+                            <mat-option style="font-size: 1rem;" [value]=1>Today</mat-option>                            
+                            <mat-option style="font-size: 1rem;" [value]=2>Past Month</mat-option>                            
+                            <mat-option style="font-size: 1rem;" [value]=3>Past Year</mat-option>
+                            <mat-option style="font-size: 1rem;" [value]=4>ALL</mat-option>                            
+                        </mat-select>
                     </div>
-                    
-                    <p class="count">{{StatusData.FreshCount + StatusData.OldCount}}</p>         
-                    <p class="value" > Rs. {{StatusData.Loans | number}} </p>
-                </div>
-                
-                <div class="dataRight">
-                    <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
-                </div>
-            </div>
-
-            <div class="statusBox">
-                <div class="dataLeft">
-                    <div class="caption">                        
-                        <i class='bx bx-receipt' style='color:#088c1b' ></i>
-                        <p> Redemptions</p>
-                    </div>                    
-                    <p class="count"></p>
-                    <p class="value" > Rs. {{StatusData.Redemptions | number}} </p>
-                </div>
-                
-                <div class="dataRight">
-                    <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
-                </div>
-            </div>
-
-        </div>
-    </ng-container>
-    
-    <div class="bodyCenter">
-        <div class="chart">
-            <div class="chartOptions">
-                <select style="padding: .5rem; border: none;" (change)="SetChartType($event)" >
-                    <option value="0">Line Chart</option>
-                    <option value="1">Bar Chart</option>
-                </select>
-
-                <select style="padding: .5rem; border: none;" (change)="SetChartPeriod($event)">
-                    <option value="0" >Last 3 Months</option>
-                    <option value="1">Last 6 Months</option>
-                    <option value="2">Last 1 Year</option>
-                </select>
-            </div>
-
-            <div class="chartData">
-                <div echarts [options]="chartOption" class="demo-chart"></div>
-            </div>
-        
-            
-            
-              <!-- <div echarts [options]="options" [merge]="mergeOptions" class="demo-chart"></div> -->
-        </div>
-
-        <ng-container *ngIf="TransactionList">
-            <div class="transactionList">
-                <div class="heading">
-                    <p>Recent Transactions</p>
-                </div>
-                <div *ngFor="let Trans of TransactionList; let i = index" >
-                    <div class="transaction">
-                        <div class="transLeft">
-                            <div class="logoBox">
-                                <p [style.color]="Trans.VouTypeSno == 12 ? 'green' : Trans.VouTypeSno == 13 ? 'grey' : Trans.VouTypeSno == 14 ? 'red' : Trans.VouTypeSno == 15 ? 'blue' : 'pink'" >
-                                    {{Trans.VouTypeSno == 12 ? 'LN' : Trans.VouTypeSno == 13 ? 'RC' : Trans.VouTypeSno == 14 ? 'RD' : Trans.VouTypeSno == 15 ? 'AU' : 'V'   }}
-                                </p>
-                            </div>
-    
-                            <div class="content">
-                                <p> <strong> {{ Trans.VouType_Name   }} </strong> </p>
-                                <p> No: {{ Trans.Trans_No }} /  {{ Trans.Trans_Date | intToDate | date:"dd/MM/yyyy"     }}   </p>
-                            </div>
-                            
-                        </div>
-    
-                        <div class="transRight">
-                            <p style="font-weight: 500;font-size: 1.2rem;">{{ Trans.Nett_Payable | number}} </p>
-                            <p> {{ Trans.UserName }}   </p>
-                        </div>
+                    <div class="matLabel">
                         
                     </div>
                 </div>
             </div>
-        </ng-container>    
-       
+        }
     </div>
-    
+
+    @if (EnableDashboard) {
+        <ng-container *ngIf="StatusData">
+            <div class="statusBoxes">
+                <div class="statusBox">
+                    <div class="dataLeft">
+                        <p class="caption"> <i class='bx bx-message-rounded-add'></i> Fresh Loans</p>
+                        <p class="count" > {{StatusData.FreshCount}} </p>
+                        <p class="value" > Rs. {{StatusData.FreshLoans | number}} </p>
+                    </div>
+                    
+                    <div class="dataRight">
+                        <i  [ngClass]=" StatusData.FreshLoans >= StatusData.PrevFreshLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.FreshLoans >= StatusData.PrevFreshLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
+                        <!-- <p>2%</p> -->
+                    </div>
+                </div>
+                <div class="statusBox">
+                    <div class="dataLeft">
+                        <div class="caption" > <i class='bx bx-copy-alt' style='color:#088c1b' ></i> <p>Old Loans</p> </div>
+                        <p class="count" > {{StatusData.OldCount}} </p>
+                        <p class="value" > Rs. {{StatusData.OldLoans | number}} </p>
+                    </div>
+                    
+                    <div class="dataRight">
+                        <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
+                    </div>
+                </div>
+
+                <div class="statusBox">
+                    <div class="dataLeft">
+                        <div class="caption" > 
+                            <i class='bx bx-money-withdraw' style='color:#088c1b'></i>
+                            <p>Loans</p>
+                        </div>
+                        
+                        <p class="count">{{StatusData.FreshCount + StatusData.OldCount}}</p>         
+                        <p class="value" > Rs. {{StatusData.Loans | number}} </p>
+                    </div>
+                    
+                    <div class="dataRight">
+                        <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
+                    </div>
+                </div>
+
+                <div class="statusBox">
+                    <div class="dataLeft">
+                        <div class="caption">                        
+                            <i class='bx bx-receipt' style='color:#088c1b' ></i>
+                            <p> Redemptions</p>
+                        </div>                    
+                        <p class="count"></p>
+                        <p class="value" > Rs. {{StatusData.Redemptions | number}} </p>
+                    </div>
+                    
+                    <div class="dataRight">
+                        <i  [ngClass]=" StatusData.OldLoans >= StatusData.PrevOldLoans ? 'bx bxs-chevrons-up' : 'bx bxs-chevrons-down' "   [style.color]="StatusData.OldLoans >= StatusData.PrevOldLoans ? '#088c1b' : 'rgb(221, 55, 55)'" ></i>
+                    </div>
+                </div>
+
+            </div>
+        </ng-container>
+        
+        <div class="bodyCenter">
+            <div class="chart">
+                <div class="chartOptions">
+                    <select style="padding: .5rem; border: none;" (change)="SetChartType($event)" >
+                        <option value="0">Line Chart</option>
+                        <option value="1">Bar Chart</option>
+                    </select>
+
+                    <select style="padding: .5rem; border: none;" (change)="SetChartPeriod($event)">
+                        <option value="0" >Last 3 Months</option>
+                        <option value="1">Last 6 Months</option>
+                        <option value="2">Last 1 Year</option>
+                    </select>
+                </div>
+
+                <div class="chartData">
+                    <div echarts [options]="chartOption" class="demo-chart"></div>
+                </div>
+            
+                
+                
+                <!-- <div echarts [options]="options" [merge]="mergeOptions" class="demo-chart"></div> -->
+            </div>
+
+            <ng-container *ngIf="TransactionList">
+                <div class="transactionList">
+                    <div class="heading">
+                        <p>Recent Transactions</p>
+                    </div>
+                    <div *ngFor="let Trans of TransactionList; let i = index" >
+                        <div class="transaction">
+                            <div class="transLeft">
+                                <div class="logoBox">
+                                    <p [style.color]="Trans.VouTypeSno == 12 ? 'green' : Trans.VouTypeSno == 13 ? 'grey' : Trans.VouTypeSno == 14 ? 'red' : Trans.VouTypeSno == 15 ? 'blue' : 'pink'" >
+                                        {{Trans.VouTypeSno == 12 ? 'LN' : Trans.VouTypeSno == 13 ? 'RC' : Trans.VouTypeSno == 14 ? 'RD' : Trans.VouTypeSno == 15 ? 'AU' : 'V'   }}
+                                    </p>
+                                </div>
+        
+                                <div class="content">
+                                    <p> <strong> {{ Trans.VouType_Name   }} </strong> </p>
+                                    <p> No: {{ Trans.Trans_No }} /  {{ Trans.Trans_Date | intToDate | date:"dd/MM/yyyy"     }}   </p>
+                                </div>
+                                
+                            </div>
+        
+                            <div class="transRight">
+                                <p style="font-weight: 500;font-size: 1.2rem;">{{ Trans.Nett_Payable | number}} </p>
+                                <p> {{ Trans.UserName }}   </p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </ng-container>    
+        
+        </div>
+    }
     
 </div>
