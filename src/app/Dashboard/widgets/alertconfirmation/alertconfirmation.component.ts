@@ -33,12 +33,9 @@ export class AlertconfirmationComponent {
 
     Submit(){
       let aStp = new ClsAlertSetup(this.dataService);
-      aStp.getAlertSetup(1).subscribe(data =>{
+      aStp.getAlertSetup(0).subscribe(data =>{
       let StpData: TypeAlertsSetup[] = JSON.parse(data.apiData);        
 
-      console.log(StpData[0].Add_91);
-      
-      
       if (!StpData) { this.globals.SnackBar("error", "Alert Setup is not complete or invalid in Alert Setup");  return}
         if (this.SelectedAlertMode == this.globals.AlertModeSms){
           if (  (StpData[0].Sms_Api == '' || StpData[0].Sms_Sender_Id == '' || StpData[0].Sms_Username == '' || StpData[0].Sms_Password == ''))
@@ -48,8 +45,7 @@ export class AlertconfirmationComponent {
           }
         }
         if (this.SelectedAlertMode == this.globals.AlertModeWhatsApp){
-          console.log(StpData[0].WhatsApp_Instance);
-          
+                    
           if (!StpData[0].WhatsApp_Instance || StpData[0].WhatsApp_Instance == ''){
             this.globals.SnackBar("error", "WhatsApp Api Setup is not complete or invalid in Alert Setup");
             return;

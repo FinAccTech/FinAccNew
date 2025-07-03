@@ -1,0 +1,157 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Pledge Book</p>        
+        </div>
+
+        <div class="headerRight">                 
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item (click)="DownloadasExcel()" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-excel" style="color: green;" ></i>
+                        <span> &nbsp; Excel</span>
+                    </div>                    
+                </button>             
+                <!-- <button mat-menu-item (click)="exporter.exportTable('csv', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-csv" style="color: rgb(168, 15, 168);" ></i>
+                        <span> &nbsp; Csv</span>
+                    </div>                    
+                </button>             
+                <button mat-menu-item (click)="exporter.exportTable('json', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fab fa-js" style="color: yellowgreen;"></i>
+                        <span> &nbsp; Json</span>
+                    </div>                    
+                </button>         
+                <button mat-menu-item (click)="exporter.exportTable('txt', {fileName:'test', sheet: 'sheet_name', Props: {Author: 'Talha'}})" >
+                    <div class="menuClass">
+                        <i class="fas fa-file-alt" style="color: chocolate;" ></i>
+                        <span> &nbsp; Text</span>
+                    </div>                    
+                </button>                     -->
+            </mat-menu>
+            
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="filterHeader">
+            <div class="filterLeft">
+                <div class="searchBox">
+                    <input type="text" required (keyup)="applyFilter($event)"  placeholder="Type here to Search" />
+                    <!-- <label for="" class="searchLabel"> Type here to Search </label> -->
+                    <div class="iconRight">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div> 
+                </div>
+            </div>
+    
+            <div class="filterRight">
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="FromDate | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> From Date </label>            
+                </div>
+                <div class="formGroup" >
+                    <input type="date" class="formControl" [ngModel]="ToDate | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                    <label for="" class="formLabel date"> To Date </label>            
+                </div>
+    
+                <!-- <div class="matGroup" style="width: 100%;" >
+                    <div class="matSelect">
+                        <mat-select [(value)]="SelectedLoanStatus"  >
+                            <mat-option [value]="0" >All Loans</mat-option>
+                            <mat-option [value]="1" >Open Loans</mat-option>
+                            <mat-option [value]="2" >Closed Loans</mat-option>
+                            <mat-option [value]="3" >Matured Loans</mat-option>
+                            <mat-option [value]="4" >Auctioned Loans</mat-option>
+                        </mat-select>
+                    </div>
+                    <div class="matLabel">Loan Status </div>
+                </div> -->
+
+                <button class="btn" (click)="LoadPledgeBook(0)"  >Load Details</button>
+            
+            </div>
+        </div>
+
+        
+        <div class="tableBody">
+            <div class="mat-elevation-z8 tableContainer" #TABLE>
+                <table class="table" mat-table [dataSource]="dataSource" multiTemplateDataRows matSort matTableExporter #exporter="matTableExporter"  >
+    
+                  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">                       
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{ column=="crud"? '': column.replace("_"," ")}} </th>
+                        
+                      <td mat-cell *matCellDef="let element; let i = dataIndex;"
+                      [style.color]=" element['Loan_Status'] == 1 ? 'green' : element['Loan_Status'] == 2 ? 'darkgray' : element['Loan_Status'] == 3 ? 'red' : 'black'"                   
+                      > 
+                        {{  
+                          column == "Approval_Status"  
+                            ? element[column] == 1 
+                              ? "Approved"
+                              : "UnApproved"                        
+    
+                            : column == "#"
+                                ? i+1
+    
+                            : (column == "Loan_Date" || column == "Mature_Date")
+                            ? (element[column] | intToDate | date:"dd/MM/YYYY")
+    
+                            : (column == "Principal")
+                            ?(element[column] | number)
+                    
+                          : element[column]                         
+                        }}                     
+    
+                      </td>            
+                      
+                  </ng-container>
+                 
+                  <ng-container matColumnDef="expand">
+                    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                      <div class="example-element-detail"
+                           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        
+                           <div class="expandDetails" >
+                                <div style="width: 100%;" > 
+                                    <app-partycard [Party]="element.Customer" > </app-partycard>                            
+                                </div>
+                                <div style="width: 100%;" > 
+                                    <app-loandetails [Loan]="element" > </app-loandetails>                            
+                                </div>
+                           </div>
+                      </div>
+                    </td>
+                  </ng-container>
+                       
+                  <tr mat-header-row *matHeaderRowDef ="columnsToDisplayWithExpand; sticky: true;"></tr>
+                  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                    class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element"
+                    (click)="expandedElement = expandedElement === element ? null : element">
+                  </tr>
+                  
+                  <tr  style="cursor: pointer;" mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                  
+                  
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" pageSize = 10 aria-label="Select page of users"></mat-paginator> 
+            </div>
+        </div>
+    </div>
+
+ 
+</div>

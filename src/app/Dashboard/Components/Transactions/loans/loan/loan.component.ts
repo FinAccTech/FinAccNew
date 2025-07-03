@@ -172,6 +172,13 @@ export class LoanComponent implements OnInit {
     this.LocationList         = JSON.parse(data.apiData.LocationList);
     this.AgentList            = JSON.parse(data.apiData.AgentList);
     this.CustomersList        = JSON.parse(data.apiData.CustomerList);    
+
+    const EnableOtpVerification = this.globals.AppSetup()[0].Enable_OtpVerification;
+
+    if (EnableOtpVerification == 1){
+      this.CustomersList = this.CustomersList.filter(cust=>{ return cust.Verify_Status == 1 });
+    }
+
     this.PaymnentModeLedgers  = JSON.parse(data.apiData.PaymentModesList);
     this.StdLedgerList        = JSON.parse(data.apiData.StdLedgerList);
 
@@ -564,6 +571,16 @@ onSearchByBarCode(event: Event): void {
 // }
 
 getCustomer($event: TypeParties){   
+  const EnableOtpVerification = this.globals.AppSetup()[0].Enable_OtpVerification;
+    if (EnableOtpVerification == 1){
+      if ($event.Verify_Status == 0) {         
+        this.CustomersList.splice( this.CustomersList.indexOf($event),1);
+        let cust = new ClsParties(this.dataService);
+        this.SelectedCustomer = cust.Initialize();         
+        return; 
+      }
+    }
+
   this.SelectedCustomer = $event;
   this.CustomerDetails = null!; 
   this.LoanDataAll = [];

@@ -71,6 +71,7 @@ export const menuTree =[
             {   Caption: "Loan Summary", Iconn: "", RouterLink:"loansummary" },
             {   Caption: "Customer History", Iconn: "", RouterLink:"customerhistory/0" },
             {   Caption: "Loan History", Iconn: "", RouterLink:"loanhistory"   },
+            {   Caption: "PledgeBook", Iconn: "", RouterLink:"pledgebook"   },
             {   Caption: "Auction History", Iconn: "", RouterLink:"auctionhistory"   },
             {   Caption: "Pending Report", Iconn: "", RouterLink:"pendingreport"   },
             {   Caption: "Age Analysis", Iconn: "", RouterLink:"ageanalysis"   },

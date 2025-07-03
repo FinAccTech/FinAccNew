@@ -178,7 +178,8 @@ CREATE TABLE Users
   Enable_WorkingHours BIT,
   FromTime VARCHAR(10),
   ToTime VARCHAR(10),
-  Ip_Restrict VARCHAR(20)
+  Ip_Restrict VARCHAR(20),
+  Enable_Dashboard BIT
 )
 GO
 
@@ -393,6 +394,7 @@ CREATE TABLE Schemes
   Active_Status     BIT,
   Create_Date INT,
   Remarks VARCHAR(50),
+  AddOneDay BIT,
   UserSno INT,
   CompSno INT
 )

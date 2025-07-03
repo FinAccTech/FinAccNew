@@ -74,6 +74,7 @@ import { ImportdataComponent } from './Dashboard/Components/Settings/importdata/
 import { AucnoticesVelsamyComponent } from './Dashboard/Components/Custom/aucnotices-velsamy/aucnotices-velsamy.component';
 import { LoanhistoryBrgoldComponent } from './Dashboard/Components/Custom/loanhistory-brgold/loanhistory-brgold.component';
 import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Custom/custom-day-history-fs2025061361/custom-day-history-fs2025061361.component';
+import { PledgebookComponent } from './Dashboard/Components/Reports/pledgebook/pledgebook.component';
 
 
 
@@ -136,6 +137,7 @@ const routes: Routes = [
       { path:'loansummary', component: LoansummaryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":19} },     
       { path:'customerhistory/:partysno', component: CustomerhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":20} },     
       { path:'loanhistory', component: LoanhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":21} },     
+      { path:'pledgebook', component: PledgebookComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":44} },     
       { path:'auctionhistory', component: AuctionhistoryComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno":22} }, 
       { path:'pendingreport', component: PendingreportComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 23} }, 
       { path:'ageanalysis', component: AgeAnalysisComponent, canActivate:[AuthGuard, CompGuard, RightsGuard], data:{"FormSno": 34 }}, 

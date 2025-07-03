@@ -70,7 +70,7 @@ export class PendingreportComponent {
           return;
         }
         else{                
-          this.LoansList = JSON.parse (data.apiData);      
+          this.LoansList = JSON.parse (data.apiData);       
                     
           this.LoansList.map(ln=>{
             ln.Customer = JSON.parse(ln.Party_Json)[0];

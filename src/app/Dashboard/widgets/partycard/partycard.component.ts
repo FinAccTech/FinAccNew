@@ -24,7 +24,7 @@ export class PartycardComponent implements AfterViewInit {
   MaturedLoans: number = 0
   AuctionedLoans: number = 0
   
-  ngAfterViewInit(){        
+  ngAfterViewInit(){         
     if(this.LoanData){          
       this.OpenLoans = this.LoanData.filter((ln: any) =>{
         return  (ln.Approval_Status == this.globals.ApprovalStatusApproved) 

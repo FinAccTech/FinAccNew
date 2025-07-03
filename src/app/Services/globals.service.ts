@@ -171,6 +171,8 @@ export class GlobalsService
      FormIdCustomLoanHistoryBrGold = 43;
      FormIdCustomDayHistoryFS2025061361 = 44;
 
+     FormIdPledgeBook = 45;
+
      //Report Component Ids
      RepDayHistory = 1;
      RepLoanSummary = 2;

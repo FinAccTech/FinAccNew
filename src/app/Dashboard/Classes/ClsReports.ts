@@ -51,6 +51,11 @@ export class ClsReports{
         return this.dataService.HttpGet(postdata, "/getLoanHistory");                
     }
     
+    getPledgeBook(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={ BranchSno: this.BranchSno,  "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
+        return this.dataService.HttpGet(postdata, "/getPledgeBook");                
+    }
+
     getRepledgeHistory(RpStatus: number, FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
         let postdata = { BranchSno: this.BranchSno,  "RpStatus" :  RpStatus, "CompSno": this.CompSno,  "FromDate" :  FromDate, "ToDate": ToDate }; 
         return this.dataService.HttpGet(postdata, "/getRepledgeHistory");                
@@ -195,6 +200,27 @@ export interface TypeLoanStatement{
     Principal: number;
     Interest: number;
     Nett_Payable: number;
+}
+
+export interface TypePledgeBook extends TypeLoan {    
+    Party_Code: string;
+    Party_Name: string;
+    Address1: string;
+    Address2: string;
+    Address3: string;
+    Address4: string;
+    City: string;
+    Pincode: string;
+    Mobile: string;
+    Grp_Name: string;
+    Scheme_Name: string;
+    Principal: number;
+    Item_Details: string;
+    TotGrossWt: number;
+    TotNettWt: number;
+    Market_Value: number;
+    CloseAmt: number;
+    Redemption_Date: string;
 }
 
 export interface TypeLoanHistory extends TypeLoan{

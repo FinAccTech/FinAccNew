@@ -6213,3 +6213,35 @@ END
 
 GO
 
+
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getPledgeBook') BEGIN DROP FUNCTION Udf_getPledgeBook END
+GO
+CREATE FUNCTION Udf_getPledgeBook(@FromDate INT, @ToDate INT, @CompSno INT, @BranchSno INT)
+  RETURNS TABLE
+  WITH ENCRYPTION AS
+RETURN
+
+SELECT		Ln.*,		
+					Pty.Address1, Pty.Address2, Pty.Address3, Pty.Address4, Pty.City, Pty.Pincode, 
+					  
+					STUFF((  SELECT   (','+ It.Item_Name + '-' + CAST(Ld.Qty AS VARCHAR))
+                                FROM     Transaction_Details Ld
+                                          INNER JOIN Items it on it.itemsno =Ld.itemsno
+                                WHERE    Ld.TransSno = Ln.LoanSno
+                                FOR XML PATH('')), 1, 1, '') as Item_Details_WithQty,
+					
+					ISNULL(Red.Nett_Payable,0) as CloseAmt, 
+					Redemption_Date = CASE WHEN Redemption_Date IS NULL THEN '' ELSE CAST([dbo].IntToDate(Red.Redemption_Date) AS VARCHAR) END 
+
+
+FROM				Udf_getLoans(0,@CompSno, 0, 0, 0, 0, @BranchSno) Ln
+					INNER JOIN Party Pty ON Pty.PartySno = Ln.PartySno
+					LEFT OUTER JOIN VW_REDEMPTIONS Red ON Red.LoanSno = Ln.LoanSno
+
+WHERE       (Ln.Loan_Date BETWEEN @FromDate AND @ToDate)
+            AND (Ln.CompSno = @CompSno)
+            AND (Ln.BranchSno=@BranchSno OR @BranchSno=0)
+GO
+
+
+

@@ -1,5 +1,6 @@
 --select * from vw_loans
 
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetInterestStruc_Multiple') BEGIN DROP FUNCTION Udf_GetInterestStruc_Multiple END
 GO
 
@@ -95,7 +96,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
         
                         --SET @IntBal = @IntBal + (@IntAccured - @IntPaid)                                            
                         INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured,IntPaid,PrinPaid,AddedPrincipal,AdjPrincipal,NewPrincipal)
-                        VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal, ISNULL(@AdjPrincipal,0), @PrinBal)
+                        VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,ROUND(@IntAccured,2),ROUND(@TotIntAccured,2), ROUND(@IntPaid,2),ROUND(@PrinPaid,2),  ROUND(@AddedPrincipal,2), ROUND(ISNULL(@AdjPrincipal,0),2), ROUND(@PrinBal,2))
 
                         SET @AdjPrincipal = 0
                         SET @FromDate = DATEADD(DAY,1,@ToDate)
@@ -133,14 +134,13 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
 
         
                         INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured, IntPaid, PrinPaid, AddedPrincipal, AdjPrincipal,NewPrincipal)
-                        VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal, ISNULL(@AdjPrincipal,0), @PrinBal)
+                        VALUES             (@FromDate,@ToDate,@TotDuration,1, @Roi,ROUND(@IntAccured,0),ROUND(@TotIntAccured,0), ROUND(@IntPaid,0),ROUND(@PrinPaid,0),  ROUND(@AddedPrincipal,0), ROUND(ISNULL(@AdjPrincipal,0),0), ROUND(@PrinBal,0))
                         SET @AdjPrincipal = 0
                     End
         
             End
         ELSE
-            BEGIN
-                
+            BEGIN                
                 SET @TotDuration = DATEDIFF(DAY,@FromDate, @AsOn)
                 SET @PrinBal = @Principal
                 SELECT      @Roi=Roi
@@ -149,7 +149,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                             AND (@TotDuration >= FromPeriod) AND (@TotDuration <=ToPeriod or ToPeriod=0)
                 
                 IF @TotDuration < @PreClosureDays BEGIN SET @TotDuration = @PreClosureDays END
-                SET @IntAccured = (@TotDuration+1) * ((@Roi/100)*@Principal / 12 /30)
+                SET @IntAccured = (@TotDuration) * ((@Roi/100)*@Principal / 12 /30)
 
                 SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                 SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
@@ -157,7 +157,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
 
                 SET @IntPaid = @AdvIntAmt
                 INSERT INTO @Result(FromDate,ToDate,Duration,DurType,Roi,IntAccured,TotIntAccured, IntPaid, PrinPaid, AddedPrincipal, AdjPrincipal,NewPrincipal)
-                VALUES             (@FromDate,@AsOn,@TotDuration,1, @Roi,@IntAccured,@TotIntAccured, @IntPaid,@PrinPaid,  @AddedPrincipal,ISNULL(@AdjPrincipal,0), @PrinBal)
+                VALUES             (@FromDate,@AsOn,@TotDuration,1, @Roi,ROUND(@IntAccured,0),ROUND(@TotIntAccured,0), ROUND(@IntPaid,0),ROUND(@PrinPaid,0),  ROUND(@AddedPrincipal,0),ROUND(ISNULL(@AdjPrincipal,0),0), ROUND(@PrinBal,0))
             END
           Return
          End   

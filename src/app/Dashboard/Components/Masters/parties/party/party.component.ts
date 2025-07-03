@@ -252,7 +252,7 @@ export class PartyComponent implements OnInit {
       { 
         if (+result == +VerifyCode){
           let pty = new ClsParties(this.dataService);
-          pty.UpdateVerifyStatus(pty.Party.PartySno).subscribe(data=>{
+          pty.UpdateVerifyStatus(this.Party.PartySno).subscribe(data=>{
             if (data.queryStatus == 0){
               this.globals.ShowAlert(3,data.apiData);                      
             }
