@@ -72,9 +72,7 @@ export class PledgebookComponent {
         }
         else{                
           this.LoansList = JSON.parse (data.apiData);    
-          console.log(this.LoansList);
-           
-          
+                    
           this.LoansList.map(ln=>{
             ln.Customer = JSON.parse(ln.Party_Json)[0];
             if (ln.Images_Json) {ln.fileSource =  JSON.parse(ln.Images_Json);}
@@ -119,10 +117,10 @@ export class PledgebookComponent {
         //     "Sender Information": "Loan Disbursed","Amount": ln.Nett_Payable
         //    })
         // });
-        let SelectedColumns = this.columnsToDisplay;
-        SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
-        SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
-  
+        let SelectedColumns = this.columnsToDisplay;        
+        this.columnsToDisplay.indexOf("#") >= 0 ? SelectedColumns.splice( this.columnsToDisplay.indexOf("#"),1) : null ;
+        this.columnsToDisplay.indexOf("crud") >= 0 ? SelectedColumns.splice( this.columnsToDisplay.indexOf("crud"),1) : null ;        
+
         const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
   
         this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);
@@ -134,5 +132,4 @@ export class PledgebookComponent {
       return this.globals.DateToInt( new Date ($event.target.value));
     }
   
-
 }

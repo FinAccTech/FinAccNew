@@ -62,8 +62,8 @@
                     </div>
 
                     <div class="row">
-                        <p class="caption" > Mature Date  </p>
-                        <p class="value" > {{Loan.Mature_Date | intToDate | date:'dd-MM-yyyy' }}  </p>
+                        <p class="caption" > {{Loan.Loan_Status == 2 ? 'Closed Date' : 'Mature Date'}}   </p>
+                        <p class="value" > {{Loan.Finish_Date | intToDate | date:'dd-MM-yyyy' }}  </p>
                     </div>
                     
                     <div class="row">

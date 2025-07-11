@@ -20,7 +20,7 @@ export class LoandetailsComponent {
   @Input() Loan!: TypeLoan;
   @Input() ShowBalInfo: boolean = false;
   @Input() AsOnDate: number = 0;  
-
+ 
   InterestDetails!: TypeInterestDetails;
   LoanSno: number = 0
 

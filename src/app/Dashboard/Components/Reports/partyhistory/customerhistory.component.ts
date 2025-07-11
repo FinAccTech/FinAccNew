@@ -87,6 +87,7 @@ export class CustomerhistoryComponent {
     });
   }
 
+  
   LoadDetails(){
     let rep = new ClsReports(this.dataService);
     rep.getCustomerDetailed(this.SelectedCustomer.PartySno).subscribe(data =>{

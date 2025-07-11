@@ -290,9 +290,9 @@ ExportToExcel(){
       SelectedColumns.push(fld.Field_Name);
     })
     
-    SelectedColumns.splice(SelectedColumns.indexOf("#"),1);
-    SelectedColumns.splice(SelectedColumns.indexOf("Actions"),1);
-
+    SelectedColumns.indexOf("#") >= 0 ? SelectedColumns.splice(SelectedColumns.indexOf("#"),1) : null ;
+    SelectedColumns.indexOf("Actions") >= 0 ? SelectedColumns.splice(SelectedColumns.indexOf("Actions"),1) : null ;
+    
     const ExportList = this.FilteredDataList.map((item: any) => SelectedColumns.map(col => item[col]));      
     
     this.excelService.exportAsExcelFile(ExportList,"FinAcc Report", SelectedColumns);

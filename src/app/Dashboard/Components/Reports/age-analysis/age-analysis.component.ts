@@ -123,9 +123,9 @@ export class AgeAnalysisComponent {
       //    })
       // });
       let SelectedColumns = this.columnsToDisplay;
-      SelectedColumns.splice(this.columnsToDisplay.indexOf("#"),1);
-      SelectedColumns.splice(this.columnsToDisplay.indexOf("crud"),1);
-
+      
+      SelectedColumns.indexOf("#") >= 0 ? SelectedColumns.splice( SelectedColumns.indexOf("#"),1) : null ;
+      
       const ExportList = this.LoansList.map((item: any) => SelectedColumns.map(col => item[col]));
 
       this.excelService.exportAsExcelFile(ExportList,"Loans", SelectedColumns);

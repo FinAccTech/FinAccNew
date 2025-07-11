@@ -1129,6 +1129,34 @@ END
 
 GO
 
+IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetPartyCode') BEGIN DROP FUNCTION Udf_GetPartyCode END
+GO
+CREATE FUNCTION Udf_GetPartyCode(@Party_Code VARCHAR(20), @BranchSno INT, @Party_Cat TINYINT)
+  RETURNS @Result TABLE(AutoCode BIT, Party_Code VARCHAR(20))
+  WITH ENCRYPTION AS
+	BEGIN
+		DECLARE @PartyCode_AutoGen BIT
+        SELECT		@PartyCode_AutoGen = (CASE @Party_Cat WHEN 1 THEN PartyCode_AutoGen WHEN 2 THEN SuppCode_AutoGen WHEN 3 THEN BwrCode_AutoGen END) 
+		FROM		Transaction_Setup WHERE BranchSno=@BranchSno
+
+        IF @PartyCode_AutoGen=1
+              BEGIN
+				  INSERT INTO @Result(AutoCode, Party_Code) VALUES
+				  (1,
+						(SELECT	TRIM((CASE @Party_Cat WHEN 1 THEN PartyCode_Prefix WHEN 2 THEN SuppCode_Prefix WHEN 3 THEN BwrCode_Prefix END)) + 
+								CAST(((CASE @Party_Cat WHEN 1 THEN PartyCode_CurrentNo WHEN 2 THEN SuppCode_CurrentNo WHEN 3 THEN BwrCode_CurrentNo END) + 1) AS VARCHAR) 
+						FROM	Transaction_Setup WHERE BranchSno=@BranchSno)
+					)
+              End
+			ELSE
+				BEGIN
+					INSERT INTO @Result(AutoCode, Party_Code) VALUES (0,@Party_Code)
+				END
+
+          RETURN 
+    END
+
+GO
 
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Sp_Party') BEGIN DROP PROCEDURE Sp_Party END
@@ -1263,14 +1291,17 @@ BEGIN
 		ELSE
 			BEGIN
       
-      
+      /*
           DECLARE @PartyCode_AutoGen BIT
           SELECT @PartyCode_AutoGen=PartyCode_AutoGen FROM Transaction_Setup WHERE BranchSno=@BranchSno
           IF @PartyCode_AutoGen=1
           BEGIN
               SELECT @Party_Code=TRIM(PartyCode_Prefix)+CAST((PartyCode_CurrentNo+1) AS VARCHAR) FROM Transaction_Setup WHERE BranchSno=@BranchSno
           End
-          
+      */
+        DECLARE @AutoCode BIT
+        SELECT @AutoCode = AutoCode, @Party_Code=Party_Code FROM Udf_GetPartyCode(@Party_Code, @BranchSno, @Party_Cat)
+                            
         IF EXISTS(SELECT PartySno FROM Party WHERE  Party_Code=@Party_Code AND CompSno IN (SELECT CompSno FROM Udf_GetCompList(@CompSno))  )
           BEGIN
               Raiserror ('Party exists with this Party Code.', 16, 1)              
@@ -1304,10 +1335,28 @@ BEGIN
 
 				IF @@ERROR <> 0 GOTO CloseNow								
 				SET @PartySno = @@IDENTITY
-        UPDATE Transaction_Setup SET PartyCode_CurrentNo=PartyCode_CurrentNo+1 WHERE BranchSno=@BranchSno
-        IF @@ERROR <> 0 GOTO CloseNow								
-			END	
 
+          IF @AutoCode = 1
+            BEGIN
+			        IF @Party_Cat = 1
+				        UPDATE Transaction_Setup 
+				        SET PartyCode_CurrentNo = PartyCode_CurrentNo + 1
+				        WHERE BranchSno = @BranchSno
+                IF @@ERROR <> 0 GOTO CloseNow
+			        ELSE IF @Party_Cat = 2
+				        UPDATE Transaction_Setup 
+				        SET SuppCode_CurrentNo = SuppCode_CurrentNo + 1
+				        WHERE BranchSno = @BranchSno
+                IF @@ERROR <> 0 GOTO CloseNow
+
+			        ELSE IF @Party_Cat = 3
+				        UPDATE Transaction_Setup 
+				        SET BwrCode_CurrentNo = BwrCode_CurrentNo + 1
+				        WHERE BranchSno = @BranchSno
+			          IF @@ERROR <> 0 GOTO CloseNow
+			        END
+          END
+          			
      IF @Party_Cat = 1
         BEGIN
           EXEC SSp_AccLedger_Master @LedSno, '', @Party_Name, 31,  0, 0, 0, @Create_Date, @CompSno, @UserSno, @LedSno OUTPUT
@@ -1376,9 +1425,6 @@ CloseNow:
 END
 
 GO
-
-
-
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_getParties') BEGIN DROP FUNCTION Udf_getParties END
 GO
@@ -3060,7 +3106,14 @@ AS
                     
 				    Trans.TotQty, Trans.TotGrossWt, Trans.TotNettWt, Trans.TotPureWt, CAST(Trans.Market_Value AS DECIMAL(10,2)) as Market_Value, CAST(Trans.Market_Rate AS DECIMAL(10,2)) as Market_Rate, CAST(Trans.Loan_PerGram AS DECIMAL(10,2)) as Loan_PerGram, CAST(Trans.Principal AS DECIMAL(10,2)) as Principal, Trans.Roi, Trans.AdvIntDur,
             CAST(Trans.AdvIntAmt AS DECIMAL(10,2)) as AdvIntAmt, Trans.DocChargesPer, CAST(Trans.DocChargesAmt AS DECIMAL(10,2)) as DocChargesAmt, CAST(Trans.Nett_Payable AS DECIMAL(10,2)) as Nett_Payable,
-				    Trans.Mature_Date, Trans.PayModeSno, 
+				    Trans.Mature_Date,
+            Finish_Date = CASE
+                              WHEN EXISTS(SELECT TransSno FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14) THEN
+                              ( SELECT Trans_Date FROM Transactions WHERE RefSno=Trans.TransSno AND VouTypeSno=14)
+                          ELSE
+                              Trans.Mature_Date
+                          END,
+            Trans.PayModeSno, 
 				    Loc.LocationSno, Loc.Loc_Code, Loc.Loc_Name,
             Trans.AgentSno, Ag.Agent_Code, Ag.Agent_Name,
 				    Trans.Remarks, Trans.UserSno, Usr.UserName, Trans.CompSno, 
@@ -3955,6 +4008,7 @@ CREATE FUNCTION Udf_getLoanHistory(@LoanStatus INT, @CompSno INT, @Fromdate INT,
 RETURN
 
     SELECT    Ln.*,
+              --Finish_Date = CASE WHEN Ln.Loan_Status = 2 THEN ( SELECT Redemption_Date FROM VW_REDEMPTIONS WHERE LoanSno=Ln.LoanSno) ELSE Ln.Mature_Date END,
               AsOn_Loan_Status = CASE   WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=14) AND (Trans_Date <=@ToDate) ) -- Loan Closed and Redemption Made Redemtion VouTypeSno is 14
                                           THEN 2
                                         WHEN EXISTS(SELECT TransSno FROM Transactions WHERE (RefSno=Ln.LoanSno) AND (VouTypeSno=15) AND (Trans_Date <=@ToDate)) -- Auction entry Made Auction Entry VouTypeSno is 15

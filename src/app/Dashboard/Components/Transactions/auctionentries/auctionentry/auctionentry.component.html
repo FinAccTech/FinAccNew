@@ -85,9 +85,9 @@
                                 <input type="text" class="formControl" required #remarks [(ngModel)]= "Auction.Remarks"/>
                                 <label for="" class="formLabel"> Bar Code </label>                                                      
                             </div>
-                        </div>
+                        </div> 
                         <div class="col30">                            
-                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
+                            <app-selectionlist [Caption]="'Loan'" [DataSource]="LoansList" [SelectedItem]="SelectedLoan" (debounceString)="SearchbyLoanNo($event)"  (newItemEvent)="getLoan($event)" ></app-selectionlist>
                         </div>
                         <div class="col50">
                             <div class="formGroup">                                

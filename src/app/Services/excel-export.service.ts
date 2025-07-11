@@ -9,7 +9,7 @@ import * as FileSaver from 'file-saver';
 })
 
 export class ExcelExportService {
-  exportAsExcelFile(data: any[], fileName: string, headers: string[] ): void {
+  exportAsExcelFile(data: any[], fileName: string, headers: string[]): void {
     
     const replacedHeaders = headers.map(caption=> caption.replace("_"," "));
         

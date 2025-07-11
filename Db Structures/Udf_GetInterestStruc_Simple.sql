@@ -213,8 +213,6 @@ GO
                                  SET @Intpaid = @IntPaid + @AdvIntAmt
                                  SET @AdvIntAmt = 0
                             End
-        
-       
                          
 /*                     IF @Calc_Basis = 1
                          BEGIN
@@ -235,7 +233,7 @@ GO
                                     Else                                    
                                         @MinCalcDays * (((@Roi/100)*@NewPrincipal)/@IntCalcinDays) 
                                     End
-
+                                    
                              IF @IntPaid < @IntAccured
                                 BEGIN
                                  SET @IntDurDays = CASE WHEN @MinCalcDays = 0 THEN @Duration WHEN @Duration >= @MinCalcDays THEN 0 ELSE @MinCalcDays End
@@ -250,14 +248,17 @@ GO
                                  SET @NewPrincipal = @NewPrincipal + ISNULL(@AddedPrincipal,0)                                 
                                  -----------------------------------------------------------------------------A1
 
+
                                   /* CALCULATING INTEREST FOR THE ADDED PRINCIPAL DURING THE PERIOD */
-                                SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
+                                  IF @AddedPrincipal > 0
+                                  BEGIN
+                                    SELECT @IntAccured = ISNULL(@IntAccured,0) + ISNULL(SUM(IntAccured),0) from Udf_GetAddPrincipalInt(@LoanSno,@FromDate,@ToDate,@Roi)
 
-                                SELECT @IntAccured = ISNULL(@IntAccured,0) - ISNULL(SUM(IntAccured),0) from Udf_GetIntDiscount(@LoanSno,@FromDate,@ToDate,@Roi)
+                                    SELECT @IntAccured = ISNULL(@IntAccured,0) - ISNULL(SUM(IntAccured),0) from Udf_GetIntDiscount(@LoanSno,@FromDate,@ToDate,@Roi)
 
-                                SET @TotIntAccured = @TotIntAccured + @IntAccured
-
-
+                                    SET @TotIntAccured = @TotIntAccured + @IntAccured
+                                  END
+                                  
 
                      INSERT INTO @Result VALUES(@FromDate,@ToDate,@Duration,1,@Roi,@IntAccured,@TotIntAccured,@IntPaid,@PrinPaid,ISNULL(@AddedPrincipal,0),0,@NewPrincipal-@PrinPaid)
         ENDS_HERE:

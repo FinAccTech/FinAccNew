@@ -15,6 +15,7 @@ import { AuctionService } from '../auction.service';
 import { ClsAuctionEntries, TypeAuctionEntry } from 'src/app/Dashboard/Classes/ClsAuctionEntries';
 import { AutoUnsubscribe } from 'src/app/auto-unsubscribe.decorator';
 import { ApiDataService } from 'src/app/Services/api-data.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   
   @Component({
     selector: 'app-auctionentry',
@@ -23,8 +24,11 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
   })
 
   @AutoUnsubscribe
-  export class AuctionentryComponent implements OnInit {
+  export class AuctionentryComponent implements OnInit { 
   
+    private searchSubject = new Subject<number>();
+    private searchSubjectLoanNo = new Subject<string>();
+
     LoansList!:       TypeLoan[];
     SelectedLoan!:    TypeLoan;
   
@@ -69,6 +73,57 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
                     this.router.navigate(['dashboard/auctions']);
                     return;
                   }   
+
+                   this.searchSubject
+                                  .pipe(
+                                    debounceTime(300), // Wait 300ms after user stops typing
+                                    distinctUntilChanged() // Only emit if the value is different from the last
+                                  )
+                                  .subscribe((searchText) => {                  
+                                    if (searchText < 1) {return;}
+                                    let ln = new ClsLoans(this.dataService);  
+                                    ln.getLoanBySno(searchText,0,0,0,0,0,0,).subscribe(data=>{
+                                      if (data.apiData){
+                                        let fLn = JSON.parse(data.apiData)[0];
+                                        fLn.Customer = JSON.parse(fLn.Party_Json)[0];
+                                        if (fLn.Images_Json) {fLn.fileSource =  JSON.parse(fLn.Images_Json);}
+                                        fLn.IGroup = JSON.parse(fLn.Group_Json)[0];
+                                        fLn.Location  = JSON.parse(fLn.Location_Json)[0];          
+                                        fLn.Scheme = JSON.parse(fLn.Scheme_Json)[0];                    
+                                        this.getLoan(fLn);
+                                      }
+                                      else{
+                                        this.SelectedLoan = ln.Initialize();
+                                        //this.CustomerDetails = null!; 
+                                      }
+                                    })
+                                    // Add your search logic here
+                                  });
+
+                    this.searchSubjectLoanNo
+                .pipe(
+                  debounceTime(300), // Wait 300ms after user stops typing
+                  distinctUntilChanged() // Only emit if the value is different from the last
+                )
+                .subscribe((searchText) => {                  
+                  if (!searchText || searchText.length < 3) { return;}
+                  let ln = new ClsLoans(this.dataService);  
+                  ln.getLoanbySearch(searchText, this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=>{
+                    
+                    if (data.apiData){
+                      this.LoansList = JSON.parse(data.apiData);
+                                    
+                      this.LoansList.map(loan => {        
+                      return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
+                                loan.Location   =   JSON.parse (loan.Location_Json)[0],
+                                loan.Scheme     =   JSON.parse (loan.Scheme_Json)[0],
+                                loan.Customer   =   JSON.parse (loan.Party_Json)[0], 
+                                loan.fileSource =   loan.Images_Json ? JSON.parse (loan.Images_Json) : '';
+                      });
+                    }                            
+                  })
+                });
+                
                 }
   
    ngOnInit(): void {     
@@ -170,6 +225,10 @@ import { ApiDataService } from 'src/app/Services/api-data.service';
     }
   }
   
+  SearchbyLoanNo($event: string){    
+    this.searchSubjectLoanNo.next($event);    
+  }
+
   SaveAuction(){    
       
     // if (this.Loan.PaymentMode.length == 0){

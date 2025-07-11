@@ -161,7 +161,7 @@
                                 ? i+1
     
                             : (column == "Loan_Date" || column == "Mature_Date" || column == "Last_Receipt_Date" )
-                            ? (element[column] !== 0 ? (element[column] | intToDate | date:"dd/MM/YYYY"): '')
+                            ? (element[column] !== 0 ? (element[column] | intToDate | date:"dd/MM/yyyy"): '')
     
                             : (column == "Principal" || column == "Pending_Interest")
                             ?(element[column] | number)

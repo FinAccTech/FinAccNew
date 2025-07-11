@@ -111,7 +111,7 @@
                             : column == "#"
                                 ? i+1
     
-                            : (column == "Loan_Date" || column == "Mature_Date")
+                            : (column == "Loan_Date" || column == "Finish_Date")
                             ? (element[column] | intToDate | date:"dd/MM/YYYY")
     
                             : (column == "Principal")

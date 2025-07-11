@@ -177,7 +177,8 @@ export class ClsLoans{
             Emi_Interest:0,
             Due_Start_Date: DateToInt(new Date()),
             Nett_Payable: 0,
-            Mature_Date: DateToInt(new Date()),            
+            Mature_Date: DateToInt(new Date()),     
+            Finish_Date: 0,       
             Location: {"LocationSno":0},
             Agent:{"AgentSno":0},
             Remarks: "",
@@ -250,6 +251,7 @@ export class ClsLoans{
         Emi_Interest: number;
         Nett_Payable: number;
         Mature_Date: number;        
+        Finish_Date: number;
         Location: TypeLocation;
         Agent: TypeAgent;
         Remarks: string;

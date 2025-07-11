@@ -30,7 +30,7 @@ export class LoanhistoryComponent {
   @ViewChild('TABLE')  table!: ElementRef;
   
   dataSource!: MatTableDataSource<TypeLoan>;  
-  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Mature_Date'];
+  columnsToDisplay: string[] = [ '#', 'Series_Name', 'Loan_No', 'Loan_Date','Party_Name', 'Principal', 'Grp_Name','Scheme_Name', 'TotNettWt', 'Finish_Date'];
   columnsToDisplayWithExpand = [ ...this.columnsToDisplay];
   expandedElement!: TypeLoan | null;
 
