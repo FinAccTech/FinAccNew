@@ -75,6 +75,7 @@ import { AucnoticesVelsamyComponent } from './Dashboard/Components/Custom/aucnot
 import { LoanhistoryBrgoldComponent } from './Dashboard/Components/Custom/loanhistory-brgold/loanhistory-brgold.component';
 import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Custom/custom-day-history-fs2025061361/custom-day-history-fs2025061361.component';
 import { PledgebookComponent } from './Dashboard/Components/Reports/pledgebook/pledgebook.component';
+import { CustomDayBookFS2024122133Component } from './Dashboard/Components/Custom/custom-day-book-fs2024122133/custom-day-book-fs2024122133.component';
 
 
 
@@ -161,6 +162,8 @@ const routes: Routes = [
       { path:'CustomAuctionNoticeVelsamy', component: AucnoticesVelsamyComponent, canActivate:[AuthGuard, CompGuard],data:{"FormSno":42}},    
       { path:'CustomLoanHistoryBrGold', component: LoanhistoryBrgoldComponent, canActivate:[AuthGuard, CompGuard],data:{"FormSno":43}},    
       { path:'CustomDayHistoryFS2025061361', component: CustomDayHistoryFS2025061361Component, canActivate:[AuthGuard, CompGuard],data:{"FormSno":44}},    
+      { path:'CustomDayHistoryFS2024122133', component: CustomDayBookFS2024122133Component, canActivate:[AuthGuard, CompGuard],data:{"FormSno":46}},    
+      
       
   ]},  
 ];

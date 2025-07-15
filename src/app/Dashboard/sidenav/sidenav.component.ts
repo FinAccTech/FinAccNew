@@ -97,7 +97,7 @@ export class SidenavComponent {
     }   
 
     switch (this.auth.LoggedClient.Client_Code) {
-
+    
       case "FS2024071105":
           this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
             SubMenu: [
@@ -114,6 +114,12 @@ export class SidenavComponent {
           this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
             SubMenu: [
               {Caption :"Day History - Custom", Iconn:"", "RouterLink" :"CustomDayHistoryFS2025061361" },              
+            ]})   
+        break;    
+      case "FS2024122133":
+          this.TreeData.push({Caption:"Custom Reports", Icon: "fa fa-pencil-square-o", RouterLink:"", 
+            SubMenu: [
+              {Caption :"Day History - Custom", Iconn:"", "RouterLink" :"CustomDayHistoryFS2024122133" },              
             ]})   
         break;    
 

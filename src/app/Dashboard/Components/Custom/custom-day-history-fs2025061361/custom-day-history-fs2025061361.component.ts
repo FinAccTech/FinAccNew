@@ -32,10 +32,10 @@ constructor(private dataService: DataService, private globals: GlobalsService, p
     { Field_Name:"#",                   Data_Type:"string" }, 
     { Field_Name:"Red_Loan_No",         Data_Type:"string" }, 
     { Field_Name:"Red_Customer_Name",   Data_Type:"string" }, 
-    { Field_Name:"Red_Loan_Date",       Data_Type:"number" }, 
+    { Field_Name:"Red_Loan_Date",       Data_Type:"date" }, 
     { Field_Name:"Redemption_No",       Data_Type:"string" }, 
     { Field_Name:"Rec_Interest",        Data_Type:"number" }, 
-    { Field_Name:"Nett_Payable",        Data_Type:"number" }, 
+    { Field_Name:"Red_Principal",        Data_Type:"number" }, 
     { Field_Name:"Loan_No",             Data_Type:"string" }, 
     { Field_Name:"Party_Name",          Data_Type:"string" }, 
     { Field_Name:"Principal",           Data_Type:"number" },         
@@ -63,7 +63,8 @@ constructor(private dataService: DataService, private globals: GlobalsService, p
       }
       else{              
         this.HistoryList = JSON.parse(data.apiData);                
-        
+        console.log(this.HistoryList);
+                
         if (!this.HistoryList){
           this.HistoryList = [];
         }

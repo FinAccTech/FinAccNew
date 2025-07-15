@@ -172,6 +172,7 @@ export class GlobalsService
      FormIdCustomDayHistoryFS2025061361 = 44;
 
      FormIdPledgeBook = 45;
+     FormIdCustomDayBookFS2024122133 = 46;
 
      //Report Component Ids
      RepDayHistory = 1;

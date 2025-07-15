@@ -1,0 +1,82 @@
+<div class="reportContainer">
+    <div class="headerCard">
+        <div class="headerLeft">                 
+            <p class="heading"> Day History</p>        
+        </div>
+
+        <div class="headerRight">    
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="FromDate! | intToDate | date:'yyyy-MM-dd'" (blur)="FromDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> From Date </label>            
+            </div>
+
+            <div class="formGroup" >
+                <input type="date" class="formControl" [ngModel]="ToDate! | intToDate | date:'yyyy-MM-dd'" (blur)="ToDate= DateToInt($event)" />                                                                                                            
+                <label for="" class="formLabel date"> To Date </label>            
+            </div>
+            
+            <button class="newBtn" (click)="LoadDayHistory()"> <i class='bx bx-play'></i> &nbsp; Load Details</button>             
+            
+            <i class='bx bxs-download' [matMenuTriggerFor]="menu"></i> 
+
+            <mat-menu #menu="matMenu" style="padding: 1rem;">
+                <button mat-menu-item >
+                    <div class="menuClass" >                        
+                        <i style="font-size: 1.2rem;" class="fas fa-file-excel" style="color: green;" ></i> &nbsp; 
+                        <span>Download</span>
+                    </div>                    
+                </button>
+            </mat-menu>            
+        </div>
+    </div>
+
+    <div class="body">
+        <!-- @for (item of ReportList; track $index) {
+                    
+           
+            <br>
+        } -->
+            <table class="stdTable">
+                <thead>
+                    <th>Particulars</th>
+                    <th>Total</th>
+                    <th>Amount</th>
+                    <th>Interest</th>
+                    <th>Defaut</th>
+                    <th>AddLess</th>
+                </thead>
+                <tbody>
+                    @for (item of ReportList; track $index) {
+                        <tr  [ngStyle]="(item.BillType == 0 || item.BillType == 4) ? {'font-weight': 'bold'} : {'font-weight': 'normal'}">
+                            <td>
+                                  @switch (item.BillType) {
+                                    @case (0) {
+                                        <p>Opening</p>
+                                    }
+                                    @case (1) {
+                                        <p>Loans Issued</p>
+                                    }
+                                    @case (2) {
+                                        <p>Redemption</p>
+                                    }
+                                    @case (3) {
+                                        <p>Receipt</p>
+                                    }
+                                    @case (4) {
+                                        <p>Total</p>
+                                    }
+                                }  
+                            </td>
+                            <td> {{item.BillCount > 0 ? item.BillCount : ''}} </td>
+                            <td>{{ item.Amount > 0 ? (item.Amount | number) : '' }} </td>
+                            <td>{{ item.Interest > 0 ? (item.Interest | number) : ''}}</td>
+                            <td>{{ item.DefaultAmt > 0 ? (item.DefaultAmt | number) : ''}}</td>
+                            <td>{{ item.AddLess > 0 ? (item.AddLess | number) : '' }}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+
+ 
+</div>

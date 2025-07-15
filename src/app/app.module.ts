@@ -160,6 +160,7 @@ import { CustomDayHistoryFS2025061361Component } from './Dashboard/Components/Cu
 import { ReactiveFormsModule } from '@angular/forms';
 import { OtpwindowComponent } from './Dashboard/widgets/otpwindow/otpwindow.component';
 import { PledgebookComponent } from './Dashboard/Components/Reports/pledgebook/pledgebook.component';
+import { CustomDayBookFS2024122133Component } from './Dashboard/Components/Custom/custom-day-book-fs2024122133/custom-day-book-fs2024122133.component';
 
 
 @NgModule({ declarations: [                
@@ -226,7 +227,7 @@ import { PledgebookComponent } from './Dashboard/Components/Reports/pledgebook/p
         AgeAnalysisComponent, AlertHistoryComponent, MarketValueAnalysisComponent, IntStatement1percentComponent, EverysizeComponent, AutomationComponent, TestimonialsComponent,
         ContactComponent, PricingComponent, RepledgesummaryComponent, RepledgehistoryComponent, AgentsComponent, AgentComponent, RepledgeauctionhistoryComponent,
         BranchComponent, DivisionComponent, BusinessregisterComponent, DailyRegisterComponent, ImportdataComponent, TableviewComponent, AucnoticesVelsamyComponent, LoanhistoryBrgoldComponent,
-        CustomDayHistoryFS2025061361Component, OtpwindowComponent, PledgebookComponent
+        CustomDayHistoryFS2025061361Component, OtpwindowComponent, PledgebookComponent, CustomDayBookFS2024122133Component,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,    
         ReactiveFormsModule,    

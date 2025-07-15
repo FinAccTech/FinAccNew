@@ -1,5 +1,3 @@
---select * from vw_loans
-
 
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='Udf_GetInterestStruc_Multiple') BEGIN DROP FUNCTION Udf_GetInterestStruc_Multiple END
 GO
@@ -77,7 +75,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         SET @TotIntAccured = @TotIntAccured + @IntAccured
 
                         --STEP 4: CHECK FOR IF ANY ADDITIONAL PRINCIPAL PAID IN BETWEEN
-                        SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                        SELECT @AddedPrincipal=ISNULL(SUM(Amount),0) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                         SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                         
                         SET @IntPaid = @IntPaid + @AdvIntAmt
@@ -128,7 +126,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                         SET @IntAccured = @TotDuration * ((@Roi/100)*@PrinBal / 12 /30)
                         SET @TotIntAccured = @TotIntAccured + @IntAccured
 
-                          SELECT @AddedPrincipal=SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                          SELECT @AddedPrincipal=ISNULL(SUM(Amount),0) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                           SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                           SET @AddedPrincipal = 0
 
@@ -153,7 +151,7 @@ CREATE FUNCTION Udf_GetInterestStruc_Multiple(@LoanSno INT,@AsOnDate INT)
                 SET @IntAccured = (@TotDuration) * ((@Roi/100)*@Principal / 12 /30)
 
 
-                SELECT @AddedPrincipal= SUM(Amount) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
+                SELECT @AddedPrincipal= ISNULL(SUM(Amount),0) FROM Loan_Payments WHERE (LoanSno=@LoanSno) AND (Pmt_Date BETWEEN [dbo].DateToInt(@FromDate) AND [dbo].DateToInt(@ToDate))
                 SET @PrinBal = @PrinBal + ISNULL(@AddedPrincipal,0)
                 
                 SET @IntPaid = @AdvIntAmt

@@ -135,6 +135,11 @@ export class ClsReports{
         let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "AsOn": AsOn}; 
         return this.dataService.HttpGet(postdata, "/getDayHistoryCustomFS2025061361");                
     }
+
+    getDayBookCustomFS2024122133(FromDate: number, ToDate: number): Observable<TypeHttpResponse> {
+        let postdata ={ BranchSno: this.BranchSno, "CompSno": this.CompSno, "FromDate": FromDate, "ToDate": ToDate}; 
+        return this.dataService.HttpGet(postdata, "/getDayBookCustomFS2024122133");                
+    }
 }
 
 export interface TypeCustomerDetailed extends TypeParties{

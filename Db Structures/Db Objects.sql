@@ -2567,6 +2567,15 @@ BEGIN
             SET @Trans_No= [dbo].GenerateVoucherNo(@SeriesSno)               
         END
 
+        IF (@VouTypeSno = 13) OR (@VouTypeSno = 14)
+          BEGIN
+            IF (SELECT Loan_Status FROM VW_LOANS WHERE LoanSno=654645) = 2
+              BEGIN
+                Raiserror ('This Loan is closed and any Receipts cannot be made', 16, 1) 
+                GOTO CloseNow
+              END              
+          END
+
         IF EXISTS(SELECT TransSno FROM Transactions WHERE Trans_No=@Trans_No AND CompSno=@CompSno)
           BEGIN
               Raiserror ('Transaction exists with this Number', 16, 1) 
@@ -3206,6 +3215,8 @@ AS
 
 GO
 
+
+
 IF EXISTS(SELECT * FROM SYS.OBJECTS WHERE name='VW_REDEMPTIONS') BEGIN DROP VIEW VW_REDEMPTIONS END
 GO
 CREATE VIEW VW_REDEMPTIONS
@@ -3215,7 +3226,7 @@ AS
 	SELECT		Trans.TransSno as RedemptionSno, Trans.SeriesSno, Ser.VouTypeSno, Ser.Series_Name, Trans.VouSno,
             Ln.Loan_No,Pty.PartySno, Pty.Party_Code  as Customer_Code, Pty.Party_Name as Customer_Name, Ln.Item_Details,
 				    Trans.Trans_No as Redemption_No, Trans.Trans_Date as Redemption_Date,
-             Trans.RefSno as LoanSno, Ln.Loan_Date, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
+             Trans.RefSno as LoanSno, Ln.Loan_Date, Ln.Principal, CAST(Trans.Rec_Principal AS DECIMAL(10,2)) as Rec_Principal, Trans.Rec_IntMonths,Trans.Rec_IntDays, CAST(Trans.Rec_Interest AS DECIMAL(10,2)) as Rec_Interest,
             CAST(Trans.Rec_Other_Credits AS DECIMAL(10,2)) as Rec_Other_Credits, CAST(Trans.Rec_Other_Debits AS DECIMAL(10,2)) as Rec_Other_Debits, CAST(Trans.Rec_Default_Amt AS DECIMAL(10,2)) as Rec_Default_Amt,
             CAST(Trans.Rec_Add_Less AS DECIMAL(10,2)) as Rec_Add_Less,
             Trans.Rec_DuesCount, Trans.Rec_DueAmount,
@@ -3231,6 +3242,7 @@ AS
 				  INNER JOIN Party Pty ON Pty.PartySno = Ln.PartySno          
 				  INNER JOIN Branches Brh ON Brh.BranchSno = Trans.BranchSno
           INNER JOIN Users Usr ON Usr.UserSno = Trans.UserSno
+
 
 GO
 
@@ -6296,6 +6308,4 @@ WHERE       (Ln.Loan_Date BETWEEN @FromDate AND @ToDate)
             AND (Ln.CompSno = @CompSno)
             AND (Ln.BranchSno=@BranchSno OR @BranchSno=0)
 GO
-
-
 

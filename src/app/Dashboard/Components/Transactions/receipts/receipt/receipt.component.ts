@@ -104,6 +104,7 @@ export class ReceiptComponent implements OnInit {
                   ln.getLoanBySno(searchText,0,0,0,0,0,0,).subscribe(data=>{
                     if (data.apiData){
                       let fLn = JSON.parse(data.apiData)[0];
+                      if (fLn.Loan_Status == (this.globals.LoanStatusClosed || this.globals.LoanStatusAuctioned) )  {return;}
                       fLn.Customer = JSON.parse(fLn.Party_Json)[0];
                       if (fLn.Images_Json) {fLn.fileSource =  JSON.parse(fLn.Images_Json);}
                       fLn.IGroup = JSON.parse(fLn.Group_Json)[0];
@@ -128,10 +129,12 @@ export class ReceiptComponent implements OnInit {
                   if (!searchText || searchText.length < 3) { return;}
                   let ln = new ClsLoans(this.dataService);  
                   ln.getLoanbySearch(searchText, this.globals.LoanStatusAll,this.globals.ApprovalStatusApproved, this.globals.CancelStatusNotCancelled, this.globals.OpenStatusAllLoans).subscribe(data=>{
-                    console.log(data);
-                    
+
                     if (data.apiData){
                       this.LoansList = JSON.parse(data.apiData);
+                      this.LoansList = this.LoansList.filter(ln=>{
+                        return ln.Loan_Status !== (this.globals.LoanStatusClosed || this.globals.LoanStatusAuctioned)
+                      })
                                     
                       this.LoansList.map(loan => {        
                       return  loan.IGroup       =   JSON.parse (loan.IGroup_Json)[0],  
